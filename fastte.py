@@ -84,6 +84,74 @@ def directed_tests_permute(series_int, A, silent_code, n_perm=200, seed=0):
             for pr, o, z, p in zip(pairs, obs, z_obs, p_fwer)}
 
 
+def cte_int(s, t, c, A, Ac):
+    """Conditional TE(s->t | c), history 1: the extra information s's last symbol gives about t's
+    next one, BEYOND t's own history and a channel-context variable c.
+
+    WEEKEND ADDITION. Pairwise transfer entropy cannot tell direct influence from common cause: if
+    every agent tracks a drifting channel topic, every pair looks dependent. Conditioning on the
+    channel's recent state is the standard remedy. `c` is kept to a small alphabet (Ac) on purpose,
+    because the joint space is A^3 * Ac and the series is only a few thousand ticks long.
+    """
+    s = np.asarray(s); t = np.asarray(t); c = np.asarray(c)
+    if t.shape[0] < 3:
+        return 0.0
+    tt, tp, sp, cc = t[1:], t[:-1], s[:-1], c[:-1]
+    h_ttpc = _H((tt * A + tp) * Ac + cc, A * A * Ac)
+    h_tpc = _H(tp * Ac + cc, A * Ac)
+    h_ttpspc = _H(((tt * A + tp) * A + sp) * Ac + cc, A * A * A * Ac)
+    h_tpspc = _H((tp * A + sp) * Ac + cc, A * A * Ac)
+    return max(0.0, (h_ttpc - h_tpc) - (h_ttpspc - h_tpspc))
+
+
+def directed_tests_conditional(series_int, channel, A, Ac, silent_code, n_perm=200, seed=0):
+    """Conditional TE for every ordered pair, with the sparsity-preserving permutation surrogate."""
+    rng = np.random.default_rng(seed)
+    ids = list(series_int)
+    pairs = [(i, j) for i in ids for j in ids if i != j]
+    obs = np.array([cte_int(series_int[i], series_int[j], channel, A, Ac) for i, j in pairs])
+    spoke = {i: np.flatnonzero(series_int[i] != silent_code) for i in ids}
+    null = np.empty((len(pairs), n_perm))
+    for p in range(n_perm):
+        shuffled = {}
+        for i in ids:
+            v = series_int[i].copy()
+            idx = spoke[i]
+            if idx.size > 1:
+                v[idx] = v[idx][rng.permutation(idx.size)]
+            shuffled[i] = v
+        for q, (i, j) in enumerate(pairs):
+            null[q, p] = cte_int(shuffled[i], series_int[j], channel, A, Ac)
+    mu, sd = null.mean(1), null.std(1, ddof=1)
+    sd = sd.copy(); sd[sd == 0] = np.inf
+    z_obs = (obs - mu) / sd
+    max_null = ((null - mu[:, None]) / sd[:, None]).max(0)
+    p_fwer = (1 + (max_null[None, :] >= z_obs[:, None]).sum(1)) / (1 + n_perm)
+    return {pr: {"te": float(o), "z": float(z), "p": float(p)}
+            for pr, o, z, p in zip(pairs, obs, z_obs, p_fwer)}
+
+
+def channel_context(stream_symbols, silent_code, window=12, n_levels=3):
+    """A small-alphabet summary of the channel's recent topic, EXCLUDING the immediately preceding
+    message so it does not simply restate the source. Returns an int array over [0, n_levels)."""
+    import collections
+    n = len(stream_symbols)
+    out = np.zeros(n, dtype=np.int64)
+    for t in range(n):
+        lo = max(0, t - window)
+        ctx = [x for x in stream_symbols[lo:max(lo, t - 1)] if x != silent_code]
+        if not ctx:
+            out[t] = 0
+            continue
+        mode, cnt = collections.Counter(ctx).most_common(1)[0]
+        frac = cnt / len(ctx)
+        # how concentrated the channel is on one topic, coarsely
+        out[t] = 0 if frac < 0.34 else (1 if frac < 0.67 else 2)
+        if n_levels > 3:
+            out[t] = min(n_levels - 1, int(frac * n_levels))
+    return out
+
+
 def code_series(series_str):
     """Map {agent: [symbol strings]} to {agent: int array} over one shared alphabet; returns (coded, A)."""
     alpha = sorted({s for v in series_str.values() for s in v})

@@ -166,3 +166,30 @@ for lab, ok in r5:
 print(f"round-5: {sum(1 for _, ok in r5 if ok)}/{len(r5)} pass")
 if not all(ok for _, ok in r5):
     sys.exit("ROUND-5 VERIFICATION FAILED")
+
+# --- round-6: conditional estimator ---
+cnd = json.load(open(os.path.join(D, "facts_conditional.json"), encoding="utf-8"))
+hc = json.load(open(os.path.join(D, "facts_humans_conditional.json"), encoding="utf-8"))
+bc = json.load(open(os.path.join(D, "..", "swarm-bench", "bench_conditional.json"), encoding="utf-8")) \
+     if os.path.exists(os.path.join(D, "..", "swarm-bench", "bench_conditional.json")) else None
+cs = json.load(open(os.path.join(D, "..", "swarm-bench", "cond_strong.json"), encoding="utf-8")) \
+     if os.path.exists(os.path.join(D, "..", "swarm-bench", "cond_strong.json")) else None
+r6 = []
+r6.append(("cond calib 20/20", f'20 of 20 replicates' in txt))
+r6.append(("main cond", f'{cnd["main-village"]["conditional_edges"]}' in txt))
+r6.append(("openchat cond 0", 'all 18 of open-chat' in txt or "open-chat's 18 vanish" in txt))
+ind = hc["results"]["individual"]; col = hc["results"]["collapsed"]
+r6.append(("collapsed cond total", f'{col["conditional"]["edges_total"]} edges survive' in txt
+           or f'**Four edges survive' in txt))
+r6.append(("collapsed h2a", f'{len(col["conditional"]["human_drives_agent"])} run from humans' in txt
+           or 'three run from humans to agents' in txt))
+if cs:
+    r6.append(("bench cc 0.0", f'{cs["common_cause_null"]["mean_edges"]:.1f}' in txt))
+    r6.append(("bench struct", f'{cs["structure"]["mean_edges"]:.1f} and recovers all 4' in txt
+               or '**4.0 and recovers all 4**' in txt))
+for lab, ok in r6:
+    if not ok:
+        print(f"FAIL  {lab}")
+print(f"round-6: {sum(1 for _, ok in r6 if ok)}/{len(r6)} pass")
+if not all(ok for _, ok in r6):
+    sys.exit("ROUND-6 VERIFICATION FAILED")

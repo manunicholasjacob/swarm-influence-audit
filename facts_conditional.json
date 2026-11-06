@@ -1,0 +1,37 @@
+{
+  "k": 8,
+  "n_surrogates": 200,
+  "window": 12,
+  "calibration_pure_null": {
+    "reps": 20,
+    "fired": 0,
+    "fwer": 0.0
+  },
+  "main-village": {
+    "n_ticks": 7958,
+    "agents": 15,
+    "pairwise_edges": 2,
+    "conditional_edges": 2,
+    "surviving": [
+      [
+        "Claude Haiku 4.5",
+        "DeepSeek-V3.2"
+      ],
+      [
+        "Claude Haiku 4.5",
+        "Gemini 3.5 Flash"
+      ]
+    ],
+    "n_surviving": 2,
+    "conditional_only": []
+  },
+  "open-chat-village": {
+    "n_ticks": 7735,
+    "agents": 15,
+    "pairwise_edges": 18,
+    "conditional_edges": 0,
+    "surviving": [],
+    "n_surviving": 0,
+    "conditional_only": []
+  }
+}
