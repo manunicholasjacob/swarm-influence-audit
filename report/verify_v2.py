@@ -134,3 +134,15 @@ for lab, ok in extra:
 print(f"round-3: {sum(1 for _, ok in extra if ok)}/{len(extra)} pass")
 if not all(ok for _, ok in extra):
     sys.exit("ROUND-3 VERIFICATION FAILED")
+
+# --- round-4: open-chat power ---
+po = json.load(open(os.path.join(D, "facts_power_openchat.json"), encoding="utf-8"))
+pr = {r["coupling"]: r for r in po["rows"]}
+r4 = [("oc power 0.1", f'{pr[0.1]["detected"]} of {pr[0.1]["of"]} runs at coupling 0.1' in txt),
+      ("oc power 0.2", f'{pr[0.2]["detected"]} of {pr[0.2]["of"]} from 0.2 upward' in txt)]
+for lab, ok in r4:
+    if not ok:
+        print(f"FAIL  {lab}")
+print(f"round-4: {sum(1 for _, ok in r4 if ok)}/{len(r4)} pass")
+if not all(ok for _, ok in r4):
+    sys.exit("ROUND-4 VERIFICATION FAILED")

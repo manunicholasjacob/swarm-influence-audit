@@ -1,0 +1,40 @@
+{
+  "village": "open-chat-village",
+  "leader": "DeepSeek-V3.2",
+  "leader_msgs": 1402,
+  "n_synth": 381,
+  "ticks": 7735,
+  "seeds": 4,
+  "rows": [
+    {
+      "coupling": 0.0,
+      "detected": 0,
+      "of": 4,
+      "rate": 0.0
+    },
+    {
+      "coupling": 0.1,
+      "detected": 3,
+      "of": 4,
+      "rate": 0.75
+    },
+    {
+      "coupling": 0.2,
+      "detected": 4,
+      "of": 4,
+      "rate": 1.0
+    },
+    {
+      "coupling": 0.4,
+      "detected": 4,
+      "of": 4,
+      "rate": 1.0
+    },
+    {
+      "coupling": 0.8,
+      "detected": 4,
+      "of": 4,
+      "rate": 1.0
+    }
+  ]
+}

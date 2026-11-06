@@ -74,7 +74,7 @@ We therefore add a **symbol-permutation** surrogate, following the local-permuta
 
 ### 5.1 Clock windows cannot separate cause from effect
 
-Figure 1 runs the detector on clock windows from 30 seconds to an hour. The two failure modes close on each other. At 30 seconds only 1.2% of agent-windows contain a message, so there is almost nothing to estimate from, while already 32.0% of replies land in the same window as the message they answer and are therefore invisible to a lag-1 test. By 5 minutes that share is 84.4%, and by an hour it is 98.6%.
+Figure 1 runs the detector on clock windows from 30 seconds to an hour, and the two failure modes close on each other. At 30 seconds only 1.2% of agent-windows contain a message, while already 32.0% of replies land in the same window as the message they answer and are invisible to a lag-1 test. By 5 minutes that share is 84.4%, and by an hour 98.6%.
 
 More telling is what the edges are made of. At every width the meaning-free hash null certifies about as many edges as the topic symboliser (12 against 9 at 30 seconds, 19 against 17 at one minute, 44 against 27 at fifteen), and at 5 minutes it certifies more, 19 against 17. Whatever clock-window transfer entropy is detecting on this data, it is not shared meaning. We therefore move to the turn-ordered grid for everything that follows.
 
@@ -92,7 +92,7 @@ A planted agent could be dismissed as an artificial insertion, so we also measur
 
 Following the local-permutation idea of Shorten et al. (2021), we keep each source's speaking positions and permute only its symbols among them. On the same destroyed-structure data the family-wise error rate falls to 0.10 over 30 replicates, with a 95% Wilson interval of 0.03 to 0.26, which covers the nominal 0.05 although the point estimate sits above it. The planted uncoupled agent is now never certified: 0 of 5 at both 263 and 1500 messages, with mean max z of 2.8 in each case against 22.0 and 68.3 under the shift surrogate.
 
-The failure is not an artifact of the configuration we happened to choose. It is not a large-swarm effect: across swarms of 5, 10, 15 and 20 agents the shift surrogate certifies something in 22 of 24 null replicates, against 3 of 24 for the permutation surrogate, so shrinking the swarm does not rescue it. It is not a property of the skewed topic alphabet either, since on the near-uniform hash alphabet, where the largest symbol holds 13% of messages rather than 37%, the shift surrogate still fires in 10 of 10. And both corrections survive a different symboliser: replacing TF-IDF and k-means with latent semantic analysis gives 12 edges against 1 in main-village and 2 against 22 in open-chat, the same inflation and the same masking by an independent route to topics.
+The failure is not an artifact of the configuration we chose. Appendix D shows it holds across swarm sizes from 5 to 20 agents, on a near-uniform alphabet as well as the skewed topic one, and that both the inflation and the masking reproduce under an independent symboliser.
 
 [Figure 2: f2_null.png. Caption: Left, how often an agent coupled to nothing is certified as a driver, under each surrogate. Middle, family-wise error rate measured on data with all structure destroyed, with a Wilson interval; the dotted line is the nominal 0.05. Right, what each surrogate certifies on the real channel.]
 
@@ -110,17 +110,17 @@ In main-village, **none** of the 11 edges the standard recipe certifies survives
 
 ### 5.5 How much influence could we have seen?
 
-Absence of edges is only informative if the test could have found them, so we plant one. A synthetic follower is inserted at the median agent's volume and copies the busiest agent's topic on a fraction of its messages. Under the repaired surrogate it is detected in 0 of 4 runs at couplings up to 0.4, and in 1 of 4 at 0.8. Holding coupling at 0.8 and varying how much the follower speaks, detection goes from 1 of 4 at 263 messages to 4 of 4 at 800, and stays at 4 of 4 at 2000 and 4000. The floor sits between 3% and 10% of the channel's messages.
+Absence of edges is only informative if the test could have found them, so we plant one. A synthetic follower is inserted at the median agent's volume and copies the busiest agent's topic on a fraction of its messages. In main-village, under the repaired surrogate, it goes undetected in 0 of 4 runs at couplings up to 0.4 and is caught in only 1 of 4 at 0.8. Holding coupling at 0.8 and varying how much it speaks, detection rises from 1 of 4 at 263 messages to 4 of 4 at 800 and stays there at 2000 and 4000, so the floor sits between 3% and 10% of the channel's messages.
 
-Power is therefore governed by how much an agent says, not only by how strongly it copies. For a median-volume agent the test is close to blind even to very strong copying, so main-village's two certified edges are a floor, not a description: the question there is largely unanswerable rather than answered in the negative.
+Power is therefore governed by how much an agent says, not only by how strongly it copies, and it is channel-specific. Repeating the control in open-chat, where the valid test certifies 18 edges, a follower at that channel's median volume is caught in 3 of 4 runs at coupling 0.1 and in 4 of 4 from 0.2 upward. The two channels differ in sensitivity as well as in structure: main-village's two certified edges are a floor rather than a description, while open-chat's 18 come from a test that can see.
 
 [Figure 3: f4_power.png. Caption: Detection of a planted follower under the repaired surrogate. Left, varying the fraction of its messages that copy the leader, at the median agent's volume. Right, varying how much it speaks, at strong coupling.]
 
 ### 5.6 Does anything replicate?
 
-In main-village, no. Under the standard recipe the adjacent fourteen-day window shares 1 edge with the primary window out of 8 and 4 respectively, a Jaccard of 0.09, and the two halves share none. Under the repaired surrogate the adjacent window certifies nothing. The one edge that does persist, GLM-5.2 to Gemini 3.5 Flash, is also the only edge the meaning-free hash null certifies, so the single stable thing the standard recipe finds carries no meaning.
+In main-village, no. Under the standard recipe the adjacent fourteen-day window shares 1 edge with the primary window out of 8 and 4, a Jaccard of 0.09, and the two halves share none. Under the repaired surrogate the adjacent window certifies nothing. The one edge that persists, GLM-5.2 to Gemini 3.5 Flash, is also the only edge the hash null certifies, so the single stable thing the standard recipe finds carries no meaning.
 
-In open-chat, where the valid test has power, the picture is better but still partial: restricted to agents active in both windows and sharing one topic space, the current window certifies 9 edges and the previous 5, with 3 in common, a Jaccard of 0.27, against 0 edges from the hash null. About a third of the structure holds up. Splitting that window into halves is harsher, 7 edges against 2 with 1 in common, which is what the power result predicts, since halving the data moves agents below the detection floor.
+In open-chat, where the valid test has power, the picture is better but still partial: restricted to agents active in both windows and sharing one topic space, the current window certifies 9 edges and the previous 5, with 3 in common, a Jaccard of 0.27, against 0 from the hash null. About a third holds up. Splitting that window into halves is harsher, 7 edges against 2 with 1 in common, which the power result predicts, since halving the data moves agents below the floor.
 
 The alphabet size remains a live degree of freedom even under the repaired surrogate, with open-chat certifying 8 edges at k=4, 18 at k=8 and 21 at k=16, so an edge count is never a property of a channel alone.
 
@@ -134,7 +134,7 @@ Two further traps, reported in Appendix D, are worth naming here: a continuous n
 
 ## 6. What an overseer should do
 
-The audit suggests four controls, none expensive, that we think should accompany any published influence graph over an agent channel.
+The audit suggests four controls, none expensive, that should accompany any published influence graph over an agent channel.
 
 1. **Plant an agent coupled to nothing, at your channel's volumes, and check it is not certified.** This one test would have caught the failure reported here, and costs one run per volume.
 2. **Measure the error rate directly,** by destroying the structure your method claims to find and checking the family-wise error rate is near nominal. If it is not, the surrogate does not match the representation.
@@ -170,7 +170,11 @@ We followed the dataset's research terms: research use only, no training on the 
 
 **LLM usage.** The author used an AI coding assistant (Claude) to help write and run the analysis code, to help draft this report, and to structure the figures. The author is responsible for every claim, number and figure here. All results come from the released code run on the public dataset, no result or reference is fabricated, and the numbers in this document are checked against the analysis output by a script that fails on any mismatch.
 
-## Appendix D: Two further traps
+## Appendix D: Robustness checks, and two further traps
+
+**The surrogate failure is not an artifact of our configuration.** It is not a large-swarm effect: across swarms of 5, 10, 15 and 20 agents the shift surrogate certifies something in 22 of 24 null replicates, against 3 of 24 for the permutation surrogate, so shrinking the swarm does not rescue it. It is not a property of the skewed topic alphabet either, since on the near-uniform hash alphabet, where the largest symbol holds 13% of messages rather than 37%, the shift surrogate still fires in 10 of 10 replicates.
+
+**Both corrections survive a different symboliser.** Replacing TF-IDF and k-means with latent semantic analysis gives 12 edges against 1 in main-village and 2 against 22 in open-chat: the same inflation and the same masking, reached by an independent route to topics. The meaning-free hash control gives 1 against 0 and 0 against 0. So the central result concerns the surrogate rather than any one clustering choice, although the edge count itself remains sensitive to the alphabet size.
 
 **A continuous influence score measures volume.** Summed outgoing minus incoming transfer entropy, a common per-node leadership summary, ranks agents almost identically under the topic symboliser and under the meaning-free hash null (Spearman 0.85), with the same agent on top at nearly the same value. A score the hash null reproduces cannot be measuring shared meaning, so the certified edge set should be reported instead.
 
