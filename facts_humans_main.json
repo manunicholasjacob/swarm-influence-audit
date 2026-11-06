@@ -1,0 +1,43 @@
+{
+  "village": "main-village",
+  "room": "general",
+  "k": 8,
+  "n_shifts": 200,
+  "window": {
+    "start": "2025-04-02",
+    "end": "2025-04-16"
+  },
+  "window_agent_msgs": 1391,
+  "window_human_msgs": 2899,
+  "human_share": 0.6758,
+  "distinct_visitors": 294,
+  "visitor_msg_counts": [
+    609,
+    266,
+    165
+  ],
+  "results": {
+    "agents_only": {
+      "edges_topic": 0,
+      "nodes": 4
+    },
+    "collapsed": {
+      "tag": "HUMANS collapsed",
+      "n_ticks": 4268,
+      "edges_topic": 0,
+      "edges_hash": 0,
+      "human_drives_agent": [],
+      "agent_drives_human": [],
+      "all_edges": []
+    },
+    "individual": {
+      "tag": "top visitors individually",
+      "n_ticks": 2409,
+      "edges_topic": 0,
+      "edges_hash": 0,
+      "human_drives_agent": [],
+      "agent_drives_human": [],
+      "all_edges": []
+    }
+  }
+}

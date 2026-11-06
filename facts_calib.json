@@ -1,0 +1,40 @@
+{
+  "reps": 10,
+  "n_perm": 200,
+  "k": 8,
+  "n_ticks": 7958,
+  "rows": {
+    "shift": {
+      "edges_per_rep": [
+        1,
+        1,
+        3,
+        2,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      "mean_edges": 1.2,
+      "familywise_error_rate": 0.9
+    },
+    "permute": {
+      "edges_per_rep": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_edges": 0.1,
+      "familywise_error_rate": 0.1
+    }
+  }
+}

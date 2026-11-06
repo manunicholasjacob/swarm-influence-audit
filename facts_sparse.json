@@ -1,0 +1,75 @@
+{
+  "n_shifts": 200,
+  "seeds": 8,
+  "k": 8,
+  "stream_ticks": 7958,
+  "real_agent_volumes": [
+    134,
+    143,
+    178,
+    226,
+    236,
+    245,
+    260,
+    263,
+    264,
+    485,
+    551,
+    740,
+    791,
+    1052,
+    2390
+  ],
+  "rows": [
+    {
+      "volume": 50,
+      "share_of_ticks": 0.0062,
+      "runs_with_any_null_edge": 3,
+      "of": 8,
+      "false_edge_rate": 0.375,
+      "as_source": 3,
+      "as_target": 0,
+      "mean_max_z": 5.63
+    },
+    {
+      "volume": 100,
+      "share_of_ticks": 0.0124,
+      "runs_with_any_null_edge": 8,
+      "of": 8,
+      "false_edge_rate": 1.0,
+      "as_source": 8,
+      "as_target": 0,
+      "mean_max_z": 12.32
+    },
+    {
+      "volume": 263,
+      "share_of_ticks": 0.032,
+      "runs_with_any_null_edge": 8,
+      "of": 8,
+      "false_edge_rate": 1.0,
+      "as_source": 8,
+      "as_target": 0,
+      "mean_max_z": 21.73
+    },
+    {
+      "volume": 600,
+      "share_of_ticks": 0.0701,
+      "runs_with_any_null_edge": 8,
+      "of": 8,
+      "false_edge_rate": 1.0,
+      "as_source": 8,
+      "as_target": 0,
+      "mean_max_z": 38.32
+    },
+    {
+      "volume": 1500,
+      "share_of_ticks": 0.1586,
+      "runs_with_any_null_edge": 8,
+      "of": 8,
+      "false_edge_rate": 1.0,
+      "as_source": 8,
+      "as_target": 0,
+      "mean_max_z": 71.7
+    }
+  ]
+}

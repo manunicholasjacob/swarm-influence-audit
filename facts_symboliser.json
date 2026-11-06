@@ -1,0 +1,42 @@
+{
+  "k": 8,
+  "n_surrogates": 200,
+  "channels": [
+    {
+      "village": "main-village",
+      "window_msgs": 8800,
+      "agents": 15,
+      "tfidf_kmeans": {
+        "shift": 11,
+        "permute": 2
+      },
+      "n_ticks": 7958,
+      "lsa_kmeans": {
+        "shift": 12,
+        "permute": 1
+      },
+      "hash": {
+        "shift": 1,
+        "permute": 0
+      }
+    },
+    {
+      "village": "open-chat-village",
+      "window_msgs": 8226,
+      "agents": 15,
+      "tfidf_kmeans": {
+        "shift": 3,
+        "permute": 18
+      },
+      "n_ticks": 7735,
+      "lsa_kmeans": {
+        "shift": 2,
+        "permute": 22
+      },
+      "hash": {
+        "shift": 0,
+        "permute": 0
+      }
+    }
+  ]
+}

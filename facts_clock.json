@@ -1,0 +1,62 @@
+{
+  "k": 8,
+  "n_shifts": 200,
+  "agents": 15,
+  "reply_gap_s": {
+    "p25": 9.2,
+    "p50": 28.1,
+    "p75": 66.2,
+    "p90": 115.6,
+    "p95": 159.3
+  },
+  "rows": [
+    {
+      "w_min": 0.5,
+      "n_windows": 32640,
+      "cell_occupancy": 0.0117,
+      "same_window_reply_share": 0.3196,
+      "edges_topic": 12,
+      "edges_hash": 9
+    },
+    {
+      "w_min": 1,
+      "n_windows": 16320,
+      "cell_occupancy": 0.0217,
+      "same_window_reply_share": 0.4755,
+      "edges_topic": 19,
+      "edges_hash": 17
+    },
+    {
+      "w_min": 2,
+      "n_windows": 8160,
+      "cell_occupancy": 0.0394,
+      "same_window_reply_share": 0.6546,
+      "edges_topic": 18,
+      "edges_hash": 17
+    },
+    {
+      "w_min": 5,
+      "n_windows": 3264,
+      "cell_occupancy": 0.0798,
+      "same_window_reply_share": 0.8439,
+      "edges_topic": 17,
+      "edges_hash": 19
+    },
+    {
+      "w_min": 15,
+      "n_windows": 1088,
+      "cell_occupancy": 0.1475,
+      "same_window_reply_share": 0.9479,
+      "edges_topic": 44,
+      "edges_hash": 27
+    },
+    {
+      "w_min": 60,
+      "n_windows": 272,
+      "cell_occupancy": 0.2154,
+      "same_window_reply_share": 0.9864,
+      "edges_topic": 1,
+      "edges_hash": 1
+    }
+  ]
+}

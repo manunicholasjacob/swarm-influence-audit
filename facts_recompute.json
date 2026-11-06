@@ -1,0 +1,165 @@
+{
+  "villages": [
+    {
+      "village": "main-village",
+      "room": "general",
+      "window_msgs": 8800,
+      "te_agents": 15,
+      "lifetime_days": 576.3,
+      "total_agents": 58,
+      "shift": {
+        "edges_topic": 11,
+        "edges_hash": 1
+      },
+      "n_ticks": 7958,
+      "permute": {
+        "edges_topic": 2,
+        "edges_hash": 0
+      }
+    },
+    {
+      "village": "open-chat-village",
+      "room": "general",
+      "window_msgs": 8226,
+      "te_agents": 15,
+      "lifetime_days": 66.1,
+      "total_agents": 23,
+      "shift": {
+        "edges_topic": 3,
+        "edges_hash": 0
+      },
+      "n_ticks": 7735,
+      "permute": {
+        "edges_topic": 18,
+        "edges_hash": 0
+      }
+    },
+    {
+      "village": "swarm-village",
+      "room": "a",
+      "window_msgs": 3846,
+      "te_agents": 13,
+      "lifetime_days": 1.0,
+      "total_agents": 133,
+      "shift": {
+        "edges_topic": 2,
+        "edges_hash": 1
+      },
+      "n_ticks": 830,
+      "permute": {
+        "edges_topic": 1,
+        "edges_hash": 0
+      }
+    }
+  ],
+  "humans_open_chat": {
+    "window_agent_msgs": 8226,
+    "window_human_msgs": 3905,
+    "human_share": 0.3219,
+    "distinct_visitors": 124,
+    "agents_only": {
+      "shift": 2,
+      "permute": 17
+    },
+    "collapsed": {
+      "tag": "HUMANS collapsed",
+      "shift": {
+        "edges_topic": 5,
+        "n_ticks": 11127,
+        "human_drives_agent": [
+          [
+            "HUMANS",
+            "GPT-5.6 Terra"
+          ],
+          [
+            "HUMANS",
+            "GPT-6 Luna"
+          ]
+        ],
+        "agent_drives_human": [
+          [
+            "GPT-5.6 Terra",
+            "HUMANS"
+          ]
+        ],
+        "agent_agent": 2
+      },
+      "permute": {
+        "edges_topic": 19,
+        "n_ticks": 11127,
+        "human_drives_agent": [
+          [
+            "HUMANS",
+            "GPT-5.6 Terra"
+          ],
+          [
+            "HUMANS",
+            "DeepSeek-V4-Pro"
+          ],
+          [
+            "HUMANS",
+            "GPT-6.1 Terra"
+          ],
+          [
+            "HUMANS",
+            "Gemini 3.1 Pro"
+          ]
+        ],
+        "agent_drives_human": [
+          [
+            "Gemini 3.1 Pro",
+            "HUMANS"
+          ],
+          [
+            "Gemini 3.8 Flash",
+            "HUMANS"
+          ]
+        ],
+        "agent_agent": 13
+      }
+    },
+    "individual": {
+      "tag": "individual visitors",
+      "shift": {
+        "edges_topic": 4,
+        "n_ticks": 8438,
+        "human_drives_agent": [
+          [
+            "visitor-3",
+            "Gemini 3.8 Flash"
+          ],
+          [
+            "visitor-2",
+            "GPT-5.6 Terra"
+          ]
+        ],
+        "agent_drives_human": [],
+        "agent_agent": 2
+      },
+      "permute": {
+        "edges_topic": 20,
+        "n_ticks": 8438,
+        "human_drives_agent": [
+          [
+            "visitor-3",
+            "GPT-6.1 Terra"
+          ],
+          [
+            "visitor-3",
+            "Gemini 3.8 Flash"
+          ],
+          [
+            "visitor-2",
+            "GPT-5.6 Terra"
+          ],
+          [
+            "visitor-1",
+            "GPT-6.1 Terra"
+          ]
+        ],
+        "agent_drives_human": [],
+        "agent_agent": 16
+      }
+    }
+  }
+}

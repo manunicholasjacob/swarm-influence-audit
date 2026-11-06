@@ -1,0 +1,116 @@
+{
+  "village": "open-chat-village",
+  "room": "general",
+  "k": 8,
+  "n_shifts": 200,
+  "window_agent_msgs": 8226,
+  "window_human_msgs": 3905,
+  "human_share": 0.3219,
+  "distinct_visitors": 124,
+  "visitor_msg_counts": [
+    436,
+    407,
+    373
+  ],
+  "results": {
+    "collapsed": {
+      "tag": "HUMANS collapsed",
+      "n_ticks": 11127,
+      "nodes": 13,
+      "edges_topic": 5,
+      "edges_hash": 1,
+      "human_drives_agent": [
+        [
+          "HUMANS",
+          "GPT-6 Luna",
+          0.005
+        ],
+        [
+          "HUMANS",
+          "GPT-5.6 Terra",
+          0.005
+        ]
+      ],
+      "agent_drives_human": [
+        [
+          "GPT-5.6 Terra",
+          "HUMANS",
+          0.005
+        ]
+      ],
+      "all_edges": [
+        [
+          "Gemini 3.1 Pro",
+          "Gemini 3.8 Flash",
+          0.005
+        ],
+        [
+          "Gemini 3.8 Flash",
+          "Gemini 3.1 Pro",
+          0.005
+        ],
+        [
+          "HUMANS",
+          "GPT-6 Luna",
+          0.005
+        ],
+        [
+          "HUMANS",
+          "GPT-5.6 Terra",
+          0.005
+        ],
+        [
+          "GPT-5.6 Terra",
+          "HUMANS",
+          0.005
+        ]
+      ]
+    },
+    "individual": {
+      "tag": "top visitors individually",
+      "n_ticks": 8438,
+      "nodes": 15,
+      "edges_topic": 4,
+      "edges_hash": 1,
+      "human_drives_agent": [
+        [
+          "visitor-2",
+          "GPT-5.6 Terra",
+          0.01
+        ],
+        [
+          "visitor-3",
+          "Gemini 3.8 Flash",
+          0.01
+        ]
+      ],
+      "agent_drives_human": [],
+      "all_edges": [
+        [
+          "Gemini 3.1 Pro",
+          "Gemini 3.8 Flash",
+          0.005
+        ],
+        [
+          "Gemini 3.8 Flash",
+          "Gemini 3.1 Pro",
+          0.005
+        ],
+        [
+          "visitor-2",
+          "GPT-5.6 Terra",
+          0.01
+        ],
+        [
+          "visitor-3",
+          "Gemini 3.8 Flash",
+          0.01
+        ]
+      ]
+    },
+    "agents_only": {
+      "edges_topic": 2,
+      "nodes": 12
+    }
+  }
+}

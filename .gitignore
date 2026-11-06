@@ -1,0 +1,20 @@
+# run logs
+*.log
+
+# rendered intermediates
+report/_*.png
+
+# build outputs that are regenerated (the submitted PDF is kept deliberately)
+report/~$*
+
+# python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# never commit dataset content: the AI Village corpus is gated and its terms
+# forbid redistribution. Only derived aggregate statistics (facts_*.json) are kept.
+*.jsonl
+*.jsonl.gz
+*.parquet
+data/

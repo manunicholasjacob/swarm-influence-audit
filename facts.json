@@ -1,0 +1,389 @@
+{
+  "generated": "2026-11-06 16:48:44Z",
+  "net_influence_topic_vs_hash_spearman": 0.85,
+  "n_full_edges_topic": 10,
+  "config": {
+    "window_days": 14,
+    "min_msgs": 50,
+    "te_top_k": 15,
+    "k_symbols": 8,
+    "n_shifts": 200,
+    "room": "general",
+    "village": "main-village"
+  },
+  "span": {
+    "start": "2026-10-17 00:00",
+    "end": "2026-10-31 00:00",
+    "n_msgs": 8529,
+    "n_agents_kept": 22,
+    "n_te_agents": 15,
+    "te_agent_labels": [
+      "Claude Haiku 4.5",
+      "DeepSeek-V3.2",
+      "Gemini 3.8 Flash",
+      "GPT-6 Sol",
+      "Gemini 3.5 Flash",
+      "Grok 4.5",
+      "GPT-6.1 Terra",
+      "Claude Opus 5",
+      "DeepSeek-V4-Pro",
+      "GPT-5.2",
+      "GLM-5.2",
+      "Gemini 4 Argon",
+      "Kimi K2.6",
+      "GPT-5.6 Sol",
+      "GPT-6 Astra"
+    ],
+    "topic_silent_share": 0.0
+  },
+  "turn_latency": {
+    "median_s": 16.9,
+    "p75_s": 38.3,
+    "p95_s": 113.4,
+    "src": "measure.py, general room"
+  },
+  "clock_baseline": [
+    {
+      "w_min": 1,
+      "n_windows": 16320,
+      "cell_occupancy": 0.0217,
+      "sig_edges_topic": 24,
+      "sig_edges_hash": 15
+    },
+    {
+      "w_min": 5,
+      "n_windows": 3264,
+      "cell_occupancy": 0.0798,
+      "sig_edges_topic": 33,
+      "sig_edges_hash": 19
+    },
+    {
+      "w_min": 15,
+      "n_windows": 1088,
+      "cell_occupancy": 0.1475,
+      "sig_edges_topic": 49,
+      "sig_edges_hash": 11
+    },
+    {
+      "w_min": 60,
+      "n_windows": 272,
+      "cell_occupancy": 0.2154,
+      "sig_edges_topic": 3,
+      "sig_edges_hash": 1
+    }
+  ],
+  "headline": {
+    "topic": {
+      "n_windows": 7958,
+      "n_sig_edges": 10,
+      "sig_edges": [
+        [
+          "Claude Haiku 4.5",
+          "Gemini 3.8 Flash",
+          0.005,
+          0.0203
+        ],
+        [
+          "Gemini 3.8 Flash",
+          "GPT-6 Sol",
+          0.005,
+          0.0055
+        ],
+        [
+          "Gemini 3.8 Flash",
+          "Gemini 3.5 Flash",
+          0.005,
+          0.01
+        ],
+        [
+          "DeepSeek-V4-Pro",
+          "Claude Haiku 4.5",
+          0.005,
+          0.007
+        ],
+        [
+          "GLM-5.2",
+          "Gemini 3.5 Flash",
+          0.005,
+          0.0175
+        ],
+        [
+          "Gemini 4 Argon",
+          "Gemini 3.5 Flash",
+          0.005,
+          0.0123
+        ],
+        [
+          "GPT-6 Sol",
+          "Gemini 3.8 Flash",
+          0.0249,
+          0.0053
+        ],
+        [
+          "Gemini 3.8 Flash",
+          "Claude Haiku 4.5",
+          0.0448,
+          0.0058
+        ],
+        [
+          "Grok 4.5",
+          "GPT-6 Sol",
+          0.0448,
+          0.0044
+        ],
+        [
+          "Claude Opus 5",
+          "GPT-6.1 Terra",
+          0.0498,
+          0.0032
+        ]
+      ],
+      "leader_scores": [
+        [
+          "Gemini 3.8 Flash",
+          1
+        ],
+        [
+          "Grok 4.5",
+          1
+        ],
+        [
+          "Claude Opus 5",
+          1
+        ],
+        [
+          "DeepSeek-V4-Pro",
+          1
+        ],
+        [
+          "GLM-5.2",
+          1
+        ],
+        [
+          "Gemini 4 Argon",
+          1
+        ],
+        [
+          "Claude Haiku 4.5",
+          -1
+        ],
+        [
+          "GPT-6 Sol",
+          -1
+        ],
+        [
+          "GPT-6.1 Terra",
+          -1
+        ],
+        [
+          "Gemini 3.5 Flash",
+          -3
+        ]
+      ],
+      "net_influence": [
+        [
+          "Claude Haiku 4.5",
+          0.1962
+        ],
+        [
+          "GLM-5.2",
+          0.0074
+        ],
+        [
+          "Gemini 4 Argon",
+          0.0067
+        ],
+        [
+          "DeepSeek-V4-Pro",
+          0.0045
+        ],
+        [
+          "GPT-5.6 Sol",
+          0.0003
+        ],
+        [
+          "Gemini 3.8 Flash",
+          0.0
+        ],
+        [
+          "Claude Opus 5",
+          -0.0032
+        ],
+        [
+          "GPT-6 Astra",
+          -0.0046
+        ],
+        [
+          "Kimi K2.6",
+          -0.0094
+        ],
+        [
+          "GPT-6.1 Terra",
+          -0.0097
+        ],
+        [
+          "GPT-5.2",
+          -0.014
+        ],
+        [
+          "Grok 4.5",
+          -0.02
+        ],
+        [
+          "GPT-6 Sol",
+          -0.0321
+        ],
+        [
+          "Gemini 3.5 Flash",
+          -0.0596
+        ],
+        [
+          "DeepSeek-V3.2",
+          -0.0625
+        ]
+      ]
+    },
+    "hash": {
+      "n_windows": 7958,
+      "n_sig_edges": 1,
+      "sig_edges": [
+        [
+          "GLM-5.2",
+          "Gemini 3.5 Flash",
+          0.005,
+          0.0146
+        ]
+      ],
+      "leader_scores": [
+        [
+          "GLM-5.2",
+          1
+        ],
+        [
+          "Gemini 3.5 Flash",
+          -1
+        ]
+      ],
+      "net_influence": [
+        [
+          "Claude Haiku 4.5",
+          0.1931
+        ],
+        [
+          "DeepSeek-V4-Pro",
+          0.0039
+        ],
+        [
+          "GPT-5.6 Sol",
+          0.0024
+        ],
+        [
+          "Gemini 3.8 Flash",
+          -0.0026
+        ],
+        [
+          "GLM-5.2",
+          -0.006
+        ],
+        [
+          "GPT-6 Astra",
+          -0.0061
+        ],
+        [
+          "GPT-6.1 Terra",
+          -0.007
+        ],
+        [
+          "Claude Opus 5",
+          -0.0078
+        ],
+        [
+          "Kimi K2.6",
+          -0.0092
+        ],
+        [
+          "Gemini 4 Argon",
+          -0.0095
+        ],
+        [
+          "GPT-5.2",
+          -0.0142
+        ],
+        [
+          "Grok 4.5",
+          -0.0236
+        ],
+        [
+          "GPT-6 Sol",
+          -0.0298
+        ],
+        [
+          "Gemini 3.5 Flash",
+          -0.0331
+        ],
+        [
+          "DeepSeek-V3.2",
+          -0.0506
+        ]
+      ]
+    }
+  },
+  "monitor_sweep": [
+    {
+      "fraction": 0.05,
+      "recall_mean": 0.0,
+      "recall_sd": 0.0,
+      "precision_mean": 0.0,
+      "net_spearman_mean": 0.4853,
+      "repeats": 8
+    },
+    {
+      "fraction": 0.1,
+      "recall_mean": 0.0125,
+      "recall_sd": 0.0331,
+      "precision_mean": 0.0625,
+      "net_spearman_mean": 0.6228,
+      "repeats": 8
+    },
+    {
+      "fraction": 0.2,
+      "recall_mean": 0.0125,
+      "recall_sd": 0.0331,
+      "precision_mean": 0.125,
+      "net_spearman_mean": 0.7942,
+      "repeats": 8
+    },
+    {
+      "fraction": 0.3,
+      "recall_mean": 0.025,
+      "recall_sd": 0.0433,
+      "precision_mean": 0.1875,
+      "net_spearman_mean": 0.8335,
+      "repeats": 8
+    },
+    {
+      "fraction": 0.5,
+      "recall_mean": 0.2125,
+      "recall_sd": 0.1166,
+      "precision_mean": 0.8542,
+      "net_spearman_mean": 0.8813,
+      "repeats": 8
+    },
+    {
+      "fraction": 0.7,
+      "recall_mean": 0.525,
+      "recall_sd": 0.1199,
+      "precision_mean": 0.8115,
+      "net_spearman_mean": 0.9576,
+      "repeats": 8
+    },
+    {
+      "fraction": 1.0,
+      "recall_mean": 1.0,
+      "recall_sd": 0.0,
+      "precision_mean": 1.0,
+      "net_spearman_mean": 1.0,
+      "repeats": 1
+    }
+  ]
+}

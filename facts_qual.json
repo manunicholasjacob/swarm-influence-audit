@@ -1,0 +1,501 @@
+{
+  "k": 8,
+  "clusters": [
+    {
+      "symbol": "t0",
+      "messages": 319,
+      "share": 0.0362,
+      "top_terms": [
+        "vector",
+        "with",
+        "and",
+        "telemetry",
+        "privacy",
+        "zero",
+        "static",
+        "gallery",
+        "100",
+        "profit"
+      ]
+    },
+    {
+      "symbol": "t1",
+      "messages": 921,
+      "share": 0.1047,
+      "top_terms": [
+        "century",
+        "grand",
+        "summit",
+        "wave",
+        "the",
+        "landmark",
+        "unbroken",
+        "and",
+        "waves",
+        "to"
+      ]
+    },
+    {
+      "symbol": "t2",
+      "messages": 529,
+      "share": 0.0601,
+      "top_terms": [
+        "c3",
+        "the",
+        "for",
+        "highway",
+        "help",
+        "park",
+        "cg",
+        "kimi",
+        "k2",
+        "you"
+      ]
+    },
+    {
+      "symbol": "t3",
+      "messages": 1055,
+      "share": 0.1199,
+      "top_terms": [
+        "the",
+        "and",
+        "not",
+        "is",
+        "finding",
+        "or",
+        "of",
+        "live",
+        "report",
+        "to"
+      ]
+    },
+    {
+      "symbol": "t4",
+      "messages": 1503,
+      "share": 0.1708,
+      "top_terms": [
+        "the",
+        "and",
+        "for",
+        "is",
+        "you",
+        "it",
+        "my",
+        "to",
+        "that",
+        "of"
+      ]
+    },
+    {
+      "symbol": "t5",
+      "messages": 860,
+      "share": 0.0977,
+      "top_terms": [
+        "standing",
+        "rmse",
+        "3d",
+        "379",
+        "flash",
+        "tip",
+        "sol",
+        "models",
+        "argon",
+        "news"
+      ]
+    },
+    {
+      "symbol": "t6",
+      "messages": 383,
+      "share": 0.0435,
+      "top_terms": [
+        "cat",
+        "milestone",
+        "patterns",
+        "deployed",
+        "batches",
+        "total",
+        "11",
+        "across",
+        "milestones",
+        "in"
+      ]
+    },
+    {
+      "symbol": "t7",
+      "messages": 3229,
+      "share": 0.3669,
+      "top_terms": [
+        "monitoring",
+        "welfare",
+        "and",
+        "with",
+        "attentive",
+        "grounding",
+        "for",
+        "animal",
+        "at",
+        "live"
+      ]
+    }
+  ],
+  "agent_topic": {
+    "GPT-6 Sol": {
+      "n": 740,
+      "modal_topic": "t3",
+      "modal_share": 0.945
+    },
+    "GPT-5.2": {
+      "n": 245,
+      "modal_topic": "t4",
+      "modal_share": 0.592
+    },
+    "Kimi K2.6": {
+      "n": 178,
+      "modal_topic": "t2",
+      "modal_share": 0.865
+    },
+    "GPT-5.6 Sol": {
+      "n": 143,
+      "modal_topic": "t3",
+      "modal_share": 0.895
+    },
+    "DeepSeek-V3.2": {
+      "n": 1052,
+      "modal_topic": "t7",
+      "modal_share": 0.348
+    },
+    "Grok 4.5": {
+      "n": 485,
+      "modal_topic": "t5",
+      "modal_share": 0.932
+    },
+    "DeepSeek-V4-Pro": {
+      "n": 260,
+      "modal_topic": "t7",
+      "modal_share": 0.431
+    },
+    "Gemini 4 Argon": {
+      "n": 226,
+      "modal_topic": "t5",
+      "modal_share": 0.894
+    },
+    "GLM-5.2": {
+      "n": 236,
+      "modal_topic": "t6",
+      "modal_share": 0.992
+    },
+    "Gemini 3.8 Flash": {
+      "n": 791,
+      "modal_topic": "t1",
+      "modal_share": 0.934
+    },
+    "Claude Opus 5": {
+      "n": 263,
+      "modal_topic": "t4",
+      "modal_share": 1.0
+    },
+    "Gemini 3.5 Flash": {
+      "n": 551,
+      "modal_topic": "t0",
+      "modal_share": 0.57
+    },
+    "GPT-6 Astra": {
+      "n": 134,
+      "modal_topic": "t4",
+      "modal_share": 0.955
+    },
+    "Claude Haiku 4.5": {
+      "n": 2390,
+      "modal_topic": "t7",
+      "modal_share": 0.994
+    },
+    "GPT-6.1 Terra": {
+      "n": 264,
+      "modal_topic": "t4",
+      "modal_share": 0.871
+    }
+  },
+  "baseline": {
+    "pairs_compared": 85,
+    "spearman_te_vs_excess_copy": 0.2096,
+    "n_significant": 10,
+    "top_by_excess_overlap": 3,
+    "rows": [
+      {
+        "src": "Claude Haiku 4.5",
+        "dst": "GPT-6 Sol",
+        "opportunities": 28,
+        "copy_rate": 0.0,
+        "expected_copy_rate": 0.1209,
+        "excess": -0.1209,
+        "te": 0.03621,
+        "p": 0.7711,
+        "significant": false
+      },
+      {
+        "src": "GLM-5.2",
+        "dst": "Gemini 3.5 Flash",
+        "opportunities": 55,
+        "copy_rate": 0.8727,
+        "expected_copy_rate": 0.0781,
+        "excess": 0.7947,
+        "te": 0.02391,
+        "p": 0.005,
+        "significant": true
+      },
+      {
+        "src": "Claude Haiku 4.5",
+        "dst": "Gemini 3.8 Flash",
+        "opportunities": 88,
+        "copy_rate": 0.0114,
+        "expected_copy_rate": 0.1189,
+        "excess": -0.1075,
+        "te": 0.02043,
+        "p": 0.005,
+        "significant": true
+      },
+      {
+        "src": "Gemini 4 Argon",
+        "dst": "Gemini 3.5 Flash",
+        "opportunities": 36,
+        "copy_rate": 0.6111,
+        "expected_copy_rate": 0.0781,
+        "excess": 0.5331,
+        "te": 0.01366,
+        "p": 0.005,
+        "significant": true
+      },
+      {
+        "src": "Gemini 3.5 Flash",
+        "dst": "DeepSeek-V3.2",
+        "opportunities": 85,
+        "copy_rate": 0.2471,
+        "expected_copy_rate": 0.1946,
+        "excess": 0.0525,
+        "te": 0.01177,
+        "p": 1.0,
+        "significant": false
+      },
+      {
+        "src": "DeepSeek-V3.2",
+        "dst": "Gemini 3.5 Flash",
+        "opportunities": 77,
+        "copy_rate": 0.1948,
+        "expected_copy_rate": 0.0781,
+        "excess": 0.1168,
+        "te": 0.01124,
+        "p": 1.0,
+        "significant": false
+      },
+      {
+        "src": "Gemini 3.8 Flash",
+        "dst": "Gemini 3.5 Flash",
+        "opportunities": 75,
+        "copy_rate": 0.36,
+        "expected_copy_rate": 0.0781,
+        "excess": 0.2819,
+        "te": 0.01076,
+        "p": 0.005,
+        "significant": true
+      },
+      {
+        "src": "Gemini 3.8 Flash",
+        "dst": "DeepSeek-V3.2",
+        "opportunities": 131,
+        "copy_rate": 0.3053,
+        "expected_copy_rate": 0.1946,
+        "excess": 0.1108,
+        "te": 0.00976,
+        "p": 1.0,
+        "significant": false
+      },
+      {
+        "src": "GPT-6 Sol",
+        "dst": "DeepSeek-V3.2",
+        "opportunities": 129,
+        "copy_rate": 0.1938,
+        "expected_copy_rate": 0.1946,
+        "excess": -0.0008,
+        "te": 0.00908,
+        "p": 1.0,
+        "significant": false
+      },
+      {
+        "src": "DeepSeek-V4-Pro",
+        "dst": "Claude Haiku 4.5",
+        "opportunities": 46,
+        "copy_rate": 0.3913,
+        "expected_copy_rate": 0.3724,
+        "excess": 0.0189,
+        "te": 0.00745,
+        "p": 0.005,
+        "significant": true
+      },
+      {
+        "src": "Claude Haiku 4.5",
+        "dst": "GPT-6.1 Terra",
+        "opportunities": 20,
+        "copy_rate": 0.0,
+        "expected_copy_rate": 0.1438,
+        "excess": -0.1438,
+        "te": 0.0069,
+        "p": 1.0,
+        "significant": false
+      },
+      {
+        "src": "DeepSeek-V3.2",
+        "dst": "Gemini 3.8 Flash",
+        "opportunities": 148,
+        "copy_rate": 0.25,
+        "expected_copy_rate": 0.1189,
+        "excess": 0.1311,
+        "te": 0.00645,
+        "p": 1.0,
+        "significant": false
+      },
+      {
+        "src": "Gemini 3.8 Flash",
+        "dst": "GPT-6 Sol",
+        "opportunities": 137,
+        "copy_rate": 0.0073,
+        "expected_copy_rate": 0.1209,
+        "excess": -0.1136,
+        "te": 0.00624,
+        "p": 0.005,
+        "significant": true
+      },
+      {
+        "src": "Gemini 3.8 Flash",
+        "dst": "Claude Haiku 4.5",
+        "opportunities": 84,
+        "copy_rate": 0.0238,
+        "expected_copy_rate": 0.3724,
+        "excess": -0.3486,
+        "te": 0.00615,
+        "p": 0.0348,
+        "significant": true
+      },
+      {
+        "src": "Gemini 3.5 Flash",
+        "dst": "Grok 4.5",
+        "opportunities": 67,
+        "copy_rate": 0.0299,
+        "expected_copy_rate": 0.118,
+        "excess": -0.0882,
+        "te": 0.0059,
+        "p": 0.9353,
+        "significant": false
+      },
+      {
+        "src": "Gemini 4 Argon",
+        "dst": "DeepSeek-V3.2",
+        "opportunities": 36,
+        "copy_rate": 0.5,
+        "expected_copy_rate": 0.1946,
+        "excess": 0.3054,
+        "te": 0.00582,
+        "p": 1.0,
+        "significant": false
+      },
+      {
+        "src": "Kimi K2.6",
+        "dst": "DeepSeek-V3.2",
+        "opportunities": 37,
+        "copy_rate": 0.5135,
+        "expected_copy_rate": 0.1946,
+        "excess": 0.3189,
+        "te": 0.0054,
+        "p": 1.0,
+        "significant": false
+      },
+      {
+        "src": "DeepSeek-V3.2",
+        "dst": "GPT-6.1 Terra",
+        "opportunities": 26,
+        "copy_rate": 0.5,
+        "expected_copy_rate": 0.1438,
+        "excess": 0.3562,
+        "te": 0.00521,
+        "p": 1.0,
+        "significant": false
+      },
+      {
+        "src": "GPT-6 Sol",
+        "dst": "Gemini 3.8 Flash",
+        "opportunities": 135,
+        "copy_rate": 0.0296,
+        "expected_copy_rate": 0.1189,
+        "excess": -0.0893,
+        "te": 0.00517,
+        "p": 0.0398,
+        "significant": true
+      },
+      {
+        "src": "Gemini 3.8 Flash",
+        "dst": "DeepSeek-V4-Pro",
+        "opportunities": 52,
+        "copy_rate": 0.1731,
+        "expected_copy_rate": 0.2218,
+        "excess": -0.0487,
+        "te": 0.00484,
+        "p": 0.398,
+        "significant": false
+      },
+      {
+        "src": "DeepSeek-V3.2",
+        "dst": "Kimi K2.6",
+        "opportunities": 37,
+        "copy_rate": 0.3784,
+        "expected_copy_rate": 0.0741,
+        "excess": 0.3042,
+        "te": 0.00459,
+        "p": 1.0,
+        "significant": false
+      },
+      {
+        "src": "GPT-5.2",
+        "dst": "DeepSeek-V3.2",
+        "opportunities": 50,
+        "copy_rate": 0.34,
+        "expected_copy_rate": 0.1946,
+        "excess": 0.1454,
+        "te": 0.00458,
+        "p": 1.0,
+        "significant": false
+      },
+      {
+        "src": "Gemini 3.5 Flash",
+        "dst": "Gemini 3.8 Flash",
+        "opportunities": 70,
+        "copy_rate": 0.2429,
+        "expected_copy_rate": 0.1189,
+        "excess": 0.1239,
+        "te": 0.00453,
+        "p": 1.0,
+        "significant": false
+      },
+      {
+        "src": "GPT-6 Sol",
+        "dst": "Gemini 3.5 Flash",
+        "opportunities": 57,
+        "copy_rate": 0.0175,
+        "expected_copy_rate": 0.0781,
+        "excess": -0.0605,
+        "te": 0.00437,
+        "p": 1.0,
+        "significant": false
+      },
+      {
+        "src": "GPT-5.2",
+        "dst": "Gemini 3.5 Flash",
+        "opportunities": 28,
+        "copy_rate": 0.1786,
+        "expected_copy_rate": 0.0781,
+        "excess": 0.1005,
+        "te": 0.00429,
+        "p": 1.0,
+        "significant": false
+      }
+    ]
+  }
+}

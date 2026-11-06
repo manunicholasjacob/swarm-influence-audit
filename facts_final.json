@@ -1,0 +1,208 @@
+{
+  "headline_by_null": {
+    "shift": {
+      "topic": {
+        "n_edges": 11,
+        "edges": [
+          [
+            "Gemini 3.8 Flash",
+            "GPT-6 Sol",
+            0.005,
+            0.00624
+          ],
+          [
+            "Gemini 4 Argon",
+            "Gemini 3.5 Flash",
+            0.005,
+            0.01366
+          ],
+          [
+            "Kimi K2.6",
+            "GPT-5.2",
+            0.005,
+            0.00561
+          ],
+          [
+            "GLM-5.2",
+            "Gemini 3.5 Flash",
+            0.005,
+            0.02391
+          ],
+          [
+            "Gemini 3.8 Flash",
+            "Gemini 3.5 Flash",
+            0.005,
+            0.01076
+          ],
+          [
+            "Claude Haiku 4.5",
+            "Gemini 3.8 Flash",
+            0.005,
+            0.02043
+          ],
+          [
+            "DeepSeek-V4-Pro",
+            "Claude Haiku 4.5",
+            0.005,
+            0.00745
+          ],
+          [
+            "Grok 4.5",
+            "GLM-5.2",
+            0.0149,
+            0.00321
+          ],
+          [
+            "Gemini 3.8 Flash",
+            "Claude Haiku 4.5",
+            0.0348,
+            0.00615
+          ],
+          [
+            "GPT-6 Sol",
+            "Gemini 3.8 Flash",
+            0.0398,
+            0.00517
+          ],
+          [
+            "Claude Opus 5",
+            "GPT-6.1 Terra",
+            0.0498,
+            0.00287
+          ]
+        ]
+      },
+      "hash": {
+        "n_edges": 1,
+        "edges": [
+          [
+            "GLM-5.2",
+            "Gemini 3.5 Flash",
+            0.005,
+            0.0146
+          ]
+        ]
+      }
+    },
+    "permute": {
+      "topic": {
+        "n_edges": 2,
+        "edges": [
+          [
+            "Claude Haiku 4.5",
+            "DeepSeek-V3.2",
+            0.005,
+            0.05169
+          ],
+          [
+            "Claude Haiku 4.5",
+            "Gemini 3.5 Flash",
+            0.0149,
+            0.03191
+          ]
+        ]
+      },
+      "hash": {
+        "n_edges": 0,
+        "edges": []
+      }
+    },
+    "survive_both_topic": [],
+    "n_survive_both_topic": 0
+  },
+  "replication_by_null": {
+    "common_agents": 15,
+    "shift": {
+      "cur_edges": 8,
+      "prev_edges": 4,
+      "shared": 1,
+      "jaccard": 0.0909,
+      "shared_list": [
+        [
+          "GLM-5.2",
+          "Gemini 3.5 Flash"
+        ]
+      ]
+    },
+    "permute": {
+      "cur_edges": 2,
+      "prev_edges": 0,
+      "shared": 0,
+      "jaccard": 0.0,
+      "shared_list": []
+    }
+  },
+  "false_positive_by_null": {
+    "seeds": 5,
+    "rows": [
+      {
+        "volume": 263,
+        "shift": {
+          "runs_with_false_edge": 5,
+          "of": 5,
+          "rate": 1.0,
+          "mean_max_z": 21.97
+        },
+        "permute": {
+          "runs_with_false_edge": 0,
+          "of": 5,
+          "rate": 0.0,
+          "mean_max_z": 2.8
+        }
+      },
+      {
+        "volume": 1500,
+        "shift": {
+          "runs_with_false_edge": 5,
+          "of": 5,
+          "rate": 1.0,
+          "mean_max_z": 68.33
+        },
+        "permute": {
+          "runs_with_false_edge": 0,
+          "of": 5,
+          "rate": 0.0,
+          "mean_max_z": 2.83
+        }
+      }
+    ]
+  },
+  "power_permute": {
+    "leader": "Claude Haiku 4.5",
+    "leader_msgs": 2390,
+    "n_synth": 263,
+    "seeds": 4,
+    "rows": [
+      {
+        "coupling": 0.0,
+        "detected": 0,
+        "of": 4,
+        "rate": 0.0
+      },
+      {
+        "coupling": 0.1,
+        "detected": 0,
+        "of": 4,
+        "rate": 0.0
+      },
+      {
+        "coupling": 0.2,
+        "detected": 0,
+        "of": 4,
+        "rate": 0.0
+      },
+      {
+        "coupling": 0.4,
+        "detected": 0,
+        "of": 4,
+        "rate": 0.0
+      },
+      {
+        "coupling": 0.8,
+        "detected": 1,
+        "of": 4,
+        "rate": 0.25
+      }
+    ]
+  }
+}

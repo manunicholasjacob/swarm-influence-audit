@@ -1,0 +1,41 @@
+{
+  "leader": "Claude Haiku 4.5",
+  "leader_msgs": 2390,
+  "coupling": 0.8,
+  "seeds": 4,
+  "n_perm": 200,
+  "rows": [
+    {
+      "synth_volume": 263,
+      "coupling": 0.8,
+      "detected": 1,
+      "of": 4,
+      "rate": 0.25,
+      "share_of_leader_msgs": 0.088
+    },
+    {
+      "synth_volume": 800,
+      "coupling": 0.8,
+      "detected": 4,
+      "of": 4,
+      "rate": 1.0,
+      "share_of_leader_msgs": 0.268
+    },
+    {
+      "synth_volume": 2000,
+      "coupling": 0.8,
+      "detected": 4,
+      "of": 4,
+      "rate": 1.0,
+      "share_of_leader_msgs": 0.669
+    },
+    {
+      "synth_volume": 4000,
+      "coupling": 0.8,
+      "detected": 4,
+      "of": 4,
+      "rate": 1.0,
+      "share_of_leader_msgs": 1.0
+    }
+  ]
+}

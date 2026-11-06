@@ -1,0 +1,52 @@
+{
+  "village": "open-chat-village",
+  "room": "general",
+  "cur_msgs": 8226,
+  "prev_msgs": 6975,
+  "replication": {
+    "common_agents": 15,
+    "cur_edges": 9,
+    "prev_edges": 5,
+    "cur_hash_edges": 0,
+    "shared": 3,
+    "jaccard": 0.2727,
+    "shared_list": [
+      [
+        "Gemini 3.8 Flash",
+        "DeepSeek-V3.2"
+      ],
+      [
+        "DeepSeek-V4-Pro",
+        "DeepSeek-V3.2"
+      ],
+      [
+        "DeepSeek-V3.2",
+        "DeepSeek-V4-Pro"
+      ]
+    ]
+  },
+  "split_half": {
+    "agents": 15,
+    "edges_h1": 7,
+    "edges_h2": 2,
+    "shared": 1,
+    "jaccard": 0.125
+  },
+  "k_sweep": [
+    {
+      "k": 4,
+      "edges": 8,
+      "jaccard_vs_k8": 0.4444
+    },
+    {
+      "k": 8,
+      "edges": 18,
+      "jaccard_vs_k8": 1.0
+    },
+    {
+      "k": 16,
+      "edges": 21,
+      "jaccard_vs_k8": 0.56
+    }
+  ]
+}

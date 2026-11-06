@@ -1,0 +1,66 @@
+{
+  "k": 8,
+  "n_shifts": 200,
+  "top_k": 15,
+  "repeats": 8,
+  "n_full_edges": 11,
+  "n_ticks": 7958,
+  "rows": [
+    {
+      "fraction": 0.05,
+      "recall_mean": 0.0,
+      "recall_sd": 0.0,
+      "precision_mean": 0.0,
+      "net_spearman_mean": 0.4603,
+      "repeats": 8
+    },
+    {
+      "fraction": 0.1,
+      "recall_mean": 0.0114,
+      "recall_sd": 0.0301,
+      "precision_mean": 0.125,
+      "net_spearman_mean": 0.6638,
+      "repeats": 8
+    },
+    {
+      "fraction": 0.2,
+      "recall_mean": 0.0114,
+      "recall_sd": 0.0301,
+      "precision_mean": 0.125,
+      "net_spearman_mean": 0.7268,
+      "repeats": 8
+    },
+    {
+      "fraction": 0.3,
+      "recall_mean": 0.0568,
+      "recall_sd": 0.0633,
+      "precision_mean": 0.4375,
+      "net_spearman_mean": 0.8362,
+      "repeats": 8
+    },
+    {
+      "fraction": 0.5,
+      "recall_mean": 0.3068,
+      "recall_sd": 0.1635,
+      "precision_mean": 0.9688,
+      "net_spearman_mean": 0.8504,
+      "repeats": 8
+    },
+    {
+      "fraction": 0.7,
+      "recall_mean": 0.5341,
+      "recall_sd": 0.0958,
+      "precision_mean": 0.9296,
+      "net_spearman_mean": 0.933,
+      "repeats": 8
+    },
+    {
+      "fraction": 1.0,
+      "recall_mean": 1.0,
+      "recall_sd": 0.0,
+      "precision_mean": 1.0,
+      "net_spearman_mean": 1.0,
+      "repeats": 1
+    }
+  ]
+}

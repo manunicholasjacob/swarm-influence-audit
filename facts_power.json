@@ -1,0 +1,212 @@
+{
+  "n_synth_msgs": 263,
+  "stream_ticks": 7958,
+  "n_agents": 15,
+  "k_symbols": 8,
+  "n_shifts": 200,
+  "seeds": 5,
+  "couplings": [
+    0.0,
+    0.05,
+    0.1,
+    0.2,
+    0.4,
+    0.8
+  ],
+  "leaders": [
+    {
+      "name": "Claude Haiku 4.5",
+      "msgs": 2390
+    },
+    {
+      "name": "Claude Opus 5",
+      "msgs": 263
+    },
+    {
+      "name": "GPT-6 Astra",
+      "msgs": 134
+    }
+  ],
+  "rows": [
+    {
+      "leader": "Claude Haiku 4.5",
+      "leader_msgs": 2390,
+      "coupling": 0.0,
+      "detected": 0,
+      "of": 5,
+      "detect_rate": 0.0,
+      "synth_false_edges": 5,
+      "mean_total_edges": 10.6
+    },
+    {
+      "leader": "Claude Haiku 4.5",
+      "leader_msgs": 2390,
+      "coupling": 0.05,
+      "detected": 0,
+      "of": 5,
+      "detect_rate": 0.0,
+      "synth_false_edges": 5,
+      "mean_total_edges": 10.6
+    },
+    {
+      "leader": "Claude Haiku 4.5",
+      "leader_msgs": 2390,
+      "coupling": 0.1,
+      "detected": 0,
+      "of": 5,
+      "detect_rate": 0.0,
+      "synth_false_edges": 5,
+      "mean_total_edges": 9.6
+    },
+    {
+      "leader": "Claude Haiku 4.5",
+      "leader_msgs": 2390,
+      "coupling": 0.2,
+      "detected": 1,
+      "of": 5,
+      "detect_rate": 0.2,
+      "synth_false_edges": 5,
+      "mean_total_edges": 10.6
+    },
+    {
+      "leader": "Claude Haiku 4.5",
+      "leader_msgs": 2390,
+      "coupling": 0.4,
+      "detected": 4,
+      "of": 5,
+      "detect_rate": 0.8,
+      "synth_false_edges": 5,
+      "mean_total_edges": 11.8
+    },
+    {
+      "leader": "Claude Haiku 4.5",
+      "leader_msgs": 2390,
+      "coupling": 0.8,
+      "detected": 5,
+      "of": 5,
+      "detect_rate": 1.0,
+      "synth_false_edges": 5,
+      "mean_total_edges": 11.8
+    },
+    {
+      "leader": "Claude Opus 5",
+      "leader_msgs": 263,
+      "coupling": 0.0,
+      "detected": 0,
+      "of": 5,
+      "detect_rate": 0.0,
+      "synth_false_edges": 5,
+      "mean_total_edges": 11.0
+    },
+    {
+      "leader": "Claude Opus 5",
+      "leader_msgs": 263,
+      "coupling": 0.05,
+      "detected": 5,
+      "of": 5,
+      "detect_rate": 1.0,
+      "synth_false_edges": 5,
+      "mean_total_edges": 10.8
+    },
+    {
+      "leader": "Claude Opus 5",
+      "leader_msgs": 263,
+      "coupling": 0.1,
+      "detected": 5,
+      "of": 5,
+      "detect_rate": 1.0,
+      "synth_false_edges": 6,
+      "mean_total_edges": 11.4
+    },
+    {
+      "leader": "Claude Opus 5",
+      "leader_msgs": 263,
+      "coupling": 0.2,
+      "detected": 5,
+      "of": 5,
+      "detect_rate": 1.0,
+      "synth_false_edges": 10,
+      "mean_total_edges": 11.8
+    },
+    {
+      "leader": "Claude Opus 5",
+      "leader_msgs": 263,
+      "coupling": 0.4,
+      "detected": 5,
+      "of": 5,
+      "detect_rate": 1.0,
+      "synth_false_edges": 11,
+      "mean_total_edges": 12.2
+    },
+    {
+      "leader": "Claude Opus 5",
+      "leader_msgs": 263,
+      "coupling": 0.8,
+      "detected": 5,
+      "of": 5,
+      "detect_rate": 1.0,
+      "synth_false_edges": 14,
+      "mean_total_edges": 16.6
+    },
+    {
+      "leader": "GPT-6 Astra",
+      "leader_msgs": 134,
+      "coupling": 0.0,
+      "detected": 0,
+      "of": 5,
+      "detect_rate": 0.0,
+      "synth_false_edges": 5,
+      "mean_total_edges": 10.4
+    },
+    {
+      "leader": "GPT-6 Astra",
+      "leader_msgs": 134,
+      "coupling": 0.05,
+      "detected": 5,
+      "of": 5,
+      "detect_rate": 1.0,
+      "synth_false_edges": 6,
+      "mean_total_edges": 12.0
+    },
+    {
+      "leader": "GPT-6 Astra",
+      "leader_msgs": 134,
+      "coupling": 0.1,
+      "detected": 5,
+      "of": 5,
+      "detect_rate": 1.0,
+      "synth_false_edges": 5,
+      "mean_total_edges": 12.0
+    },
+    {
+      "leader": "GPT-6 Astra",
+      "leader_msgs": 134,
+      "coupling": 0.2,
+      "detected": 5,
+      "of": 5,
+      "detect_rate": 1.0,
+      "synth_false_edges": 5,
+      "mean_total_edges": 11.0
+    },
+    {
+      "leader": "GPT-6 Astra",
+      "leader_msgs": 134,
+      "coupling": 0.4,
+      "detected": 5,
+      "of": 5,
+      "detect_rate": 1.0,
+      "synth_false_edges": 6,
+      "mean_total_edges": 12.4
+    },
+    {
+      "leader": "GPT-6 Astra",
+      "leader_msgs": 134,
+      "coupling": 0.8,
+      "detected": 5,
+      "of": 5,
+      "detect_rate": 1.0,
+      "synth_false_edges": 6,
+      "mean_total_edges": 12.0
+    }
+  ]
+}

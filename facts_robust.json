@@ -1,0 +1,359 @@
+{
+  "headline": {
+    "window": {
+      "start": "2026-10-17",
+      "end": "2026-10-31",
+      "n_msgs_window": 8800,
+      "n_agents_ge50": 22,
+      "n_te_agents": 15,
+      "agent_labels": [
+        "Claude Haiku 4.5",
+        "DeepSeek-V3.2",
+        "Gemini 3.8 Flash",
+        "GPT-6 Sol",
+        "Gemini 3.5 Flash",
+        "Grok 4.5",
+        "GPT-6.1 Terra",
+        "Claude Opus 5",
+        "DeepSeek-V4-Pro",
+        "GPT-5.2",
+        "GLM-5.2",
+        "Gemini 4 Argon",
+        "Kimi K2.6",
+        "GPT-5.6 Sol",
+        "GPT-6 Astra"
+      ]
+    },
+    "topic": {
+      "n_ticks": 7958,
+      "n_edges": 11,
+      "edges": [
+        [
+          "GLM-5.2",
+          "Gemini 3.5 Flash",
+          0.005,
+          0.0239
+        ],
+        [
+          "Kimi K2.6",
+          "GPT-5.2",
+          0.005,
+          0.0056
+        ],
+        [
+          "Gemini 3.8 Flash",
+          "Gemini 3.5 Flash",
+          0.005,
+          0.0108
+        ],
+        [
+          "DeepSeek-V4-Pro",
+          "Claude Haiku 4.5",
+          0.005,
+          0.0074
+        ],
+        [
+          "Gemini 3.8 Flash",
+          "GPT-6 Sol",
+          0.005,
+          0.0062
+        ],
+        [
+          "Gemini 4 Argon",
+          "Gemini 3.5 Flash",
+          0.005,
+          0.0137
+        ],
+        [
+          "Claude Haiku 4.5",
+          "Gemini 3.8 Flash",
+          0.005,
+          0.0204
+        ],
+        [
+          "Grok 4.5",
+          "GLM-5.2",
+          0.0149,
+          0.0032
+        ],
+        [
+          "Gemini 3.8 Flash",
+          "Claude Haiku 4.5",
+          0.0348,
+          0.0062
+        ],
+        [
+          "GPT-6 Sol",
+          "Gemini 3.8 Flash",
+          0.0398,
+          0.0052
+        ],
+        [
+          "Claude Opus 5",
+          "GPT-6.1 Terra",
+          0.0498,
+          0.0029
+        ]
+      ],
+      "leader_scores": [
+        [
+          "Gemini 3.8 Flash",
+          1
+        ],
+        [
+          "Grok 4.5",
+          1
+        ],
+        [
+          "Claude Opus 5",
+          1
+        ],
+        [
+          "DeepSeek-V4-Pro",
+          1
+        ],
+        [
+          "Gemini 4 Argon",
+          1
+        ],
+        [
+          "Kimi K2.6",
+          1
+        ],
+        [
+          "GPT-6 Sol",
+          0
+        ],
+        [
+          "GLM-5.2",
+          0
+        ],
+        [
+          "Claude Haiku 4.5",
+          -1
+        ],
+        [
+          "GPT-6.1 Terra",
+          -1
+        ],
+        [
+          "GPT-5.2",
+          -1
+        ],
+        [
+          "Gemini 3.5 Flash",
+          -3
+        ]
+      ],
+      "net": {
+        "Claude Haiku 4.5": 0.1951,
+        "DeepSeek-V3.2": -0.0595,
+        "Gemini 3.8 Flash": -0.0005,
+        "GPT-6 Sol": -0.0301,
+        "Gemini 3.5 Flash": -0.0652,
+        "Grok 4.5": -0.0202,
+        "GPT-6.1 Terra": -0.0074,
+        "Claude Opus 5": -0.0052,
+        "DeepSeek-V4-Pro": 0.0026,
+        "GPT-5.2": -0.0147,
+        "GLM-5.2": 0.0154,
+        "Gemini 4 Argon": 0.004,
+        "Kimi K2.6": -0.0077,
+        "GPT-5.6 Sol": -0.0006,
+        "GPT-6 Astra": -0.006
+      }
+    },
+    "hash": {
+      "n_ticks": 7958,
+      "n_edges": 1,
+      "edges": [
+        [
+          "GLM-5.2",
+          "Gemini 3.5 Flash",
+          0.005,
+          0.0146
+        ]
+      ],
+      "leader_scores": [
+        [
+          "GLM-5.2",
+          1
+        ],
+        [
+          "Gemini 3.5 Flash",
+          -1
+        ]
+      ],
+      "net": {
+        "Claude Haiku 4.5": 0.1931,
+        "DeepSeek-V3.2": -0.0506,
+        "Gemini 3.8 Flash": -0.0026,
+        "GPT-6 Sol": -0.0298,
+        "Gemini 3.5 Flash": -0.0331,
+        "Grok 4.5": -0.0236,
+        "GPT-6.1 Terra": -0.007,
+        "Claude Opus 5": -0.0078,
+        "DeepSeek-V4-Pro": 0.0039,
+        "GPT-5.2": -0.0142,
+        "GLM-5.2": -0.006,
+        "Gemini 4 Argon": -0.0095,
+        "Kimi K2.6": -0.0092,
+        "GPT-5.6 Sol": 0.0024,
+        "GPT-6 Astra": -0.0061
+      }
+    },
+    "net_topic_vs_hash_spearman": 0.85
+  },
+  "k_sweep": [
+    {
+      "k": 4,
+      "edges_topic": 9,
+      "edges_hash": 2,
+      "jaccard_vs_k8": 0.6667,
+      "recovered_of_k8": 8
+    },
+    {
+      "k": 8,
+      "edges_topic": 11,
+      "edges_hash": 1,
+      "jaccard_vs_k8": 1.0,
+      "recovered_of_k8": 11
+    },
+    {
+      "k": 16,
+      "edges_topic": 4,
+      "edges_hash": 2,
+      "jaccard_vs_k8": 0.3636,
+      "recovered_of_k8": 4
+    },
+    {
+      "k": 32,
+      "edges_topic": 7,
+      "edges_hash": 3,
+      "jaccard_vs_k8": 0.2857,
+      "recovered_of_k8": 4
+    }
+  ],
+  "fit_corpus_sensitivity": [
+    {
+      "fit_corpus": "all_window_msgs",
+      "n_fit_msgs": 8800,
+      "edges_topic": 11,
+      "jaccard_vs_all": 1.0
+    },
+    {
+      "fit_corpus": "agents_ge50_msgs",
+      "n_fit_msgs": 8529,
+      "edges_topic": 10,
+      "jaccard_vs_all": 0.75
+    },
+    {
+      "fit_corpus": "te_agents_msgs",
+      "n_fit_msgs": 7958,
+      "edges_topic": 7,
+      "jaccard_vs_all": 0.3846
+    }
+  ],
+  "replication": {
+    "common_agents": 15,
+    "agent_labels": [
+      "Claude Haiku 4.5",
+      "DeepSeek-V3.2",
+      "Gemini 3.8 Flash",
+      "GPT-6 Sol",
+      "Grok 4.5",
+      "GPT-5",
+      "GPT-5.2",
+      "Claude Opus 5",
+      "Gemini 3.5 Flash",
+      "GLM-5.2",
+      "DeepSeek-V4-Pro",
+      "Kimi K2.6",
+      "Claude Sonnet 4.6",
+      "Claude Sonnet 5",
+      "Gemini 4 Argon"
+    ],
+    "cur": {
+      "start": "2026-10-17",
+      "n_ticks": 7718,
+      "edges_topic": 8,
+      "edges_hash": 1
+    },
+    "prev": {
+      "start": "2026-10-03",
+      "n_ticks": 7663,
+      "edges_topic": 4,
+      "edges_hash": 0
+    },
+    "shared_edges": 1,
+    "jaccard": 0.0909,
+    "leader_score_spearman": 0.5107,
+    "shared_edge_list": [
+      [
+        "GLM-5.2",
+        "Gemini 3.5 Flash"
+      ]
+    ],
+    "cur_edge_list": [
+      [
+        "Gemini 4 Argon",
+        "Gemini 3.5 Flash"
+      ],
+      [
+        "GPT-6 Sol",
+        "Gemini 3.8 Flash"
+      ],
+      [
+        "Gemini 3.8 Flash",
+        "Gemini 3.5 Flash"
+      ],
+      [
+        "Gemini 3.8 Flash",
+        "GPT-6 Sol"
+      ],
+      [
+        "Gemini 3.8 Flash",
+        "Claude Haiku 4.5"
+      ],
+      [
+        "Claude Haiku 4.5",
+        "Gemini 3.8 Flash"
+      ],
+      [
+        "GLM-5.2",
+        "Gemini 3.5 Flash"
+      ],
+      [
+        "DeepSeek-V4-Pro",
+        "Claude Haiku 4.5"
+      ]
+    ],
+    "prev_edge_list": [
+      [
+        "DeepSeek-V3.2",
+        "Kimi K2.6"
+      ],
+      [
+        "Gemini 3.8 Flash",
+        "DeepSeek-V3.2"
+      ],
+      [
+        "GLM-5.2",
+        "Gemini 3.5 Flash"
+      ],
+      [
+        "Claude Opus 5",
+        "Gemini 3.8 Flash"
+      ]
+    ]
+  },
+  "split_half": {
+    "agents": 13,
+    "n1": 3502,
+    "n2": 1839,
+    "edges_h1": 4,
+    "edges_h2": 1,
+    "shared": 0,
+    "jaccard": 0.0
+  }
+}
