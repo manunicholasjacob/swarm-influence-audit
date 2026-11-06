@@ -1,13 +1,13 @@
 {
   "null": "permute",
-  "reps": 270,
-  "n_with_edge": 18,
-  "fwer": 0.0667,
+  "reps": 300,
+  "n_with_edge": 19,
+  "fwer": 0.0633,
   "wilson95": [
-    0.0426,
-    0.1029
+    0.0409,
+    0.0968
   ],
-  "mean_edges": 0.07,
+  "mean_edges": 0.067,
   "n_surrogates": 200,
   "k": 8,
   "agents": 15
