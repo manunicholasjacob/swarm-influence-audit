@@ -108,3 +108,29 @@ print(f"\n{len(checks)-len(bad)}/{len(checks)} numeric checks pass")
 if bad:
     sys.exit("VERIFICATION FAILED")
 print("ALL NUMERIC CLAIMS VERIFIED against the analysis output")
+
+# --- round-3 robustness additions ---
+sc = json.load(open(os.path.join(D, "facts_scale.json"), encoding="utf-8"))
+sy = json.load(open(os.path.join(D, "facts_symboliser.json"), encoding="utf-8"))
+extra = []
+srow = {r["n_agents"]: r for r in sc["rows"]}
+tot_s = sum(sum(1 for c in r["shift"]["edges_per_rep"] if c>0) for r in sc["rows"])
+tot_p = sum(sum(1 for c in r["permute"]["edges_per_rep"] if c>0) for r in sc["rows"])
+tot_n = len(sc["rows"])*sc["reps"]
+extra.append(("scale shift aggregate", f"{tot_s} of {tot_n}" in txt))
+extra.append(("scale permute aggregate", f"{tot_p} of {tot_n}" in txt))
+hc = json.load(open(os.path.join(D, "facts_hashcalib.json"), encoding="utf-8"))
+if "hash" in hc["alphabets"]:
+    h = hc["alphabets"]["hash"]
+    extra.append(("hash alphabet share", f'{h["largest_symbol_share"]*100:.0f}%' in txt))
+    extra.append(("hash alphabet shift", f'{int(h["shift"]["fwer"]*hc["reps"])} of {hc["reps"]}' in txt))
+ch = {c["village"]: c for c in sy["channels"]}
+m, o = ch["main-village"], ch["open-chat-village"]
+extra.append(("lsa main", f'{m["lsa_kmeans"]["shift"]} edges against {m["lsa_kmeans"]["permute"]}' in txt))
+extra.append(("lsa openchat", f'{o["lsa_kmeans"]["shift"]} against {o["lsa_kmeans"]["permute"]}' in txt))
+for lab, ok in extra:
+    if not ok:
+        print(f"FAIL  {lab}")
+print(f"round-3: {sum(1 for _, ok in extra if ok)}/{len(extra)} pass")
+if not all(ok for _, ok in extra):
+    sys.exit("ROUND-3 VERIFICATION FAILED")

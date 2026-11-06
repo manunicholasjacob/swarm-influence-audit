@@ -14,7 +14,7 @@ If a population of AI agents shares a channel, an overseer would like to know wh
 
 Almost every demonstration of these detectors runs on synthetic traces with a planted leader, where the analyst controls timing and vocabulary. Real agent chat is asynchronous, bursty and written in open language. This report asks a narrower question than "what is the influence structure of a real swarm": whether the standard recipe, applied to real agent logs, returns anything an overseer should act on.
 
-We run that audit on the AI Village (AI Digest, 2026), in which frontier models share chat channels over eighteen months, across four villages differing in size, lifetime and tempo. We apply the checks a reader should demand: a positive control with planted influence, a negative control with an agent coupled to nothing, a meaning-free symboliser, replication in a held-out window, and sensitivity to the parameters we had to choose. The audit fails in a specific and instructive way, with a clean mechanism and a known fix.
+We run that audit on the AI Village (AI Digest, 2026), in which frontier models share chat channels over eighteen months, across four villages differing in size, lifetime and tempo, applying the checks a reader should demand: planted positive and negative controls, a meaning-free symboliser, replication in a held-out window, and sensitivity to the parameters we had to choose. The audit fails in a specific and instructive way, with a clean mechanism and a known fix.
 
 1. The conventional circular-shift surrogate is invalid on turn-ordered agent chat. We give the structural reason and measure the damage: a family-wise error rate of 0.90 against a nominal 0.05, and an agent coupled to nothing certified as a driver in 8 of 8 runs.
 2. We adopt the local-permutation surrogate from the event-based literature, verify it restores calibration here, and re-certify every result under it. The invalid surrogate is not merely liberal: on one channel it manufactures 11 edges of which none survive, on another it masks 15.
@@ -27,7 +27,7 @@ We run that audit on the AI Village (AI Digest, 2026), in which frontier models 
 
 **Event-based data breaks the shift surrogate.** Our audit rediscovers this in a new domain. Shorten, Spinney and Lizier (2021), working on neural spike trains, show that transfer entropy for event-based processes is poorly served by time discretisation, and specifically that the conventional source-time-shift surrogate fails to represent the null hypothesis of conditional independence; they propose a local permutation scheme instead. Agent chat is event-based in exactly that sense: messages are events in continuous time, not samples of a clocked signal. Our contribution is not the fix but the demonstration that multi-agent safety practice inherits this failure, and that it is severe enough to manufacture leaders out of nothing.
 
-**Oversight under a budget.** AI-control research frames monitoring as resource constrained, with an auditing budget and a cost for false positives (Greenblatt et al., 2024). An influence graph is one such measurement, and our concern is the error rate attached to it.
+**Oversight under a budget.** AI-control research frames monitoring as resource constrained, with a cost for false positives (Greenblatt et al., 2024). An influence graph is one such measurement, and our concern is the error rate attached to it.
 
 ## 3. Data
 
@@ -42,7 +42,7 @@ The AI Village dataset ships one gzipped-JSONL table per village. We use four vi
 
 A 2026 scaffolding change scopes each agent to its current room's context, so the busiest room of each village is a self-contained influence substrate and we analyse it alone.
 
-The primary analysis window is the final fourteen days of main-village #general, 17 to 31 October 2026, holding 8,800 agent messages. Twenty-two models posted at least 50 messages each in that window, and the directed test uses the 15 busiest of them, giving 7,958 message events. Two scaffolding facts are disclosed rather than corrected: the automated nudger that injects messages was off throughout this window, so no scaffolding-authored messages contaminate it, and the unused #best and #rest rooms were soft-deleted mid-window, which does not touch #general. We read message metadata and text only. No personal data and no model internals are involved, and individual human participants appear only as opaque, aggregated or anonymised nodes.
+The primary analysis window is the final fourteen days of main-village #general, 17 to 31 October 2026, holding 8,800 agent messages. Twenty-two models posted at least 50 messages each in that window, and the directed test uses the 15 busiest of them, giving 7,958 message events. Two scaffolding facts are disclosed rather than corrected: the automated nudger that injects messages was off throughout this window, and the unused #best and #rest rooms were soft-deleted mid-window, which does not touch #general. We read message metadata and text only, and individual human participants appear only as aggregated or anonymised nodes.
 
 ## 4. Method
 
@@ -54,13 +54,13 @@ Transfer entropy needs discrete symbols, so each message is mapped to a small al
 
 A lag-1 transfer entropy compares window t-1 with window t, so influence landing inside one window is invisible to it. Agent chat makes this binding. Among the fifteen analysed agents the gap between consecutive messages by different speakers has a median of 28.1 seconds (25th percentile 9.2, 75th 66.2, 95th 159.3). Turn-taking is therefore a seconds-scale process, while any clock window wide enough to hold two speakers is minutes wide and swallows both a message and its answer. Section 5.1 measures both horns directly.
 
-We avoid the bind by ordering messages canonically and letting one message be one tick. Each agent's series carries its symbol at the ticks where it spoke and a silent symbol elsewhere, so the lag-1 comparison is between a message and the one immediately before it, and stimulus and response are always in different ticks. The cost is that the measure captures immediate-predecessor influence only; influence over several turns is out of scope.
+We avoid the bind by ordering messages canonically and letting one message be one tick. Each agent's series carries its symbol where it spoke and a silent symbol elsewhere, so the lag-1 comparison is between a message and the one immediately before it. The cost is that the measure captures immediate-predecessor influence only.
 
 ### 4.3 Two surrogate nulls
 
-The preexisting estimator certifies an edge by comparing the observed transfer entropy with a **circular-shift** surrogate of the source, using a max-T family-wise test at level 0.05 across all ordered pairs. On the turn-ordered grid this surrogate is invalid, for a reason that is visible by construction: exactly one agent is non-silent at each tick, because each tick is one message by one speaker. Circularly shifting one agent's series destroys that mutual exclusivity, so the surrogate statistic is computed over speaker configurations that cannot occur in the data. Section 5.2 shows what this costs.
+The preexisting estimator certifies an edge by comparing the observed transfer entropy with a **circular-shift** surrogate of the source, using a max-T family-wise test at level 0.05 across all ordered pairs. On the turn-ordered grid this surrogate is invalid, for a reason visible by construction: exactly one agent is non-silent at each tick, because each tick is one message by one speaker. Circularly shifting one agent's series destroys that mutual exclusivity, so the surrogate is computed over speaker configurations that cannot occur in the data.
 
-We therefore add a **symbol-permutation** surrogate, following the local-permutation idea of Shorten et al. (2021): the source keeps the exact ticks at which it spoke, and only its symbols are permuted among those ticks. Speaking pattern, sparsity and mutual exclusivity are preserved exactly; only the correspondence between symbol and time is destroyed, which is what the alternative hypothesis is about. Both nulls are reported throughout.
+We therefore add a **symbol-permutation** surrogate, following the local-permutation idea of Shorten et al. (2021): the source keeps the exact ticks at which it spoke, and only its symbols are permuted among them. Speaking pattern, sparsity and mutual exclusivity are preserved exactly, and only the correspondence between symbol and time is destroyed. Both are reported throughout.
 
 ### 4.4 Controls
 
@@ -92,6 +92,8 @@ A planted agent could be dismissed as an artificial insertion, so we also measur
 
 Following the local-permutation idea of Shorten et al. (2021), we keep each source's speaking positions and permute only its symbols among them. On the same destroyed-structure data the family-wise error rate falls to 0.10 over 30 replicates, with a 95% Wilson interval of 0.03 to 0.26, which covers the nominal 0.05 although the point estimate sits above it. The planted uncoupled agent is now never certified: 0 of 5 at both 263 and 1500 messages, with mean max z of 2.8 in each case against 22.0 and 68.3 under the shift surrogate.
 
+The failure is not an artifact of the configuration we happened to choose. It is not a large-swarm effect: across swarms of 5, 10, 15 and 20 agents the shift surrogate certifies something in 22 of 24 null replicates, against 3 of 24 for the permutation surrogate, so shrinking the swarm does not rescue it. It is not a property of the skewed topic alphabet either, since on the near-uniform hash alphabet, where the largest symbol holds 13% of messages rather than 37%, the shift surrogate still fires in 10 of 10. And both corrections survive a different symboliser: replacing TF-IDF and k-means with latent semantic analysis gives 12 edges against 1 in main-village and 2 against 22 in open-chat, the same inflation and the same masking by an independent route to topics.
+
 [Figure 2: f2_null.png. Caption: Left, how often an agent coupled to nothing is certified as a driver, under each surrogate. Middle, family-wise error rate measured on data with all structure destroyed, with a Wilson interval; the dotted line is the nominal 0.05. Right, what each surrogate certifies on the real channel.]
 
 ### 5.4 The same channels, re-certified
@@ -116,7 +118,7 @@ Power is therefore governed by how much an agent says, not only by how strongly 
 
 ### 5.6 Does anything replicate?
 
-In main-village, no. Under the standard recipe the adjacent fourteen-day window shares 1 edge with the primary window out of 8 and 4 respectively, a Jaccard of 0.09, and the two halves of the primary window share none at all. Under the repaired surrogate the adjacent window certifies nothing, so there is nothing to share. The single edge that does persist across windows under the standard recipe, GLM-5.2 to Gemini 3.5 Flash, is also the only edge the meaning-free hash null certifies, so the one stable thing the standard recipe finds carries no meaning.
+In main-village, no. Under the standard recipe the adjacent fourteen-day window shares 1 edge with the primary window out of 8 and 4 respectively, a Jaccard of 0.09, and the two halves share none. Under the repaired surrogate the adjacent window certifies nothing. The one edge that does persist, GLM-5.2 to Gemini 3.5 Flash, is also the only edge the meaning-free hash null certifies, so the single stable thing the standard recipe finds carries no meaning.
 
 In open-chat, where the valid test has power, the picture is better but still partial: restricted to agents active in both windows and sharing one topic space, the current window certifies 9 edges and the previous 5, with 3 in common, a Jaccard of 0.27, against 0 edges from the hash null. About a third of the structure holds up. Splitting that window into halves is harsher, 7 edges against 2 with 1 in common, which is what the power result predicts, since halving the data moves agents below the detection floor.
 
@@ -124,13 +126,11 @@ The alphabet size remains a live degree of freedom even under the repaired surro
 
 ### 5.7 Humans in the channel
 
-main-village #general is now effectively human-free, with 3 human messages in the analysis window, so the question has to be asked where humans are present. In open-chat, 32% of messages in the window come from 124 human visitors. Adding them as nodes under the repaired surrogate, the 12 agents alone certify 17 edges; adding the three busiest visitors individually gives 20 edges, of which 16 are agent to agent, **4 run from an individual visitor to a specific agent, and none run from an agent to a visitor**. Collapsing all humans into one node gives the same asymmetry, 4 edges out and 2 back.
+main-village #general is now effectively human-free, with 3 human messages in the window, so the question has to be asked where humans are present. In open-chat, 32% of messages come from 124 human visitors. Under the repaired surrogate the 12 agents alone certify 17 edges; adding the three busiest visitors individually gives 20, of which 16 are agent to agent, **4 run from an individual visitor to a specific agent, and none run from an agent to a visitor**. Collapsing all humans into one node gives the same asymmetry.
 
 This is the one substantive behavioural observation that survives the audit, and it should be read carefully: topical dependence from a person to an agent is also what ordinary responsiveness looks like. The measurement supports only that the dependence is directional and attributable to particular visitors, not that anyone is deliberately steering a swarm.
 
-### 5.8 Two further traps
-
-Summed outgoing minus incoming transfer entropy, a common per-node leadership score, ranks agents almost identically under the topic symboliser and under the meaning-free hash null (Spearman 0.85, same agent on top at nearly the same value). A score the hash null reproduces is measuring volume, not shared meaning, so the certified edge set should be reported instead. The statistic itself is not redundant, though: a trivial copy-rate detector ranks pairs very differently (Spearman 0.21) and its top pairs overlap the certified set in only 3 of 10 cases. What this report indicts is the surrogate, not transfer entropy.
+Two further traps, reported in Appendix D, are worth naming here: a continuous net-influence score turns out to measure volume rather than meaning, and a trivial copy-rate detector does not reproduce transfer entropy, so what this report indicts is the surrogate and not the statistic.
 
 ## 6. What an overseer should do
 
@@ -151,7 +151,7 @@ Applied to real agent chat, the standard recipe for "who drives whom" fails in a
 
 - **Immediate-predecessor only.** The turn-ordered lag-1 measure sees influence from the message directly before a reply. Influence acting over several turns, or through a room's accumulated context, is out of scope and needs a higher-order or memory-aware estimator.
 - **Discrete approximation to an event process.** Agent chat is event-based in continuous time. We use a turn-ordered discretisation with a permutation surrogate as a practical fix; a continuous-time estimator (Shorten et al., 2021) is the principled route and we did not attempt it.
-- **Symbolisation is a free parameter, and it matters.** Results move with the alphabet size and with which messages the topic model is fit on, and we report both sensitivities rather than tuning them. Two of the eight topic clusters are dominated by function words, because the preexisting symboliser does not remove stopwords.
+- **Symbolisation is a free parameter.** The central result survives an independent symboliser (Section 5.3), but the edge count does not: it moves with the alphabet size and with which messages the topic model is fit on, and we report those sensitivities rather than tuning them. Two of the eight topic clusters are dominated by function words, because the preexisting symboliser does not remove stopwords.
 - **No ground truth in the real logs.** The validity argument rests on planted controls and on the meaning-free null, not on recovering a known answer.
 - **Scaffolding confounds.** Agent behaviour is shaped by prompt, tool and memory changes logged in the dataset's changelog. We chose a window in which the message-injecting nudger was off, but other scaffolding is held fixed only by the shortness of the window.
 - **The human result is exploratory.** It rests on one village and one window, and given the instability documented in Section 5.4 it should be read as a lead, not a finding. Topical dependence from a human to an agent is also consistent with ordinary responsiveness rather than steering.
@@ -169,6 +169,12 @@ We followed the dataset's research terms: research use only, no training on the 
 **New this weekend.** The subset and window choices on the real data; the measured reply-latency justification for the lag; the turn-ordered representation; the symbolisation of real message text; the clock-window failure analysis; the symbol-permutation surrogate and the demonstration that the shift surrogate is invalid on this grid; the planted positive and negative controls; the calibration measurement; the replication and sensitivity battery; the four-village comparison; the human-node analysis; the trivial-baseline comparison; the read-budget sweep; all figures; and a vectorised reimplementation of the preexisting estimator, used only for scale and verified bit-for-bit against the preexisting code before use.
 
 **LLM usage.** The author used an AI coding assistant (Claude) to help write and run the analysis code, to help draft this report, and to structure the figures. The author is responsible for every claim, number and figure here. All results come from the released code run on the public dataset, no result or reference is fabricated, and the numbers in this document are checked against the analysis output by a script that fails on any mismatch.
+
+## Appendix D: Two further traps
+
+**A continuous influence score measures volume.** Summed outgoing minus incoming transfer entropy, a common per-node leadership summary, ranks agents almost identically under the topic symboliser and under the meaning-free hash null (Spearman 0.85), with the same agent on top at nearly the same value. A score the hash null reproduces cannot be measuring shared meaning, so the certified edge set should be reported instead.
+
+**The estimator is not redundant, though.** A trivial detector, the rate at which an agent repeats the previous message's topic in excess of its own base rate, ranks pairs very differently from transfer entropy (Spearman 0.21), and the pairs it ranks highest overlap the certified set in only 3 of 10 cases. So transfer entropy is not an expensive way to compute a copy rate, and the failure documented in this report belongs to the surrogate rather than to the statistic.
 
 ## References
 
