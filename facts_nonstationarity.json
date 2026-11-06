@@ -1,0 +1,23 @@
+{
+  "block_share_cv": {
+    "Claude Haiku 4.5": 1.275,
+    "DeepSeek-V3.2": 1.098,
+    "Gemini 3.8 Flash": 0.523,
+    "GPT-6 Sol": 0.766,
+    "Gemini 3.5 Flash": 1.001,
+    "Grok 4.5": 0.789,
+    "GPT-6.1 Terra": 1.36,
+    "Claude Opus 5": 0.74,
+    "DeepSeek-V4-Pro": 0.678,
+    "GPT-5.2": 0.978,
+    "GLM-5.2": 0.617,
+    "Gemini 4 Argon": 0.676,
+    "Kimi K2.6": 1.206,
+    "GPT-5.6 Sol": 0.627,
+    "GPT-6 Astra": 1.367
+  },
+  "median": 0.789,
+  "mean": 0.9134,
+  "blocks": 20,
+  "n_ticks": 7958
+}

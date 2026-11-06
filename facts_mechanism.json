@@ -1,0 +1,50 @@
+{
+  "reps": 10,
+  "n_surrogates": 200,
+  "k": 8,
+  "n_ticks": 7958,
+  "speaker_repeat_rate": 0.3607,
+  "speaker_return_after_one": 0.3807,
+  "conditions": {
+    "A_real_order_real_symbols": {
+      "shift": {
+        "fwer": 1.0,
+        "mean_edges": 2.0
+      },
+      "permute": {
+        "fwer": 0.0,
+        "mean_edges": 0.0
+      }
+    },
+    "B_real_order_iid_symbols": {
+      "shift": {
+        "fwer": 0.6,
+        "mean_edges": 0.7
+      },
+      "permute": {
+        "fwer": 0.1,
+        "mean_edges": 0.1
+      }
+    },
+    "C_shuffled_order_real_symbols": {
+      "shift": {
+        "fwer": 0.0,
+        "mean_edges": 0.0
+      },
+      "permute": {
+        "fwer": 0.1,
+        "mean_edges": 0.1
+      }
+    },
+    "D_shuffled_order_iid_symbols": {
+      "shift": {
+        "fwer": 0.0,
+        "mean_edges": 0.0
+      },
+      "permute": {
+        "fwer": 0.1,
+        "mean_edges": 0.1
+      }
+    }
+  }
+}

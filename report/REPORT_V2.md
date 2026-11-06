@@ -58,7 +58,7 @@ We avoid the bind by ordering messages canonically and letting one message be on
 
 ### 4.3 Two surrogate nulls
 
-The preexisting estimator certifies an edge by comparing the observed transfer entropy with a **circular-shift** surrogate of the source, using a max-T family-wise test at level 0.05 across all ordered pairs. On the turn-ordered grid this surrogate is invalid, for a reason visible by construction: exactly one agent is non-silent at each tick, because each tick is one message by one speaker. Circularly shifting one agent's series destroys that mutual exclusivity, so the surrogate is computed over speaker configurations that cannot occur in the data.
+The preexisting estimator certifies an edge by comparing the observed transfer entropy with a **circular-shift** surrogate of the source, using a max-T family-wise test at level 0.05 across all ordered pairs. On the turn-ordered grid this surrogate fails, and Section 5.2 both measures the failure and isolates its cause: the structure of the real speaker sequence. Real conversation is not a sequence of independent draws about who talks next. It has strong turn-taking, and circularly shifting one agent's series slides that burst pattern to a different part of the timeline, where it aligns against the other agents differently than it ever does in the data.
 
 We therefore add a **symbol-permutation** surrogate, following the local-permutation idea of Shorten et al. (2021): the source keeps the exact ticks at which it spoke, and only its symbols are permuted among them. Speaking pattern, sparsity and mutual exclusivity are preserved exactly, and only the correspondence between symbol and time is destroyed. Both are reported throughout.
 
@@ -76,17 +76,19 @@ We therefore add a **symbol-permutation** surrogate, following the local-permuta
 
 Figure 1 runs the detector on clock windows from 30 seconds to an hour, and the two failure modes close on each other. At 30 seconds only 1.2% of agent-windows contain a message, while already 32.0% of replies land in the same window as the message they answer and are invisible to a lag-1 test. By 5 minutes that share is 84.4%, and by an hour 98.6%.
 
-More telling is what the edges are made of. At every width the meaning-free hash null certifies about as many edges as the topic symboliser (12 against 9 at 30 seconds, 19 against 17 at one minute, 44 against 27 at fifteen), and at 5 minutes it certifies more, 19 against 17. Whatever clock-window transfer entropy is detecting on this data, it is not shared meaning. We therefore move to the turn-ordered grid for everything that follows.
+More telling is what the edges are made of. At every width the meaning-free hash null certifies about as many edges as the topic symboliser (12 against 9 at 30 seconds, 19 against 17 at one minute, 44 against 27 at fifteen), and at 5 minutes more, 19 against 17. Whatever clock-window transfer entropy detects here, it is not shared meaning, so we move to the turn-ordered grid.
 
 [Figure 1: f1_clock.png. Caption: Clock-window transfer entropy on the 15 analysed agents of main-village #general. Left, the two failure modes as a function of window width. Right, edges certified under the topic symboliser against the meaning-free hash null.]
 
 ### 5.2 On a turn-ordered grid the standard surrogate is invalid
 
-On that grid exactly one agent is non-silent at each tick. A circular shift of one agent's series destroys this, so the surrogate statistic is evaluated on speaker configurations that cannot occur. The consequence is not subtle. We plant an agent whose symbols are drawn from the channel's marginal and which is coupled to nothing at all, and ask how often it is certified as driving something.
+We plant an agent into the real stream, drawing its symbols from the channel's marginal and coupling it to nothing at all, then ask how often it is certified as driving something.
 
-It is certified in 3 of 8 runs when it posts 50 messages, and in 8 of 8 at 100, 263, 600 and 1500 messages, with the mean largest z rising from 5.6 to 12.3, 21.7, 38.3 and 71.7. The error grows with how much the agent speaks, which is the opposite of what a sparsity story predicts and exactly what the mutual-exclusivity account predicts: the more ticks an agent occupies, the further the shifted surrogate departs from the data's structure.
+It is certified in 3 of 8 runs when it posts 50 messages, and in 8 of 8 at 100, 263, 600 and 1500 messages, with the mean largest z rising from 5.6 to 12.3, 21.7, 38.3 and 71.7. The error grows with how much the agent speaks, which rules out a small-sample explanation and says the mismatch is in structure rather than in sample size.
 
-A planted agent could be dismissed as an artificial insertion, so we also measure the error rate directly. Keeping the real sequence of speakers and permuting the symbols globally leaves a dataset with no directed topical influence by construction. The circular-shift surrogate certifies at least one edge in 9 of 10 such replicates, a family-wise error rate of 0.90 against a nominal 0.05, averaging 1.2 edges per replicate.
+A planted agent could be dismissed as artificial, so we also measure the error rate directly. Keeping the real speaker sequence and permuting the symbols globally leaves data with no directed topical influence by construction. The shift surrogate certifies at least one edge in 9 of 10 such replicates, a family-wise error rate of 0.90 against a nominal 0.05.
+
+**What breaks it is the speaker sequence.** Destroying one structure at a time isolates the cause (Appendix D). With the real speaker order intact and only the symbols shuffled, the shift surrogate fires in 10 of 10 replicates; randomising the speaker order as well drops it to 0 of 10. Replacing the real symbols with uniform draws, keeping the real order, still gives 6 of 10. So the failure is driven by turn-taking, not by the symbol distribution and not by sparsity: the real sequence repeats the same speaker 36% of the time and returns to a speaker after one other message 38% of the time. Shifting slides that burst pattern across the timeline; permuting symbols within an agent's own speaking positions leaves it intact, which is why the repair is unaffected in every condition.
 
 ### 5.3 A sparsity-preserving surrogate restores calibration
 
@@ -106,13 +108,13 @@ Re-running every channel under the repaired surrogate changes the answers, and n
 | open-chat #general | 8,226 | 3 / 0 | 18 / 0 |
 | swarm, room a | 3,846 | 2 / 1 | 1 / 0 |
 
-In main-village, **none** of the 11 edges the standard recipe certifies survives the repair, and the two the valid surrogate does certify were not among them. In open-chat the correction runs the other way, 3 edges becoming 18. The mechanism is the family-wise step: pathological pairs inflate the max-T threshold, which lets those pairs through and raises the bar for everything else. An invalid surrogate does not simply add false positives, it scrambles the result.
+In main-village, **none** of the 11 edges the standard recipe certifies survives the repair, and the two the valid surrogate certifies were not among them. In open-chat the correction runs the other way, 3 edges becoming 18, because pathological pairs inflate the max-T threshold and so raise the bar for everything else. An invalid surrogate does not simply add false positives, it scrambles the result.
 
 ### 5.5 How much influence could we have seen?
 
 Absence of edges is only informative if the test could have found them, so we plant one. A synthetic follower is inserted at the median agent's volume and copies the busiest agent's topic on a fraction of its messages. In main-village, under the repaired surrogate, it goes undetected in 0 of 4 runs at couplings up to 0.4 and is caught in only 1 of 4 at 0.8. Holding coupling at 0.8 and varying how much it speaks, detection rises from 1 of 4 at 263 messages to 4 of 4 at 800 and stays there at 2000 and 4000, so the floor sits between 3% and 10% of the channel's messages.
 
-Power is therefore governed by how much an agent says, not only by how strongly it copies, and it is channel-specific. Repeating the control in open-chat, where the valid test certifies 18 edges, a follower at that channel's median volume is caught in 3 of 4 runs at coupling 0.1 and in 4 of 4 from 0.2 upward. The two channels differ in sensitivity as well as in structure: main-village's two certified edges are a floor rather than a description, while open-chat's 18 come from a test that can see.
+Power is governed by how much an agent says, not only by how strongly it copies, and it is channel-specific. Repeating the control in open-chat, a follower at that channel's median volume is caught in 3 of 4 runs at coupling 0.1 and in 4 of 4 from 0.2 upward. So the channels differ in sensitivity as well as structure: main-village's two edges are a floor, while open-chat's 18 come from a test that can see.
 
 [Figure 3: f4_power.png. Caption: Detection of a planted follower under the repaired surrogate. Left, varying the fraction of its messages that copy the leader, at the median agent's volume. Right, varying how much it speaks, at strong coupling.]
 
@@ -126,9 +128,9 @@ The alphabet size remains a live degree of freedom even under the repaired surro
 
 ### 5.7 Humans in the channel
 
-main-village #general is now effectively human-free, with 3 human messages in the window, so the question has to be asked where humans are present. In open-chat, 32% of messages come from 124 human visitors. Under the repaired surrogate the 12 agents alone certify 17 edges; adding the three busiest visitors individually gives 20, of which 16 are agent to agent, **4 run from an individual visitor to a specific agent, and none run from an agent to a visitor**. Collapsing all humans into one node gives the same asymmetry.
+main-village #general is now effectively human-free, with 3 human messages in the window, so the question has to be asked where humans are present. In open-chat, 32% of messages come from 124 human visitors. Under the repaired surrogate the 12 agents alone certify 17 edges; adding the three busiest visitors individually gives 20, of which 16 are agent to agent, **4 run from an individual visitor to a specific agent, and none run from an agent to a visitor**.
 
-This is the one substantive behavioural observation that survives the audit, and it should be read carefully: topical dependence from a person to an agent is also what ordinary responsiveness looks like. The measurement supports only that the dependence is directional and attributable to particular visitors, not that anyone is deliberately steering a swarm.
+This is the one substantive behavioural observation that survives, and it should be read carefully: topical dependence from a person to an agent is also what ordinary responsiveness looks like. The measurement supports only that the dependence is directional and attributable to particular visitors, not that anyone is steering a swarm.
 
 Two further traps, reported in Appendix D, are worth naming here: a continuous net-influence score turns out to measure volume rather than meaning, and a trivial copy-rate detector does not reproduce transfer entropy, so what this report indicts is the surrogate and not the statistic.
 
@@ -137,15 +139,15 @@ Two further traps, reported in Appendix D, are worth naming here: a continuous n
 The audit suggests four controls, none expensive, that should accompany any published influence graph over an agent channel.
 
 1. **Plant an agent coupled to nothing, at your channel's volumes, and check it is not certified.** This one test would have caught the failure reported here, and costs one run per volume.
-2. **Measure the error rate directly,** by destroying the structure your method claims to find and checking the family-wise error rate is near nominal. If it is not, the surrogate does not match the representation.
-3. **Match the surrogate to the representation's hard constraints.** On a turn-ordered grid exactly one agent speaks per tick, and any surrogate breaking that tests a hypothesis about impossible data. For event-based data this is known, and the continuous-time treatment of Shorten et al. (2021) is the principled route.
+2. **Measure the error rate directly,** by destroying the structure your method claims to find and checking the family-wise rate is near nominal. If it is not, the surrogate does not match the data.
+3. **Preserve the speaker sequence in your surrogate.** Turn-taking is the structure that breaks the shift here, and any surrogate that moves an agent's messages in time will disturb it. For event-based data this is known, and Shorten et al. (2021) is the principled route.
 4. **Establish the detection floor before interpreting an absence,** and report it beside the graph. "No edges" and "no influence" are different claims.
 
-Two reporting habits follow: publish a meaning-free symboliser's edge count alongside the real one, and require replication in a held-out window before calling a graph the structure of a swarm.
+Two habits follow: publish a meaning-free symboliser's edge count beside the real one, and require replication in a held-out window before calling a graph the structure of a swarm.
 
 ## 7. Conclusion
 
-Applied to real agent chat, the standard recipe for "who drives whom" fails in a way that is easy to miss and easy to check. Clock windows cannot separate a message from its answer at the timescale agents reply on, and the edges they certify are reproduced by a null with no access to meaning. The turn-ordered representation that fixes this invalidates the circular-shift surrogate, whose family-wise error rate on structure-free data we measure at 0.90 against a nominal 0.05, and which certifies an agent coupled to nothing in 8 of 8 runs. Repairing it changes every answer: one channel loses all 11 edges, another gains 15 that were masked. What survives is modest, and only where the data is thick enough. For an overseer that is the operative finding: an influence graph over an agent swarm is a measurement with an error rate, and until that error rate is reported it should not be acted on.
+Applied to real agent chat, the standard recipe for "who drives whom" fails in a way that is easy to miss and easy to check. Clock windows cannot separate a message from its answer at the timescale agents reply on, and the edges they certify are reproduced by a null with no access to meaning. The turn-ordered representation that fixes this breaks the circular-shift surrogate, whose family-wise error rate on structure-free data we measure at 0.90 against a nominal 0.05, and the cause is the turn-taking structure of conversation itself. Repairing it changes every answer: one channel loses all 11 edges, another gains 15 that were masked. For an overseer that is the operative finding: an influence graph is a measurement with an error rate, and until that rate is reported it should not be acted on.
 
 ## Appendix A: Limitations
 
@@ -170,7 +172,18 @@ We followed the dataset's research terms: research use only, no training on the 
 
 **LLM usage.** The author used an AI coding assistant (Claude) to help write and run the analysis code, to help draft this report, and to structure the figures. The author is responsible for every claim, number and figure here. All results come from the released code run on the public dataset, no result or reference is fabricated, and the numbers in this document are checked against the analysis output by a script that fails on any mismatch.
 
-## Appendix D: Robustness checks, and two further traps
+## Appendix D: Isolating the cause, robustness, and two further traps
+
+**Which structure breaks the surrogate.** Each condition below contains no directed topical influence by construction, so a calibrated procedure should fire in about 5% of replicates. Ten replicates each.
+
+| condition | circular shift | symbol permutation |
+|---|---|---|
+| real speaker order, symbols shuffled | **10 / 10** | 0 / 10 |
+| real speaker order, uniform i.i.d. symbols | 6 / 10 | 1 / 10 |
+| speaker order shuffled, symbols shuffled | **0 / 10** | 1 / 10 |
+| speaker order shuffled, uniform i.i.d. symbols | 0 / 10 | 1 / 10 |
+
+Speaker order is the switch. The symbol distribution only modulates. A synthetic channel that draws speakers independently does not reproduce the failure at all, which is how we found this: a generated benchmark with exactly one speaker per tick left the shift surrogate roughly calibrated, so mutual exclusivity alone, which we had first proposed as the explanation, is not sufficient.
 
 **The surrogate failure is not an artifact of our configuration.** It is not a large-swarm effect: across swarms of 5, 10, 15 and 20 agents the shift surrogate certifies something in 22 of 24 null replicates, against 3 of 24 for the permutation surrogate, so shrinking the swarm does not rescue it. It is not a property of the skewed topic alphabet either, since on the near-uniform hash alphabet, where the largest symbol holds 13% of messages rather than 37%, the shift surrogate still fires in 10 of 10 replicates.
 

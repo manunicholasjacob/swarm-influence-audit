@@ -146,3 +146,22 @@ for lab, ok in r4:
 print(f"round-4: {sum(1 for _, ok in r4 if ok)}/{len(r4)} pass")
 if not all(ok for _, ok in r4):
     sys.exit("ROUND-4 VERIFICATION FAILED")
+
+# --- round-5: mechanism isolation ---
+mech = json.load(open(os.path.join(D, "facts_mechanism.json"), encoding="utf-8"))
+C = mech["conditions"]
+r5 = []
+def frac(cond, null):
+    return f'{int(round(C[cond][null]["fwer"]*mech["reps"]))} / {mech["reps"]}'
+r5.append(("mech A shift", frac("A_real_order_real_symbols", "shift").replace(" / ", " / ") in txt
+           or f'{int(round(C["A_real_order_real_symbols"]["shift"]["fwer"]*mech["reps"]))} of {mech["reps"]}' in txt))
+r5.append(("mech C shift", f'{int(round(C["C_shuffled_order_real_symbols"]["shift"]["fwer"]*mech["reps"]))} of {mech["reps"]}' in txt))
+r5.append(("mech B shift", f'{int(round(C["B_real_order_iid_symbols"]["shift"]["fwer"]*mech["reps"]))} of {mech["reps"]}' in txt))
+r5.append(("repeat rate", f'{mech["speaker_repeat_rate"]*100:.0f}%' in txt))
+r5.append(("return rate", f'{mech["speaker_return_after_one"]*100:.0f}%' in txt))
+for lab, ok in r5:
+    if not ok:
+        print(f"FAIL  {lab}")
+print(f"round-5: {sum(1 for _, ok in r5 if ok)}/{len(r5)} pass")
+if not all(ok for _, ok in r5):
+    sys.exit("ROUND-5 VERIFICATION FAILED")
