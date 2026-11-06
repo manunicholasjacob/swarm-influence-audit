@@ -14,7 +14,7 @@ def load(n):
 BLUE, GREY, RED, GREEN, ORANGE = "#2563EB", "#9CA3AF", "#DC2626", "#059669", "#F59E0B"
 
 clock = load("facts_clock.json"); fin = load("facts_final.json")
-cal = load("facts_calib.json"); cal2 = load("facts_calib2.json")
+cal = load("facts_calib.json"); cal2 = load("facts_calib_big.json") or load("facts_calib2.json")
 sp = load("facts_sparse.json"); rec = load("facts_recompute.json")
 pw2 = load("facts_power2.json")
 

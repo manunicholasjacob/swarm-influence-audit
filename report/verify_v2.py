@@ -43,10 +43,11 @@ want("shift reps", f'{sum(1 for c in cal["rows"]["shift"]["edges_per_rep"] if c>
 want("shift mean edges", cal["rows"]["shift"]["mean_edges"])
 
 # --- 5.3 repair ---
-want("permute fwer", f'{cal2["fwer"]:.2f}')
-want("permute reps", cal2["reps"])
-want("wilson lo", f'{cal2["wilson95"][0]:.2f}')
-want("wilson hi", f'{cal2["wilson95"][1]:.2f}')
+cbig = json.load(open(os.path.join(D, "facts_calib_big.json"), encoding="utf-8"))
+want("permute fwer", f'{cbig["fwer"]:.3f}')
+want("permute reps", cbig["reps"])
+want("wilson lo", f'{cbig["wilson95"][0]:.3f}')
+want("wilson hi", f'{cbig["wilson95"][1]:.3f}')
 fp = {x["volume"]: x for x in fin["false_positive_by_null"]["rows"]}
 want("perm fp 263", f'0 of {fp[263]["permute"]["of"]}')
 want("perm z263", fp[263]["permute"]["mean_max_z"])

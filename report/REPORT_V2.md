@@ -92,7 +92,7 @@ A planted agent could be dismissed as artificial, so we also measure the error r
 
 ### 5.3 A sparsity-preserving surrogate restores calibration
 
-Following the local-permutation idea of Shorten et al. (2021), we keep each source's speaking positions and permute only its symbols among them. On the same destroyed-structure data the family-wise error rate falls to 0.10 over 30 replicates, with a 95% Wilson interval of 0.03 to 0.26, which covers the nominal 0.05 although the point estimate sits above it. The planted uncoupled agent is now never certified: 0 of 5 at both 263 and 1500 messages, with mean max z of 2.8 in each case against 22.0 and 68.3 under the shift surrogate.
+Following the local-permutation idea of Shorten et al. (2021), we keep each source's speaking positions and permute only its symbols among them. On the same destroyed-structure data the family-wise error rate falls to 0.065 over 260 replicates, with a 95% Wilson interval of 0.041 to 0.102, so it is close to the nominal 0.05 and clearly separated from the 0.90 it replaces. The planted uncoupled agent is now never certified: 0 of 5 at both 263 and 1500 messages, with mean max z of 2.8 in each case against 22.0 and 68.3 under the shift surrogate.
 
 The failure is not an artifact of the configuration we chose. Appendix D shows it holds across swarm sizes from 5 to 20 agents, on a near-uniform alphabet as well as the skewed topic one, and that both the inflation and the masking reproduce under an independent symboliser.
 
