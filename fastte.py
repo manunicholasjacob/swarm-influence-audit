@@ -96,6 +96,8 @@ def cte_int(s, t, c, A, Ac):
     s = np.asarray(s); t = np.asarray(t); c = np.asarray(c)
     if t.shape[0] < 3:
         return 0.0
+    if c.size and int(c.max()) >= Ac:
+        raise ValueError(f"context code {int(c.max())} >= Ac={Ac}; joint indices would collide")
     tt, tp, sp, cc = t[1:], t[:-1], s[:-1], c[:-1]
     h_ttpc = _H((tt * A + tp) * Ac + cc, A * A * Ac)
     h_tpc = _H(tp * Ac + cc, A * Ac)
@@ -131,7 +133,7 @@ def directed_tests_conditional(series_int, channel, A, Ac, silent_code, n_perm=2
             for pr, o, z, p in zip(pairs, obs, z_obs, p_fwer)}
 
 
-def channel_context(stream_symbols, silent_code, window=12, n_levels=3):
+def channel_context(stream_symbols, silent_code, window=12, n_levels=None):
     """A small-alphabet summary of the channel's recent topic, EXCLUDING the immediately preceding
     message so it does not simply restate the source. Returns an int array over [0, n_levels)."""
     import collections
@@ -143,12 +145,11 @@ def channel_context(stream_symbols, silent_code, window=12, n_levels=3):
         if not ctx:
             out[t] = 0
             continue
-        mode, cnt = collections.Counter(ctx).most_common(1)[0]
-        frac = cnt / len(ctx)
-        # how concentrated the channel is on one topic, coarsely
-        out[t] = 0 if frac < 0.34 else (1 if frac < 0.67 else 2)
-        if n_levels > 3:
-            out[t] = min(n_levels - 1, int(frac * n_levels))
+        mode, _ = collections.Counter(ctx).most_common(1)[0]
+        # the channel's recent topic itself. An earlier version returned how CONCENTRATED the
+        # window was on its mode, which discarded which topic it was and carried almost no
+        # information about it, so conditioning on it did nothing.
+        out[t] = mode if n_levels is None else (mode % n_levels)
     return out
 
 

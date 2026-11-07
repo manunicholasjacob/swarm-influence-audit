@@ -172,21 +172,65 @@ cnd = json.load(open(os.path.join(D, "facts_conditional.json"), encoding="utf-8"
 hc = json.load(open(os.path.join(D, "facts_humans_conditional.json"), encoding="utf-8"))
 bc = json.load(open(os.path.join(D, "..", "swarm-bench", "bench_conditional.json"), encoding="utf-8")) \
      if os.path.exists(os.path.join(D, "..", "swarm-bench", "bench_conditional.json")) else None
-cs = json.load(open(os.path.join(D, "..", "swarm-bench", "cond_strong.json"), encoding="utf-8")) \
-     if os.path.exists(os.path.join(D, "..", "swarm-bench", "cond_strong.json")) else None
+# bench_validation.json supersedes cond_strong.json / bench_conditional.json: those predate the
+# generator and evaluator fixes, so their numbers must never be cited again.
+bv = json.load(open(os.path.join(D, "..", "swarm-bench", "bench_validation.json"), encoding="utf-8"))
+cs = None
 r6 = []
-r6.append(("cond calib 20/20", f'20 of 20 replicates' in txt))
+# the old 20-replicate calibration is superseded by the 40-replicate one checked in round 8
 r6.append(("main cond", f'{cnd["main-village"]["conditional_edges"]}' in txt))
-r6.append(("openchat cond 0", 'all 18 of open-chat' in txt or "open-chat's 18 vanish" in txt))
+r6.append(("openchat undetermined", "undetermined" in txt and "between 0 and 13" in txt))
 ind = hc["results"]["individual"]; col = hc["results"]["collapsed"]
 r6.append(("collapsed cond total", f'{col["conditional"]["edges_total"]} edges survive' in txt
-           or f'**Four edges survive' in txt))
+           or 'four edges survive' in txt.lower()))
 r6.append(("collapsed h2a", f'{len(col["conditional"]["human_drives_agent"])} run from humans' in txt
            or 'three run from humans to agents' in txt))
-if cs:
-    r6.append(("bench cc 0.0", f'{cs["common_cause_null"]["mean_edges"]:.1f}' in txt))
-    r6.append(("bench struct", f'{cs["structure"]["mean_edges"]:.1f} and recovers all 4' in txt
-               or '**4.0 and recovers all 4**' in txt))
+bf = bv["families"]
+cc, st = bf["common_cause_null"], bf["structure"]
+pn = bf["pure_null"]
+r6 += [("bench cc pairwise", f'certifies **{cc["pairwise"]["mean_edges"]:.1f}** edges' in txt),
+       ("bench cc conditional", f'takes that to **{cc["conditional"]["mean_edges"]:.2f}**' in txt),
+       ("bench struct pairwise", f'pairwise certifies {st["pairwise"]["mean_edges"]:.1f} to recover' in txt),
+       ("bench struct prec pw", f'pooled precision of {st["pairwise"]["pooled_precision"]:.2f}' in txt),
+       ("bench struct conditional", f'**{st["conditional"]["mean_edges"]:.1f} and still recovers all 4**' in txt),
+       ("bench struct prec cond", f'precision of **{st["conditional"]["pooled_precision"]:.2f}**' in txt),
+       ("bench recall 1.0", 'Recall is 1.0 either way' in txt),
+       ("bench pure null", f'pairwise fires in {pn["pairwise"]["fired_in"]} of {pn["pairwise"]["of"]}'
+        f' and conditional in {pn["conditional"]["fired_in"]} of {pn["conditional"]["of"]}' in txt),
+       ("bench abstract pw", f'fall from {cc["pairwise"]["mean_edges"]:.1f} to'
+        f' {cc["conditional"]["mean_edges"]:.2f}' in txt),
+       ("bench abstract prec", f'from {st["pairwise"]["pooled_precision"]:.2f} to'
+        f' {st["conditional"]["pooled_precision"]:.2f}' in txt),
+       # superseded pre-fix numbers must not reappear anywhere in the report
+       ("no stale precision 1.00", 'to 1.00' not in txt),
+       ("no stale 22.7", '22.7' not in txt),
+       ("no stale 0.71", '0.71' not in txt),
+       ("no stale 4.0 recovers", '4.0 and recovers all 4' not in txt),
+       ("label gap disclosed", 'precision on this benchmark is a lower bound' in txt),
+       ("vocab leak disclosed", 'recovered the generator' in txt),
+       ("bench power 3 of 3", 'in 3 of 3 runs' in txt)]
+
+# --- round-9: the 30-replicate activity-drift sweep supersedes the 8-replicate one ---
+sb = json.load(open(os.path.join(D, "..", "swarm-bench", "bench_stationarity_big.json"), encoding="utf-8"))
+r9 = [("drift reps 30", f'{sb["reps"]} replicates per cell' in txt)]
+for rw in sb["rows"]:
+    d = rw["activity_drift"]
+    r9.append((f"drift {d} shift", f'| {d} | {rw["shift"]["fwer"]:.3f}'.rstrip("0").rstrip(".") in txt
+               or f'{rw["shift"]["fwer"]:.3f}' in txt))
+    r9.append((f"drift {d} permute", f'{rw["permute"]["fwer"]:.3f}' in txt))
+pm = [rw["permute"]["fwer"] for rw in sb["rows"]]
+r9 += [("permute range", f'between {min(pm):.3f} and {max(pm):.3f}' in txt),
+       ("no stale 0.125", '0.125' not in txt),
+       ("no stale 0.625", '0.625' not in txt),
+       ("8-rep disclosed", '8-replicate' in txt or 'eight-replicate' in txt
+        or 'earlier 8-replicate' in txt or '0.375 at drift 0.6' in txt),
+       ("permute caution", 'not shown to fail' in txt)]
+for lab, ok in r9:
+    if not ok:
+        print(f"FAIL  {lab}")
+print(f"round-9: {sum(1 for _, ok in r9 if ok)}/{len(r9)} pass")
+if not all(ok for _, ok in r9):
+    sys.exit("ROUND-9 VERIFICATION FAILED")
 for lab, ok in r6:
     if not ok:
         print(f"FAIL  {lab}")
@@ -205,3 +249,25 @@ for lab, ok in r7:
 print(f"round-7: {sum(1 for _, ok in r7 if ok)}/{len(r7)} pass")
 if not all(ok for _, ok in r7):
     sys.exit("ROUND-7 VERIFICATION FAILED")
+
+# --- round-8: conditioning-resolution sensitivity ---
+cd8 = json.load(open(os.path.join(D, "facts_cond_diag.json"), encoding="utf-8"))
+oc = cd8["open-chat-village"]; mv = cd8["main-village"]
+r8 = [("oc full edges 0", f'**{oc["full_Ac9"]["edges"]}** (mean z {oc["full_Ac9"]["mean_z"]:+.2f}' in txt),
+      ("main full edges 2", f'**{mv["full_Ac9"]["edges"]}, the same two edges** (mean z {mv["full_Ac9"]["mean_z"]:+.2f}' in txt),
+      ("oc coarse4", f'| **{oc["coarse_Ac4"]["edges"]}** |' in txt),
+      ("oc coarse2", f'| **{oc["coarse_Ac2"]["edges"]}** |' in txt),
+      ("oc max z", f'only {oc["full_Ac9"]["max_z"]:.1f}' in txt),
+      ("oc frac neg", f'{oc["full_Ac9"]["frac_z_negative"]*100:.0f}% of pairs' in txt),
+      ("undetermined", "between 0 and 13" in txt)]
+cpn = cd8["conditional_pure_null"]
+r8 += [("cond calib fired", f'fires in {cpn["fired"]} of {cpn["reps"]} replicates' in txt),
+       ("cond calib fwer", f'error rate of {cpn["fwer"]:.2f}' in txt),
+       ("cond calib mean z", f'mean z of {cpn["mean_z"]:.3f}' in txt),
+       ("no stale 20/20", "20 of 20 replicates" not in txt)]
+for lab, ok in r8:
+    if not ok:
+        print(f"FAIL  {lab}")
+print(f"round-8: {sum(1 for _, ok in r8 if ok)}/{len(r8)} pass")
+if not all(ok for _, ok in r8):
+    sys.exit("ROUND-8 VERIFICATION FAILED")

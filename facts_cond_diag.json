@@ -1,0 +1,75 @@
+{
+  "k": 8,
+  "n_surrogates": 200,
+  "window": 12,
+  "main-village": {
+    "n_ticks": 7958,
+    "agents": 15,
+    "alphabet_A": 9,
+    "full_Ac9": {
+      "Ac": 9,
+      "joint_cells": 6561,
+      "ticks_per_cell": 1.213,
+      "edges": 2,
+      "mean_z": 0.343,
+      "frac_z_negative": 0.51,
+      "max_z": 13.5
+    },
+    "coarse_Ac4": {
+      "Ac": 4,
+      "joint_cells": 2916,
+      "ticks_per_cell": 2.729,
+      "edges": 2,
+      "mean_z": 0.394,
+      "frac_z_negative": 0.514,
+      "max_z": 13.4
+    },
+    "coarse_Ac2": {
+      "Ac": 2,
+      "joint_cells": 1458,
+      "ticks_per_cell": 5.458,
+      "edges": 3,
+      "mean_z": 0.585,
+      "frac_z_negative": 0.467,
+      "max_z": 14.89
+    }
+  },
+  "open-chat-village": {
+    "n_ticks": 7735,
+    "agents": 15,
+    "alphabet_A": 9,
+    "full_Ac9": {
+      "Ac": 9,
+      "joint_cells": 6561,
+      "ticks_per_cell": 1.179,
+      "edges": 0,
+      "mean_z": -0.338,
+      "frac_z_negative": 0.652,
+      "max_z": 4.43
+    },
+    "coarse_Ac4": {
+      "Ac": 4,
+      "joint_cells": 2916,
+      "ticks_per_cell": 2.653,
+      "edges": 7,
+      "mean_z": 0.546,
+      "frac_z_negative": 0.514,
+      "max_z": 13.24
+    },
+    "coarse_Ac2": {
+      "Ac": 2,
+      "joint_cells": 1458,
+      "ticks_per_cell": 5.305,
+      "edges": 13,
+      "mean_z": 1.117,
+      "frac_z_negative": 0.457,
+      "max_z": 17.8
+    }
+  },
+  "conditional_pure_null": {
+    "reps": 40,
+    "fired": 2,
+    "fwer": 0.05,
+    "mean_z": -0.001
+  }
+}
