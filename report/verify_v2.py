@@ -221,7 +221,22 @@ for rw in sb["rows"]:
                or f'{rw["shift"]["fwer"]:.3f}' in txt))
     r9.append((f"drift {d} permute", f'{rw["permute"]["fwer"]:.3f}' in txt))
 pm = [rw["permute"]["fwer"] for rw in sb["rows"]]
+# COMPUTE the coverage claim rather than string-matching it. The report previously said "every
+# 95% interval covering the nominal 0.05", which was false: the drift-0.6 interval runs from
+# 0.073 and excludes it. A substring check passed that happily, which is exactly the failure
+# mode this verifier exists to prevent.
+_cov = [rw for rw in sb["rows"] if rw["permute"]["wilson95"][0] <= 0.05 <= rw["permute"]["wilson95"][1]]
+_n_cov, _n_tot = len(_cov), len(sb["rows"])
+_miss = [rw for rw in sb["rows"] if rw not in _cov]
 r9 += [("permute range", f'between {min(pm):.3f} and {max(pm):.3f}' in txt),
+       ("coverage not overclaimed", "every 95% interval covering" not in txt
+        and "all four 95% intervals" not in txt),
+       ("coverage stated correctly",
+        (f'{["zero","one","two","three","four"][_n_cov]} of its {["zero","one","two","three","four"][_n_tot]} 95% intervals' in txt)
+        if _n_cov < _n_tot else True),
+       ("the excluded interval is named",
+        all(f'{rw["permute"]["wilson95"][0]} to {rw["permute"]["wilson95"][1]}' in txt
+            or f'drift {rw["activity_drift"]}' in txt for rw in _miss) if _miss else True),
        ("no stale 0.125", '0.125' not in txt),
        ("no stale 0.625", '0.625' not in txt),
        ("8-rep disclosed", '8-replicate' in txt or 'eight-replicate' in txt

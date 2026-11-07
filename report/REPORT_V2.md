@@ -179,7 +179,7 @@ We followed the dataset's research terms: research use only, no training on the 
 | speaker order shuffled, symbols shuffled | **0 / 10** | 1 / 10 |
 | speaker order shuffled, uniform i.i.d. symbols | 0 / 10 | 1 / 10 |
 
-Speaker order is the switch and the symbol distribution only modulates. A generated channel with exactly one speaker per tick but stationary activity leaves the shift surrogate roughly calibrated at 0.067, which is how we found this: mutual exclusivity alone, our first proposed explanation, is not sufficient. Sweeping the generated activity from stationary to strongly non-stationary, 30 replicates per cell, raises the shift surrogate through 0.133 and 0.200 to **0.367**, while the permutation surrogate stays between 0.033 and 0.167 with every 95% interval covering the nominal 0.05.
+Speaker order is the switch and the symbol distribution only modulates. A generated channel with exactly one speaker per tick but stationary activity leaves the shift surrogate roughly calibrated at 0.067, which is how we found this: mutual exclusivity alone, our first proposed explanation, is not sufficient. Sweeping the generated activity from stationary to strongly non-stationary, 30 replicates per cell, raises the shift surrogate through 0.133 and 0.200 to **0.367**, while the permutation surrogate stays between 0.033 and 0.167, with three of its four 95% intervals covering the nominal 0.05 and the fourth, at drift 0.6, running from 0.073 to 0.336.
 
 | activity drift | shift | permutation |
 |---|---|---|
@@ -188,7 +188,7 @@ Speaker order is the switch and the symbol distribution only modulates. A genera
 | 0.6 | 0.200 | 0.167 |
 | 0.9 | **0.367** | **0.100** |
 
-The real channel's agents sit at the top of that range, with a median block-share coefficient of variation of 0.79. So non-stationary activity is one sufficient route to the failure, and the repair survives it. Two cautions: because shuffling the speaker order destroys turn-taking and non-stationarity together, we cannot say which of the two is doing more work on the real data; and 30 replicates leave intervals wide enough that the permutation column should be read as not shown to fail rather than shown to be nominal. An earlier 8-replicate version of this sweep put the permutation surrogate at 0.375 at drift 0.6, which is why it was re-run.
+The real channel's agents sit at the top of that range, with a median block-share coefficient of variation of 0.79. So non-stationary activity is one sufficient route to the failure, and the repair survives it. Two cautions: because shuffling the speaker order destroys turn-taking and non-stationarity together, we cannot say which of the two is doing more work on the real data; and 30 replicates leave intervals wide enough that the permutation column should be read as not shown to fail rather than shown to be nominal, which the drift-0.6 interval makes concrete. An earlier 8-replicate version of this sweep put the permutation surrogate at 0.375 at drift 0.6, which is why it was re-run.
 
 **The surrogate failure is not an artifact of our configuration.** It is not a large-swarm effect: across swarms of 5, 10, 15 and 20 agents the shift surrogate certifies something in 22 of 24 null replicates, against 3 of 24 for the permutation surrogate, so shrinking the swarm does not rescue it. It is not a property of the skewed topic alphabet either, since on the near-uniform hash alphabet, where the largest symbol holds 13% of messages rather than 37%, the shift surrogate still fires in 10 of 10 replicates.
 
@@ -239,7 +239,7 @@ Running the detector on clock windows from 30 seconds to an hour shows the two f
 
 More telling is what the edges are made of. Across widths the meaning-free hash null certifies comparably many edges to the topic symboliser, 9 against 12 at 30 seconds, 17 against 19 at one minute and 27 against 44 at fifteen, and at 5 minutes it certifies more, 19 against 17. Whatever clock-window transfer entropy is detecting on this data, it is not shared meaning, which is what sends us to the turn-ordered grid.
 
-[Figure 3: f1_clock.png. Caption: Clock-window transfer entropy on the 15 analysed agents of main-village #general. Left, the two failure modes as a function of window width. Right, edges certified under the topic symboliser against the meaning-free hash null.]
+[Figure 2: f1_clock.png. Caption: Clock-window transfer entropy on the 15 analysed agents of main-village #general. Left, the two failure modes as a function of window width. Right, edges certified under the topic symboliser against the meaning-free hash null.]
 
 ## Appendix G: power and replication in full
 
@@ -249,7 +249,7 @@ Absence of edges is only informative if the test could have found them, so we pl
 
 Power is governed by how much an agent says, not only by how strongly it copies, and it is channel-specific: in open-chat a follower at that channel's median volume is caught in 3 of 4 runs at coupling 0.1 and in 4 of 4 from 0.2 upward. main-village's two edges are therefore a floor rather than a description.
 
-[Figure 2: f4_power.png. Caption: Detection of a planted follower under the repaired surrogate. Left, varying the fraction of its messages that copy the leader, at the median agent's volume. Right, varying how much it speaks, at strong coupling.]
+[Figure 3: f4_power.png. Caption: Detection of a planted follower under the repaired surrogate. Left, varying the fraction of its messages that copy the leader, at the median agent's volume. Right, varying how much it speaks, at strong coupling.]
 
 **Does anything replicate?**
 

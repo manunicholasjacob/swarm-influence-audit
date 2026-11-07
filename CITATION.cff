@@ -45,3 +45,13 @@ references:
     issue: 4
     year: 2021
     doi: "10.1371/journal.pcbi.1008054"
+  - type: conference-paper
+    title: "Conditional Independence Testing Based on a Nearest-Neighbor Estimator of Conditional Mutual Information"
+    authors:
+      - family-names: Runge
+        given-names: Jakob
+    collection-title: "Proceedings of the Twenty-First International Conference on Artificial Intelligence and Statistics"
+    volume: 84
+    start: 938
+    end: 947
+    year: 2018
