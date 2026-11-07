@@ -101,6 +101,35 @@ def check_retired(root: pathlib.Path) -> tuple[bool, str]:
     return True, f"checked {n} documents, no retired claim restated"
 
 
+def check_arxiv_fresh(root: pathlib.Path) -> tuple[bool, str]:
+    """arxiv/main.tex is generated from the report, so it must match a fresh generation.
+
+    It had drifted by 58 lines before 7 Nov 2026, including a missing contribution bullet and an
+    attribution the report had already corrected. Nothing noticed, because nothing compared them.
+    """
+    import tempfile
+    src = root / "report" / "REPORT_V2.md"
+    gen = root / "report" / "to_latex.py"
+    out = root / "arxiv" / "main.tex"
+    if not (src.exists() and gen.exists() and out.exists()):
+        return True, "arxiv package not present, nothing to compare"
+    with tempfile.TemporaryDirectory() as td:
+        tmp = pathlib.Path(td) / "main.tex"
+        p = subprocess.run([sys.executable, "-X", "utf8", str(gen), str(src), str(tmp)],
+                           capture_output=True, text=True, timeout=300)
+        if p.returncode != 0:
+            return False, f"could not regenerate: {(p.stderr or '').strip()[-400:]}"
+        fresh = tmp.read_text(encoding="utf-8").splitlines()
+    committed = out.read_text(encoding="utf-8").splitlines()
+    if fresh == committed:
+        return True, f"arxiv/main.tex matches a fresh generation ({len(fresh)} lines)"
+    import difflib
+    diff = list(difflib.unified_diff(committed, fresh, "committed", "regenerated", lineterm="", n=0))
+    return False, (f"arxiv/main.tex is stale by {len(diff)} diff lines. "
+                   f"Regenerate it:\n  python -X utf8 report/to_latex.py report/REPORT_V2.md "
+                   f"arxiv/main.tex\n" + "\n".join(diff[:12]))
+
+
 def check_ascii(root: pathlib.Path) -> tuple[bool, str]:
     """No em dashes, en dashes, or other non-ASCII in anything the author ships."""
     offenders, n = [], 0
@@ -136,7 +165,8 @@ def main() -> int:
         checks.append(("submission pack matches report",
                        [py, "check_pack.py", str(pack_root / "deliverables")], HERE / "report"))
 
-    names = [n for n, _, _ in checks] + ["retired claims in docs", "ascii and dashes"]
+    names = [n for n, _, _ in checks] + ["arxiv source in sync", "retired claims in docs",
+                                         "ascii and dashes"]
     total = len(names)
     width = max(len(n) for n in names) + 2
     failed, skipped = [], []
@@ -150,6 +180,11 @@ def main() -> int:
         print(f"{name:<{width}} {'PASS' if ok else 'FAIL'}")
         if not ok:
             failed.append((name, detail))
+
+    ok, detail = check_arxiv_fresh(HERE)
+    print(f"{'arxiv source in sync':<{width}} {'PASS' if ok else 'FAIL'}")
+    if not ok:
+        failed.append(("arxiv source in sync", detail))
 
     # These two run over the repository itself, always, plus the pack when one was given.
     roots = [HERE] + ([pack_root] if pack_root is not None and pack_root.exists() else [])
