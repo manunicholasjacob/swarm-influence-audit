@@ -30,8 +30,8 @@ want("same-window 0.5min", f'{r[0.5]["same_window_reply_share"]*100:.1f}%')
 want("same-window 5min", f'{r[5]["same_window_reply_share"]*100:.1f}%')
 want("same-window 60min", f'{r[60]["same_window_reply_share"]*100:.1f}%')
 want("occupancy 0.5min", f'{r[0.5]["cell_occupancy"]*100:.1f}%')
-for w in (0.5, 1, 15):
-    want(f"clock edges {w}", f'{r[w]["edges_topic"]} against {r[w]["edges_hash"]}')
+for w in (0.5, 1, 15):   # report states hash against topic
+    want(f"clock edges {w}", f'{r[w]["edges_hash"]} against {r[w]["edges_topic"]}')
 
 # --- 5.2 negative control ---
 sr = {x["volume"]: x for x in sparse["rows"]}

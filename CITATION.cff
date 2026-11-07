@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+title: "An Agent That Copies Nobody Is Certified as a Leader"
+message: "If you use this work, please cite it as below."
+type: software
+authors:
+  - family-names: Jacob
+    given-names: Manu Nicholas
+    email: manunicholasjacob@gmail.com
+    affiliation: Independent Researcher
+abstract: >-
+  An audit of information-theoretic influence detection on real multi-agent chat. The conventional
+  circular-shift surrogate is invalid on turn-ordered agent logs (family-wise error rate 0.90 against
+  a nominal 0.05); a symbol-permutation surrogate restores it to 0.063, and a conditional estimate
+  additionally removes common-cause edges.
+keywords:
+  - transfer entropy
+  - multi-agent systems
+  - AI safety
+  - surrogate data
+  - coordination detection
+license: MIT
+year: 2026
