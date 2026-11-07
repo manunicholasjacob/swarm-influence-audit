@@ -6,6 +6,9 @@ November 2026 (Track 4, Multi-Agent Oversight and Control).
 
 Report: [`report/Apart_Swarm_Report_Manu_Nicholas_Jacob.pdf`](report/Apart_Swarm_Report_Manu_Nicholas_Jacob.pdf).
 Benchmark built out of this work: **[swarm-influence-bench](https://github.com/manunicholasjacob/swarm-influence-bench)**.
+General-purpose harness built out of it since: **[attribution-calibration](https://github.com/manunicholasjacob/attribution-calibration)**,
+which packages the calibration argument here (family-wise error on your own log, a power curve, a
+detection floor) for any detector that emits directed claims.
 
 Author: Manu Nicholas Jacob, Independent Researcher (manunicholasjacob@gmail.com). AI coding
 assistance used and disclosed in the report; the author is responsible for every claim. No result or
@@ -33,29 +36,49 @@ shuffling the order destroys both, so this does **not** isolate turn-taking from
 An earlier draft of this work blamed "mutual exclusivity" (one speaker per tick); the benchmark
 refuted that, and the claim does not appear in the report.
 
-A **symbol-permutation** surrogate (Shorten, Spinney & Lizier 2021; the fix is theirs, the
-demonstration is ours) restores the error rate to **0.063 [0.041, 0.097] over 300 replicates**.
+A **symbol-permutation** surrogate restores the error rate to **0.063 [0.041, 0.097] over 300
+replicates**. The scheme is the local permutation of **Runge (2018)**, AISTATS, PMLR 84, 938-947, as
+adapted to continuous-time event data by **Shorten, Spinney and Lizier (2021)**, PLOS Computational
+Biology 17(4) e1008054. The fix is theirs; the demonstration that multi-agent safety monitoring
+inherits the failure is ours.
 
 **2. A valid surrogate fixes calibration, not confounding.** Pairwise transfer entropy cannot
 separate direct influence from a shared drifting channel topic. Conditioning on the channel's recent
-modal topic does, validated on the benchmark (common-cause false edges **22.7 to 0.0**, precision
-**0.17 to 1.00**, no power lost from coupling 0.05 to 0.8).
+modal topic does, validated on the benchmark: common-cause false edges **22.3 to 0.33** on the
+instances built to be confounded, and pooled precision **0.17 to 0.80** on the four-edge instances,
+with recall 1.0 either way and no power lost from coupling 0.05 to 0.8. **That 0.80 is a lower
+bound, not a score**: planting an edge displaces other agents' speaking turns, so the instances
+contain real lag-1 dependencies the label set does not list.
+
+**3. There is a floor under all of it.** Everything above runs downstream of turning text into
+symbols. On the benchmark, where true topics are known, detection collapses once the symboliser's
+agreement with truth falls **below roughly 0.44** adjusted Rand index, whatever the estimator, and
+below the floor the false-positive rate improves only because there is no shared topic left to be
+confounded by. Real agent-style text sits at **0.937**, an upper bound. We find this check reported
+in no influence-detection paper, and we cannot run it on the real logs, which makes it the largest
+unquantified threat to everything here.
 
 **What survives both repairs, on real channels:**
 
 | channel | shift | permutation | + conditioning |
 |---|---|---|---|
-| main #general | 11 | 2 | **2** (same two) |
-| open-chat #general | 3 | 18 | **0** |
+| main #general | 11 | 2 | **2** (same two, at every resolution tried) |
+| open-chat #general | 3 | 18 | **undetermined: 0 to 13** |
 | swarm, room a | 2 | 1 | **0** |
 
-and **no certified edge replicates out of sample** (adjacent window certifies nothing, under either
+open-chat's answer is set by the conditioning resolution, not by the data: 0 edges at nine context
+values, 7 at four, 13 at two, and at the finest resolution the test is degenerate, with the surrogate
+above the observed statistic for 65% of pairs. An earlier version of this README reported that cell
+as a flat **0**, which was withdrawn.
+
+And **no certified edge replicates out of sample** (adjacent window certifies nothing, under either
 estimator). Where humans are present, the influence that survives conditioning runs from people to
-agents and never back (19 edges to 4: 3 human-to-agent, 1 agent-to-agent, 0 back).
+agents and never back (19 edges to 4: 3 human-to-agent, 1 agent-to-agent, 0 back), though that is
+also what ordinary responsiveness looks like and the measurement cannot separate the two.
 
 ## Preexisting vs new work (this matters for judging)
 
-**Preexisting, declared** — `C:\dev\swarm-prep` (commit `b90ca01`), **untouched** during the sprint:
+**Preexisting, declared.** `swarm-prep` (commit `b90ca01`), **untouched** during the sprint:
 `swarm_te.py` (lag-1 TE, circular-shift surrogate, max-T test) and `swarm_load.py` (reader, Topic and
 Hash symbolisers), both validated pre-sprint on synthetic chat. That validation used a representation
 in which several agents speak per window, where the shift surrogate is valid; the invalidity reported
@@ -75,23 +98,28 @@ reimplementation of the preexisting estimator verified bit-for-bit against it be
 
 ## Requirements and layout
 
-Python 3.12+. Dependencies: `numpy`, `matplotlib`, `huggingface_hub`, `pymupdf` (page checks),
-`python-docx` (report build only). **No scikit-learn**: the symbolisers are hand-rolled.
+Python 3.10+.
 
 ```
-pip install numpy matplotlib huggingface_hub pymupdf python-docx
+pip install -r requirements.txt
 ```
 
-**Scripts use absolute paths and expect all three repositories side by side:**
+`requirements.txt` is the authority. Note `scikit-learn`: `r3_symboliser.py` imports it lazily
+inside `fit()`, so a missing install does not fail at import time, it fails minutes into a run.
+
+**Put the three repositories side by side.** `report/verify_v2.py` reads `../swarm-bench/*.json`,
+and the analysis scripts import the preexisting estimator from `../swarm-prep`:
 
 ```
-C:\dev\swarm-prep     preexisting estimator and symbolisers (private)
-C:\dev\swarm-sprint   this repository
-C:\dev\swarm-bench    the benchmark (report/verify_v2.py reads ../swarm-bench/*.json)
+swarm-prep     preexisting estimator and symbolisers (private, not redistributed)
+swarm-sprint   this repository
+swarm-bench    the benchmark
 ```
 
-On another layout or OS, edit the `sys.path.insert` lines at the top of `swarmlib.py`, `fastte.py`,
-`figures_r2.py` and `report/verify_v2.py`.
+Some analysis scripts still carry absolute `C:\dev\...` paths in their `sys.path.insert` lines and
+need editing on another layout or OS. The two scripts a reader is most likely to run,
+`report/verify_v2.py` and `verify_all.py`, resolve everything relative to their own location and
+need no editing.
 
 ## Verify every number without dataset access
 
@@ -99,7 +127,16 @@ The dataset is gated, but **every number in the report is checked against the co
 `facts_*.json`**, so this works from a clone alone:
 
 ```
-python -X utf8 report/verify_v2.py      # 71 numeric claims + 23 assertions across rounds 3-7
+python verify_all.py
+```
+
+That runs five checks and prints one verdict: the numeric verifier below, the 8-page body cap, the
+benchmark's own test suite, a guard that no withdrawn claim is restated in any document, and an
+ASCII sweep. A check that cannot run is reported as a skip **and fails the run**, because a verifier
+that prints success for work it did not do is worse than no verifier.
+
+```
+python -X utf8 report/verify_v2.py      # 71 numeric claims + 89 assertions across rounds 3 to 12
 ```
 
 ## Reproduce the analysis (needs dataset access)

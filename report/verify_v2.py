@@ -2,7 +2,15 @@
 Fails loudly on any mismatch. No number in the report may be hand-typed."""
 import json, os, re, sys
 
-D = r"C:\dev\swarm-sprint"
+# Resolve the repository root from this file's own location, never from a hardcoded path.
+# This was `D = r"C:\dev\swarm-sprint"` until 7 Nov 2026, which meant the verifier read that
+# directory no matter where it was invoked from. Running it inside a clone with every facts_*.json
+# and the report deleted still printed ALL NUMERIC CLAIMS VERIFIED, because it was silently
+# verifying the author's working copy. On any machine without that directory it raised
+# FileNotFoundError instead. Either way the README's claim that this works from a clone alone was
+# false for every reader. A verifier that passes on an empty clone is worse than no verifier,
+# because it invites a reviewer to trust it.
+D = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def F(n): return json.load(open(os.path.join(D, n), encoding="utf-8"))
 txt = open(os.path.join(D, "report", "REPORT_V2.md"), encoding="utf-8").read()
 
