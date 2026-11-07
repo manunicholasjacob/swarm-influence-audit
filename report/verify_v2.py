@@ -298,6 +298,27 @@ print(f"round-11: {sum(1 for _, ok in r11 if ok)}/{len(r11)} pass")
 if not all(ok for _, ok in r11):
     sys.exit("ROUND-11 VERIFICATION FAILED")
 
+# --- round-12: the real-corpus ARI measurement ---
+ca_path = os.path.join(D, "..", "swarm-bench", "corpus_ari.json")
+if os.path.exists(ca_path):
+    ca = json.load(open(ca_path, encoding="utf-8"))
+    worst = min(v for v in ca["corpus_per_topic"].values())
+    biggest = max(ca["corpus_per_topic"].values())
+    r12 = [("corpus ari", f'**{ca["ari_mean"]:.3f}**' in txt),
+           ("upper bound stated", 'upper bound' in txt.lower()),
+           ("distinct strings", f'{ca["distinct_messages_total"]} distinct strings' in txt),
+           ("corpus rows", f'{ca["corpus_rows"]} rows' in txt),
+           ("imbalance biggest", f'{biggest} of {ca["corpus_rows"]}' in txt),
+           ("imbalance smallest", f'{worst} each' in txt),
+           ("topics used", f'k={len(ca["topics_used"])}' in txt),
+           ("above floor", ca["above_collapse_floor"] is True)]
+    for lab, ok in r12:
+        if not ok:
+            print(f"FAIL  {lab}")
+    print(f"round-12: {sum(1 for _, ok in r12 if ok)}/{len(r12)} pass")
+    if not all(ok for _, ok in r12):
+        sys.exit("ROUND-12 VERIFICATION FAILED")
+
 # --- round-10: internal cross-references resolve ---
 import re as _re
 _heads = set(_re.findall(r'^#{2,3} (.+)$', txt, _re.M))
