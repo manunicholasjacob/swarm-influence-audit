@@ -1,3 +1,8 @@
+# NOTE FOR ANYONE ADDING ZENODO METADATA LATER.
+# Zenodo reads this file when archiving a GitHub release, BUT if a .zenodo.json is also present it
+# uses that and ignores this file silently. Do not add a .zenodo.json alongside this one unless you
+# intend it to be the single source of truth, or a minted DOI will carry whichever metadata is
+# stale. This repository deliberately keeps CITATION.cff only.
 cff-version: 1.2.0
 title: "An Agent That Copies Nobody Is Certified as a Leader"
 message: "If you use this work, please cite it as below."
@@ -11,12 +16,32 @@ abstract: >-
   An audit of information-theoretic influence detection on real multi-agent chat. The conventional
   circular-shift surrogate is invalid on turn-ordered agent logs (family-wise error rate 0.90 against
   a nominal 0.05); a symbol-permutation surrogate restores it to 0.063, and a conditional estimate
-  additionally removes common-cause edges.
+  additionally removes common-cause edges. Also reports a symbolisation floor: below an adjusted
+  Rand index of about 0.44 between symboliser and truth, detection collapses regardless of estimator.
 keywords:
   - transfer entropy
   - multi-agent systems
   - AI safety
   - surrogate data
   - coordination detection
+  - reproducibility
 license: MIT
-year: 2026
+version: 1.0.0
+date-released: "2026-11-06"
+repository-code: "https://github.com/manunicholasjacob/swarm-influence-audit"
+url: "https://github.com/manunicholasjacob/swarm-influence-audit"
+references:
+  - type: article
+    title: "Estimating transfer entropy in continuous time between neural spike trains or other event-based data"
+    authors:
+      - family-names: Shorten
+        given-names: David P.
+      - family-names: Spinney
+        given-names: Richard E.
+      - family-names: Lizier
+        given-names: Joseph T.
+    journal: "PLOS Computational Biology"
+    volume: 17
+    issue: 4
+    year: 2021
+    doi: "10.1371/journal.pcbi.1008054"
