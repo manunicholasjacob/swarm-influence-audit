@@ -18,3 +18,12 @@ __pycache__/
 *.jsonl.gz
 *.parquet
 data/
+
+# Exported event trains are a close derivative of a gated corpus: exact per-agent timestamps for
+# every message in the window. The AI Village research terms forbid redistributing the corpus, and
+# while this carries no text and no identities, the timing structure is substantial enough that
+# shipping it would be redistribution in substance. The exporter is committed instead, so anyone
+# with their own dataset access can regenerate it in one command.
+cotete_export/*_events.json
+cotete_export/*_trains.csv
+cotete_export/export_summary.json
