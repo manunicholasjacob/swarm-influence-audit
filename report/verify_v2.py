@@ -271,3 +271,21 @@ for lab, ok in r8:
 print(f"round-8: {sum(1 for _, ok in r8 if ok)}/{len(r8)} pass")
 if not all(ok for _, ok in r8):
     sys.exit("ROUND-8 VERIFICATION FAILED")
+
+# --- round-10: internal cross-references resolve ---
+import re as _re
+_heads = set(_re.findall(r'^#{2,3} (.+)$', txt, _re.M))
+_apps = {h.split(":")[0].strip() for h in _heads if h.startswith("Appendix")}
+_secs = set()
+for _h in _heads:
+    _m = _re.match(r'^(\d+(?:\.\d+)?)\.?\s', _h)
+    if _m:
+        _secs.add(_m.group(1))
+_bad = [r for r in set(_re.findall(r'Appendix [A-Z]', txt)) if r not in _apps]
+_bad += ["Section " + r for r in set(_re.findall(r'Section (\d+(?:\.\d+)?)', txt)) if r not in _secs]
+for _b in _bad:
+    print(f"FAIL  dangling reference: {_b}")
+print(f"round-10: {len(_apps)} appendices, {len(_secs)} sections, "
+      f"{'no dangling references' if not _bad else str(len(_bad)) + ' DANGLING'}")
+if _bad:
+    sys.exit("ROUND-10 VERIFICATION FAILED")
