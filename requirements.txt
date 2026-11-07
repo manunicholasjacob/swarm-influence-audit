@@ -3,3 +3,17 @@ matplotlib>=3.8
 huggingface_hub>=1.0
 pymupdf>=1.24
 python-docx>=1.1
+
+# Added 7 Nov 2026 after an audit found both missing. A fresh clone could install cleanly and then
+# fail partway through a run, which is the worst failure mode for a repository whose claim is
+# reproducibility.
+#
+# scikit-learn: r3_symboliser.py imports KMeans, TruncatedSVD and TfidfVectorizer lazily inside
+# TopicSymboliser.fit(), so a missing install does not fail at import time. It fails minutes into an
+# evaluation run, after the corpus load. swarm-bench/requirements.txt already carried this pin and
+# this warning; this file did not.
+scikit-learn>=1.4
+
+# pypdf: report/check_pages.py imports it at module level to count pages. Without it the 8-page
+# body cap cannot be checked, and checking that cap by eye is how it was missed once already.
+pypdf>=4.0
