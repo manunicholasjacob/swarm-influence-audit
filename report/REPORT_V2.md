@@ -27,7 +27,7 @@ We run that audit on the AI Village (AI Digest, 2026), in which frontier models 
 
 **Event-based data breaks the shift surrogate.** Our audit rediscovers this in a new domain. Shorten, Spinney and Lizier (2021), on neural spike trains, show that the conventional source-time-shift surrogate fails to represent the null hypothesis of conditional independence for event-based processes, and propose a local permutation scheme instead. Agent chat is event-based in that sense: messages are events in continuous time, not samples of a clocked signal. Our contribution is not the fix but the demonstration that multi-agent safety practice inherits the failure, and that it is severe enough to manufacture leaders out of nothing.
 
-**Oversight under a budget.** AI-control research frames monitoring as resource constrained, with a cost for false positives (Greenblatt et al., 2024). An influence graph is one such measurement; our concern is the error rate attached to it.
+**Oversight under a budget.** AI-control research frames monitoring as resource constrained, with a cost for false positives (Greenblatt et al., 2024); an influence graph is one such measurement and our concern is its error rate.
 
 ## 3. Data
 
@@ -46,7 +46,7 @@ A 2026 scaffolding change scopes each agent to its current room's context, so th
 
 ### 4.1 From open language to symbols
 
-Transfer entropy needs discrete symbols, so each message is mapped to a small alphabet before influence is estimated, and that mapping is kept separate from the estimator. A topic symboliser (TF-IDF then k-means, k=8) gives a message its topic cluster id, so paraphrases of one idea share a symbol. A hash symboliser (a stable hash of the normalised text into k=8 buckets) has no notion of meaning and serves as a null: an edge surviving under topics but not hashing lives in shared meaning, one appearing under both lives in timing alone.
+Transfer entropy needs discrete symbols, so each message is mapped to a small alphabet before influence is estimated, and that mapping is kept separate from the estimator. A topic symboliser (TF-IDF then k-means, k=8) gives a message its topic cluster id, so paraphrases of one idea share a symbol. A hash symboliser (a stable hash of the normalised text into k=8 buckets) has no notion of meaning and serves as a null: an edge appearing under both lives in timing alone.
 
 ### 4.2 The lag problem, and why clock windows cannot solve it
 
@@ -66,7 +66,7 @@ We therefore add a **symbol-permutation** surrogate, following the local-permuta
 
 A valid surrogate fixes calibration but not confounding. If every agent tracks a drifting channel topic, every pair is genuinely dependent through the channel, and pairwise transfer entropy cannot tell that from direct influence. We therefore also report a **conditional** estimate, which asks whether a source's last message adds anything about a target's next one beyond the target's own history **and the channel's recent state**. The conditioning variable is the modal symbol of the last twelve messages, excluding the immediately preceding one so that it does not simply restate the source.
 
-The two estimates bound the answer rather than one superseding the other: pairwise asks whether there is directed topical dependence at all, including dependence mediated by the channel, and conditional asks whether it is specific to the pair. The distinction matters, because influence that works by shifting what the room talks about is real influence, and conditioning removes it.
+The two estimates bound the answer rather than one superseding the other: pairwise asks whether there is directed topical dependence at all, including dependence mediated by the channel, and conditional asks whether it is specific to the pair. Influence that works by shifting what the room talks about is real influence, and conditioning removes it, which is why both are reported.
 
 ### 4.5 Controls
 
@@ -76,7 +76,7 @@ Real logs have no ground truth, so we plant it. A synthetic follower is spliced 
 
 ### 5.1 On a turn-ordered grid the standard surrogate is invalid
 
-We plant an agent into the real stream, drawing its symbols from the channel's marginal and coupling it to nothing at all, then ask how often it is certified as driving something. It is certified in 3 of 8 runs when it posts 50 messages, and in 8 of 8 at 100, 263, 600 and 1500 messages, with the mean largest z rising from 5.6 to 12.3, 21.7, 38.3 and 71.7. The error grows with how much the agent speaks, which rules out a small-sample explanation and says the mismatch is in structure rather than in sample size.
+We plant an agent into the real stream, drawing its symbols from the channel's marginal and coupling it to nothing at all, then ask how often it is certified as driving something. It is certified in 3 of 8 runs when it posts 50 messages, and in 8 of 8 at 100, 263, 600 and 1500 messages, with the mean largest z rising from 5.6 to 12.3, 21.7, 38.3 and 71.7. The error grows with how much the agent speaks, which rules out a small-sample explanation.
 
 A planted agent could be dismissed as artificial, so we also measure the error rate directly. Keeping the real speaker sequence and permuting the symbols globally leaves data with no directed topical influence by construction. The shift surrogate certifies at least one edge in 9 of 10 such replicates, a family-wise error rate of 0.90 against a nominal 0.05.
 
@@ -84,7 +84,7 @@ A planted agent could be dismissed as artificial, so we also measure the error r
 
 ### 5.2 A sparsity-preserving surrogate restores calibration
 
-Following the local-permutation idea of Shorten et al. (2021), we keep each source's speaking positions and permute only its symbols among them. On the same destroyed-structure data the family-wise error rate falls to 0.063 over 300 replicates, with a 95% Wilson interval of 0.041 to 0.097, so it is close to the nominal 0.05 and clearly separated from the 0.90 it replaces. The planted uncoupled agent is now never certified: 0 of 5 at both 263 and 1500 messages, with mean max z of 2.8 in each case against 22.0 and 68.3 under the shift surrogate. The failure is also not an artifact of our configuration. Appendix D shows it holds across swarm sizes from 5 to 20 agents, on a near-uniform alphabet as well as the skewed topic one, and that both the inflation and the masking reproduce under an independent symboliser.
+Following the local-permutation idea of Shorten et al. (2021), we keep each source's speaking positions and permute only its symbols among them. On the same destroyed-structure data the family-wise error rate falls to 0.063 over 300 replicates, with a 95% Wilson interval of 0.041 to 0.097, so it is close to the nominal 0.05 and clearly separated from the 0.90 it replaces. The planted uncoupled agent is now never certified: 0 of 5 at both 263 and 1500 messages, with mean max z of 2.8 in each case against 22.0 and 68.3 under the shift surrogate. Appendix D shows the failure is not an artifact of our configuration: it survives swarm size, a near-uniform alphabet, and an independent symboliser.
 
 [Figure 1: f2_null.png. Caption: Left, how often an agent coupled to nothing is certified as a driver, under each surrogate. Middle, family-wise error rate measured on data with all structure destroyed, with a Wilson interval; the dotted line is the nominal 0.05. Right, what each surrogate certifies on the real channel.]
 
@@ -98,7 +98,7 @@ Re-running every channel under the repaired surrogate changes the answers, and n
 | open-chat #general | 8,226 | 3 / 0 | 18 / 0 |
 | swarm, room a | 3,846 | 2 / 1 | 1 / 0 |
 
-In main-village, **none** of the 11 edges the standard recipe certifies survives the repair, and the two the valid surrogate certifies were not among them. In open-chat the correction runs the other way, 3 edges becoming 18, because pathological pairs inflate the max-T threshold and so raise the bar for everything else. An invalid surrogate does not simply add false positives, it scrambles the result.
+In main-village, **none** of the 11 edges the standard recipe certifies survives the repair, and the two the valid surrogate certifies were not among them. In open-chat the correction runs the other way, 3 edges becoming 18, because pathological pairs inflate the max-T threshold and raise the bar for everything else. An invalid surrogate does not simply add false positives, it scrambles the result.
 
 ### 5.4 Conditioning on the channel, and what it removes
 
@@ -124,33 +124,31 @@ Both bound the claims above and both are in Appendix G. Power is governed by how
 
 ### 5.6 Humans in the channel
 
-main-village #general is now effectively human-free, with 3 human messages in the window, so the question has to be asked in open-chat, where 32% of messages come from 124 human visitors. Pairwise, with humans collapsed into one node, 19 edges are certified. Conditioning removes almost all the agent-to-agent structure and little of the rest: **four edges survive, of which three run from humans to agents, one is agent to agent, and none run from an agent to a human.** So the asymmetry is not an artifact of the confound; it is what is left once the confound is removed. Read it carefully all the same, because topical dependence from a person to an agent is also what ordinary responsiveness looks like, and the measurement supports only that it is dyad-specific and directional, not that anyone is steering a swarm. Appendix I gives the breakdown and the individual-visitor variant.
+main-village #general is now effectively human-free, with 3 human messages in the window, so the question has to be asked in open-chat, where 32% of messages come from 124 human visitors. Pairwise, with humans collapsed into one node, 19 edges are certified. Conditioning removes almost all the agent-to-agent structure and little of the rest: **four edges survive, of which three run from humans to agents, one is agent to agent, and none run from an agent to a human.** So the asymmetry is not an artifact of the confound. Read it carefully all the same: the measurement supports only that the dependence is dyad-specific and directional, not that anyone is steering a swarm. Appendix I has the breakdown.
 
-Two further traps, in Appendix D: a continuous net-influence score measures volume rather than meaning, and a trivial copy-rate detector does not reproduce transfer entropy, so what this report indicts is the surrogate and not the statistic.
+Appendix D reports two further traps: a net-influence score measures volume rather than meaning, and a copy-rate detector does not reproduce transfer entropy, so what this report indicts is the surrogate and not the statistic.
 
 ## 6. What an overseer should do
 
 Five controls, none expensive, should accompany any published influence graph over an agent channel.
 
 1. **Plant an agent coupled to nothing, at your channel's volumes, and check it is not certified.** This one test would have caught the failure reported here, at one run per volume.
-2. **Measure the error rate directly,** by destroying the structure your method claims to find and checking the family-wise rate is near nominal. If it is not, the surrogate does not match the data.
-3. **Preserve the speaker sequence in your surrogate.** Its structure is what breaks the shift here, and any surrogate that moves an agent's messages in time will disturb it. Shorten et al. (2021) is the principled route.
+2. **Measure the error rate directly,** by destroying the structure your method claims to find and checking the family-wise rate is near nominal. If it is not, your surrogate does not match your data.
+3. **Preserve the speaker sequence in your surrogate.** Any surrogate that moves an agent's messages in time will disturb it. Shorten et al. (2021) is the principled route.
 4. **Establish the detection floor before interpreting an absence.** "No edges" and "no influence" are different claims.
 5. **Condition on the channel, report both numbers, and sweep the resolution.** Pairwise and conditional bound the answer and the gap between them is the result; conditioning costs cells, so check whether your answer is an artifact of how finely you conditioned. On one of our channels it was.
 
-Two habits follow: publish a meaning-free symboliser's edge count beside the real one, and require replication in a held-out window before calling a graph the structure of a swarm.
+Two habits follow: publish a meaning-free null's edge count beside the real one, and require held-out replication before calling a graph the structure of a swarm.
 
 ## 7. Conclusion
 
-Applied to real agent chat, the standard recipe for "who drives whom" needs two repairs before it says anything. Clock windows cannot separate a message from its answer at the timescale agents reply on, and the edges they certify are reproduced by a null with no access to meaning. The turn-ordered representation that fixes this breaks the circular-shift surrogate, whose family-wise error rate on structure-free data we measure at 0.90 against a nominal 0.05, and the cause is the structure of the speaker sequence itself. A valid surrogate then fixes calibration but not confounding, and conditioning introduces a resolution of its own.
-
-What survives is small: two dyad-specific edges that do not replicate, an undetermined answer where conditioning resolution decides it, and, where humans are present, influence running from people into agents and never back. An influence graph is a measurement with an error rate, a confound and a detection floor, and until all three are reported it should not be acted on.
+Applied to real agent chat, the standard recipe for "who drives whom" needs two repairs before it says anything. Clock windows cannot separate a message from its answer at the timescale agents reply on, and the edges they certify are reproduced by a null with no access to meaning. The turn-ordered representation that fixes this breaks the circular-shift surrogate, whose family-wise error rate on structure-free data we measure at 0.90 against a nominal 0.05, caused by the structure of the speaker sequence itself. A valid surrogate then fixes calibration but not confounding, and conditioning introduces a resolution of its own. What survives is small: two dyad-specific edges that do not replicate, an undetermined answer where conditioning resolution decides it, and, where humans are present, influence running from people into agents and never back. An influence graph is a measurement with an error rate, a confound and a detection floor, and until all three are reported it should not be acted on.
 
 ## Appendix A: Limitations
 
 - **Immediate-predecessor only.** The turn-ordered lag-1 measure sees influence from the message directly before a reply. Influence acting over several turns, or through a room's accumulated context, is out of scope and needs a higher-order or memory-aware estimator.
 - **Discrete approximation to an event process.** Agent chat is event-based in continuous time. We use a turn-ordered discretisation with a permutation surrogate as a practical fix; a continuous-time estimator (Shorten et al., 2021) is the principled route and we did not attempt it.
-- **Symbolisation is a free parameter.** The central result survives an independent symboliser (Section 5.3), but the edge count does not: it moves with the alphabet size and with which messages the topic model is fit on, and we report those sensitivities rather than tuning them. Two of the eight topic clusters are dominated by function words, because the preexisting symboliser does not remove stopwords.
+- **Symbolisation is a free parameter, and we cannot measure its quality on the real logs.** The central result survives an independent symboliser (Section 5.3), but the edge count does not: it moves with the alphabet size and with which messages the topic model is fit on, and we report those sensitivities rather than tuning them. Two of the eight topic clusters are dominated by function words, because the preexisting symboliser does not remove stopwords. On the benchmark, where true topics are known, we can measure it, and Appendix E shows a sharp floor: once the symboliser's agreement with the truth falls below roughly 0.44 by adjusted Rand index, detection collapses regardless of estimator. We have no corresponding number for the real channels, so we cannot rule out that they sit near that floor, and that is the single largest unquantified threat to everything reported here.
 - **No ground truth in the real logs.** The validity argument rests on planted controls and on the meaning-free null, not on recovering a known answer.
 - **Scaffolding confounds.** Agent behaviour is shaped by prompt, tool and memory changes logged in the dataset's changelog. We chose a window in which the message-injecting nudger was off, but other scaffolding is held fixed only by the shortness of the window.
 - **Conditioning removes real influence too.** The conditional estimate discards any influence that works by shifting what the channel is talking about, which in a group chat may be a large part of genuine influence. It is a lower bound on dyadic influence, not a better measurement of influence in general, which is why both estimates are reported.
@@ -215,6 +213,19 @@ Three honest caveats. The benchmark's common cause is a shared modal topic and o
 The third caveat is about the labels, and auditing our own generator changed numbers in this report. Only one agent speaks per tick, so when a leader has two followers whose reaction coins both land they cannot both reply at the stated lag: the second is pushed to the next tick. An early version dropped it instead, which understated coupling for every follower after the first. Re-queueing fixes that, but the requested coupling is still not the realised one, so the generator now measures and reports both: a labelled 0.3 realises about 0.18 when it shares its leader with another follower, while unshared edges realise their label to within 0.03.
 
 More importantly, **a planted edge does not only couple its own pair**. Because a queued reaction consumes the tick, every other agent becomes less likely to speak immediately after the leader. On the four-edge instance the probability that a non-follower speaks in the tick after the leader falls to between 0.19 and 0.83 of its own base rate, against 0.94 to 1.05 on an otherwise identical instance with no planted edges. That displacement is a real lag-1 dependency and the label set does not contain it, so **precision on this benchmark is a lower bound for any detector**, and what the benchmark supports is the comparison between the two estimators rather than the absolute value of either. We report the measured 0.80 rather than patching the labels until our own method scores well, and the measurement is in the repository's test suite so a user can see the size of the gap.
+
+**Does any of this depend on the text being easy?** It is a fair objection to a synthetic text layer that disjoint per-topic vocabularies make symbolisation trivial, so every number above assumes a symboliser that does not exist. Real messages are not like that: most words are common to every subject and only a few are distinctive. So the generator takes a `vocab_overlap` parameter, the fraction of each topic's vocabulary shared with every other topic, and we sweep it. Adjusted Rand index is measured between the symboliser's output and the generator's true topic labels, so the degradation is quantified rather than asserted.
+
+| vocabulary overlap | symboliser ARI | common-cause null, pairwise | structure, pairwise precision | structure, conditional precision | conditional recall |
+|---|---|---|---|---|---|
+| 0.0 | 1.00 | 22.7 | 0.18 | **0.80** | 1.00 |
+| 0.5 | 0.92 | 20.0 | 0.18 | **0.80** | 1.00 |
+| 0.8 | 0.44 | 10.7 | 0.33 | **0.80** | 1.00 |
+| 0.9 | 0.08 | 0.0 | 0.56 | 1.00 | **0.08** |
+
+Two things follow. **The conditional estimator's advantage is not an artifact of easy text:** at an ARI of 0.44, where the symboliser recovers less than half the topic structure, it still holds precision 0.80 at full recall while pairwise sits at 0.33. The zero row also reproduces the headline numbers from an independent seed stream, which is a small replication of Section 5.4 in its own right.
+
+**But there is a symbolisation floor, and it is sharp.** Between ARI 0.44 and 0.08 the whole enterprise collapses: conditional recall falls from 1.00 to 0.08, and the common-cause null stops producing false edges only because there is no longer any topic signal to confound with. A detector that certifies nothing on a badly symbolised channel is not reporting an absence of influence, it is reporting that its own front end failed, and nothing downstream of the symboliser can tell the two apart. **Anyone publishing an influence graph over open text should report their symboliser's agreement with something, because below roughly half it does not matter what the estimator does.** We know of no influence-detection paper that reports this.
 
 One further defect is worth naming because it would have invalidated the symbolisation claim. The per-topic vocabularies were originally built by appending the topic index to every word, so a one-line regular expression recovered the generator's own label from every message and the symbolisation step the benchmark claims to require was free. The vocabularies are now built as one pool and partitioned, so they stay disjoint while nothing inside a word says which slice it landed in, and all the numbers above are from the corrected generator.
 

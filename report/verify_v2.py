@@ -202,9 +202,11 @@ r6 += [("bench cc pairwise", f'certifies **{cc["pairwise"]["mean_edges"]:.1f}** 
        ("bench abstract prec", f'from {st["pairwise"]["pooled_precision"]:.2f} to'
         f' {st["conditional"]["pooled_precision"]:.2f}' in txt),
        # superseded pre-fix numbers must not reappear anywhere in the report
-       ("no stale precision 1.00", 'to 1.00' not in txt),
-       ("no stale 22.7", '22.7' not in txt),
-       ("no stale 0.71", '0.71' not in txt),
+       # guard the retired CLAIMS, not the digits: 22.7 and 0.80 now appear legitimately in the
+       # symbolisation sweep, so a bare substring check on the number is wrong.
+       ("no stale precision claim", '0.17 to 1.00' not in txt and 'precision of **1.00**' not in txt),
+       ("no stale cc claim", '22.7 to 0.0' not in txt and 'from 22.7 to' not in txt),
+       ("no stale 0.71 claim", 'precision of **0.71**' not in txt and '0.17 to 0.71' not in txt),
        ("no stale 4.0 recovers", '4.0 and recovers all 4' not in txt),
        ("label gap disclosed", 'precision on this benchmark is a lower bound' in txt),
        ("vocab leak disclosed", 'recovered the generator' in txt),
@@ -271,6 +273,30 @@ for lab, ok in r8:
 print(f"round-8: {sum(1 for _, ok in r8 if ok)}/{len(r8)} pass")
 if not all(ok for _, ok in r8):
     sys.exit("ROUND-8 VERIFICATION FAILED")
+
+# --- round-11: the symbolisation-difficulty sweep ---
+rs = json.load(open(os.path.join(D, "..", "swarm-bench", "realism_sweep.json"), encoding="utf-8"))
+r11 = []
+for row in rs["rows"]:
+    ov = row["vocab_overlap"]
+    cc = row["families"]["common_cause_null"]["pairwise"]["mean_edges"]
+    st = row["families"]["structure"]
+    r11.append((f"overlap {ov} ARI", f'| {ov} | {row["symboliser_ari_mean"]:.2f} |' in txt))
+    r11.append((f"overlap {ov} cc", f'| {cc:.1f} |' in txt))
+    r11.append((f"overlap {ov} cond prec",
+                f'{st["conditional"]["pooled_precision"]:.2f}' in txt))
+lo = [r for r in rs["rows"] if r["symboliser_ari_mean"] < 0.5]
+r11 += [("floor named", 'symbolisation floor' in txt.lower()),
+        ("floor value", f'{max(r["symboliser_ari_mean"] for r in lo if r["symboliser_ari_mean"] > 0.1):.2f}' in txt),
+        ("collapse recall", f'to {min(r["families"]["structure"]["conditional"]["mean_recall"] for r in rs["rows"]):.2f}' in txt),
+        ("limitation linked", 'adjusted Rand index, detection collapses' in txt
+         or 'adjusted Rand index' in txt)]
+for lab, ok in r11:
+    if not ok:
+        print(f"FAIL  {lab}")
+print(f"round-11: {sum(1 for _, ok in r11 if ok)}/{len(r11)} pass")
+if not all(ok for _, ok in r11):
+    sys.exit("ROUND-11 VERIFICATION FAILED")
 
 # --- round-10: internal cross-references resolve ---
 import re as _re
