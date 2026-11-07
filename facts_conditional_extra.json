@@ -1,0 +1,44 @@
+{
+  "k": 8,
+  "n_surrogates": 200,
+  "main_replication": {
+    "common_agents": 15,
+    "pairwise": {
+      "cur_edges": 2,
+      "prev_edges": 0,
+      "shared": 0,
+      "jaccard": 0.0,
+      "cur_list": [
+        [
+          "GPT-6 Sol",
+          "Claude Haiku 4.5"
+        ],
+        [
+          "Claude Haiku 4.5",
+          "DeepSeek-V3.2"
+        ]
+      ],
+      "shared_list": []
+    },
+    "conditional": {
+      "cur_edges": 1,
+      "prev_edges": 0,
+      "shared": 0,
+      "jaccard": 0.0,
+      "cur_list": [
+        [
+          "Claude Haiku 4.5",
+          "Gemini 3.5 Flash"
+        ]
+      ],
+      "shared_list": []
+    }
+  },
+  "swarm_village": {
+    "agents": 13,
+    "window_msgs": 3846,
+    "pairwise": 1,
+    "n_ticks": 830,
+    "conditional": 0
+  }
+}

@@ -193,3 +193,15 @@ for lab, ok in r6:
 print(f"round-6: {sum(1 for _, ok in r6 if ok)}/{len(r6)} pass")
 if not all(ok for _, ok in r6):
     sys.exit("ROUND-6 VERIFICATION FAILED")
+
+# --- round-7: conditional replication and swarm-village ---
+ce = json.load(open(os.path.join(D, "facts_conditional_extra.json"), encoding="utf-8"))
+r7 = [("swarm cond", f'| {ce["swarm_village"]["pairwise"]} | **{ce["swarm_village"]["conditional"]}**' in txt),
+      ("no replication", 'certifies nothing at all, under either estimator' in txt),
+      ("no edge replicates", 'No certified edge in this report replicates out of sample.' in txt)]
+for lab, ok in r7:
+    if not ok:
+        print(f"FAIL  {lab}")
+print(f"round-7: {sum(1 for _, ok in r7 if ok)}/{len(r7)} pass")
+if not all(ok for _, ok in r7):
+    sys.exit("ROUND-7 VERIFICATION FAILED")
