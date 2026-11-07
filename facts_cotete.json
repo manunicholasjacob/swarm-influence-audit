@@ -1,0 +1,96 @@
+{
+ "audit_discrete_for_comparison": {
+  "main-village": {
+   "symbol_permutation_maxT_edges": 2
+  },
+  "note": "Reproduced exactly from the same export using the audit's own fastte.directed_tests_permute, so both sides use one agent-id space.",
+  "open-chat-village": {
+   "symbol_permutation_maxT_edges": 18
+  }
+ },
+ "estimator": {
+  "commit": "2c7234dbc6bd723eadc7db46bf234dab986f6cdb",
+  "method": "Shorten, Spinney and Lizier (2021), continuous-time event-based transfer entropy",
+  "package": "CoTETE.jl",
+  "version_tag": "v0.2.3"
+ },
+ "parameters": {
+  "add_dummy_exclusion_windows": true,
+  "auto_find_start_and_num_events": true,
+  "k_global": 5,
+  "k_perm": 10,
+  "l_x": 1,
+  "l_y": 1,
+  "metric": "Cityblock",
+  "note": "add_dummy_exclusion_windows=true applies the surrogate's enlarged exclusion windows to the observed estimate too, so observed and surrogate statistics are computed under identical exclusion.",
+  "num_samples_ratio": 1.0,
+  "num_surrogates": 100
+ },
+ "villages": {
+  "main-village": {
+   "continuous_time_edges_certified": 0,
+   "highest_observed_z": 3.062,
+   "max_T_threshold_z": 4.1712,
+   "n_agents": 15,
+   "n_events": 7958,
+   "n_ordered_pairs": 210,
+   "top5_z_opaque": [
+    {
+     "pair": "agent-01 -> agent-02",
+     "z": 3.062
+    },
+    {
+     "pair": "agent-01 -> agent-03",
+     "z": 2.7877
+    },
+    {
+     "pair": "agent-02 -> agent-04",
+     "z": 2.7238
+    },
+    {
+     "pair": "agent-05 -> agent-06",
+     "z": 2.6619
+    },
+    {
+     "pair": "agent-07 -> agent-08",
+     "z": 2.4518
+    }
+   ],
+   "z_max": 3.062,
+   "z_min": -5.0807
+  },
+  "open-chat-village": {
+   "continuous_time_edges_certified": 0,
+   "highest_observed_z": 3.9803,
+   "max_T_threshold_z": 4.3076,
+   "n_agents": 15,
+   "n_events": 7735,
+   "n_ordered_pairs": 210,
+   "top5_z_opaque": [
+    {
+     "pair": "agent-09 -> agent-10",
+     "z": 3.9803
+    },
+    {
+     "pair": "agent-10 -> agent-11",
+     "z": 2.9836
+    },
+    {
+     "pair": "agent-09 -> agent-12",
+     "z": 2.9835
+    },
+    {
+     "pair": "agent-13 -> agent-12",
+     "z": 2.8054
+    },
+    {
+     "pair": "agent-13 -> agent-14",
+     "z": 2.6485
+    }
+   ],
+   "z_max": 3.9803,
+   "z_min": -1.9336
+  }
+ },
+ "what": "Continuous-time transfer entropy on the same two channels the audit analysed, compared against the audit's discrete turn-ordered result. Agents are relabelled opaquely; no corpus identifier appears here."
+}

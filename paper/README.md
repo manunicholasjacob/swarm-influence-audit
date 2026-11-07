@@ -18,7 +18,7 @@ recomputed from `../facts_*.json` by `../report/verify_v2.py`.
 | 3 | Representation | report 4.1 to 4.2 | Written. Promote: the clock-window failure is a result, not setup |
 | 4 | The surrogate failure | report 5.1 + turn-taking factorial | **Unblocked.** Turn-taking and non-stationarity now separated, and the answer inverts the hypothesis |
 | 5 | The repair, compared | report 5.2 + variants | Partly written. Needs the variant comparison at 300 replicates |
-| 6 | Continuous time | new | Attempted 7 Nov. See `../cotete_export/` |
+| 6 | Continuous time | new | **Done, 7 Nov, and the answer is neither of the two expected ones.** See `06_continuous_time.md` |
 | 7 | Confounding | report 5.4 | Written |
 | 8 | The symbolisation floor | report Appendix E + floor proxy | **Has a result and an open contradiction** |
 | 9 | The benchmark | report Appendix E | Written. Promote to a section; it is a contribution |
@@ -37,11 +37,9 @@ recomputed from `../facts_*.json` by `../report/verify_v2.py`.
 
 ## The three things that would finish it
 
-1. **Continuous-time comparison.** The principled route for event data, and the paper's one external
-   dependency. CoTETE.jl is not in the Julia registry and needs a pinned clone with submodules.
-   Input is already generated and verified in `../cotete_export/`, reproducing the report's tick
-   counts exactly. Either outcome is publishable, and disagreement would reframe everything before
-   it, which is why it should go first.
+1. ~~**Continuous-time comparison.**~~ **Done. See `06_continuous_time.md`.** The two estimators
+   agree that nothing is detectable in event timing, and the audit's edges turn out to live in a
+   channel the continuous-time estimator cannot read at all.
 2. **The open-chat contradiction.** The floor proxy calls open-chat below the floor; open-chat
    certifies 18 and 22 edges against main-village's 2 and 1, with its hash null at 0. A below-floor
    channel should certify near zero and should look like its own meaning-free null. It does neither.
