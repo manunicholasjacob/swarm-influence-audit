@@ -12,9 +12,9 @@ Multi-agent oversight relies on information-theoretic methods to identify influe
 
 When AI agents interact in a shared channel, it is useful to understand how they influence one another. Information-theoretic methods offer a way to measure this through lagged transfer entropy, surrogate testing, and per-agent influence scores. They are attractive because they require no labels or access to model internals, only a record of who said what and when. However, the reliability of these measurements needs to be examined.
 
-Almost every demonstration of these detectors runs on synthetic traces with a planted leader, where the analyst controls timing and vocabulary. Real agent chat is asynchronous, bursty and written in open language. This report asks a narrower question than "what is the influence structure of a real swarm": whether the standard recipe, applied to real agent logs, returns anything an overseer should act on.
+Almost every demonstration of these detectors runs on synthetic traces with a planted leader, where the analyst controls timing and vocabulary. Real agent chat is asynchronous, bursty and written in open language. This report asks a narrower question: whether the standard recipe, applied to real agent logs, returns anything an overseer should act on.
 
-We run that audit on the AI Village (AI Digest, 2026), in which frontier models share chat channels over eighteen months, across four villages differing in size, lifetime and tempo, applying the checks a reader should demand: planted controls, a meaning-free symboliser, replication in a held-out window, and sensitivity to every parameter we had to choose. Our audit identifies a specific failure in the method and shows how it can be addressed.
+We run that audit on the AI Village (AI Digest, 2026), in which frontier models share chat channels over eighteen months, across four villages differing in size, lifetime and tempo, applying the checks a reader should demand: planted controls, a meaning-free symboliser, replication in a held-out window, and sensitivity to every parameter we had to choose.
 
 1. The conventional circular-shift surrogate is **invalid** on turn-ordered agent chat: a family-wise error rate of 0.90 against a nominal 0.05, caused by the structure of the speaker sequence itself.
 2. The local-permutation surrogate restores calibration, and re-certifying under it **scrambles rather than shrinks** the answer: one channel loses all 11 of its edges, another gains 15.
@@ -24,9 +24,11 @@ We run that audit on the AI Village (AI Digest, 2026), in which frontier models 
 
 ## 2. Related Work
 
-**Transfer entropy and surrogates.** Transfer entropy (Schreiber, 2000) measures how much a source's past reduces uncertainty about a target's next symbol beyond the target's own past. Plug-in estimators are biased upward on short series, so significance rests on surrogate data, with family-wise error across all ordered pairs controlled by a max-T test (Westfall and Young, 1993). The usual surrogate is a circular time shift of the source.
+**Transfer entropy and surrogates.** Transfer entropy (Schreiber, 2000) measures how much a source's past reduces uncertainty about a target's next symbol beyond the target's own past. Plug-in estimators are biased upward on short series, so significance rests on surrogate data, with family-wise error controlled by a max-T test (Westfall and Young, 1993). The usual surrogate is a circular time shift of the source.
 
 **Event-based data breaks the shift surrogate.** Our audit rediscovers this in a new domain. Shorten, Spinney and Lizier (2021), on neural spike trains, show that the conventional source-time-shift surrogate fails to represent the null hypothesis of conditional independence for event-based processes, and adapt to that setting the nearest-neighbour local permutation scheme of Runge (2018). Agent chat is event-based in that sense: messages are events in continuous time, not samples of a clocked signal. The correction itself is not our contribution. Ours is showing that the same failure carries over to multi-agent safety monitoring and can be severe enough to create apparent leaders where none exist.
+
+Papadopoulos and Psannis (2026) report the same failure in multi-agent reinforcement learning, from a different cause; Appendix J draws the boundary.
 
 **Oversight under a budget.** AI-control research frames monitoring as resource constrained, with a cost for false positives (Greenblatt et al., 2024); an influence graph is one such measurement and our concern is its error rate.
 
@@ -85,7 +87,7 @@ A planted agent could be dismissed as artificial, so we also measure the error r
 
 ### 5.2 A sparsity-preserving surrogate restores calibration
 
-Following the local-permutation idea of Runge (2018) as adapted by Shorten et al. (2021), we keep each source's speaking positions and permute only its symbols among them. On the same destroyed-structure data the family-wise error rate falls to 0.063 over 300 replicates, with a 95% Wilson interval of 0.041 to 0.097, so it is close to the nominal 0.05 and clearly separated from the 0.90 it replaces. The planted uncoupled agent is now never certified: 0 of 5 at both 263 and 1500 messages, with mean max z of 2.8 in each case against 22.0 and 68.3 under the shift surrogate. Appendix D shows the failure is not an artifact of our configuration: it survives swarm size, a near-uniform alphabet, and an independent symboliser.
+Following the local-permutation idea of Runge (2018) as adapted by Shorten et al. (2021), we keep each source's speaking positions and permute only its symbols among them. On the same destroyed-structure data the family-wise error rate falls to 0.063 over 300 replicates, with a 95% Wilson interval of 0.041 to 0.097, so it is close to the nominal 0.05 and clearly separated from the 0.90 it replaces. The planted uncoupled agent is now never certified: 0 of 5 at both 263 and 1500 messages, with mean max z of 2.8 in each case against 22.0 and 68.3 under the shift surrogate. Appendix D shows the failure survives swarm size, a near-uniform alphabet, and an independent symboliser.
 
 [Figure 1: f2_null.png. Caption: Left, how often an agent coupled to nothing is certified as a driver, under each surrogate. Middle, family-wise error rate measured on data with all structure destroyed, with a Wilson interval; the dotted line is the nominal 0.05. Right, what each surrogate certifies on the real channel.]
 
@@ -105,7 +107,7 @@ In main-village, **none** of the 11 edges the standard recipe certifies survives
 
 A valid surrogate does not address confounding, so we built a generated benchmark with a known influence graph (Appendix E). Its decisive instances contain no influence while every agent tracks a shared drifting topic, so any certified edge is common cause. There, pairwise transfer entropy certifies **22.3** edges on average and conditioning takes that to **0.33**, lifting pooled precision on the four-edge instances from 0.17 to **0.80** at a recall of 1.0 either way, and across couplings from 0.05 to 0.8 the conditional test still finds the planted edge in 3 of 3 runs, so the gain costs no power.
 
-The benchmark flatters the conditional estimator, since its common cause is a shared modal topic and the conditioning variable is the channel's modal topic. The real channels are the harder test, and conditioning there costs degrees of freedom: a 9-symbol alphabet with a 9-valued context gives 6,561 cells against about 7,900 ticks, roughly one observation per cell. So we also coarsen the same variable to 4 and 2 values.
+The benchmark flatters the conditional estimator, since its common cause is a shared modal topic and the conditioning variable is the channel's modal topic. The real channels are harder, and conditioning there costs degrees of freedom: a 9-symbol alphabet with a 9-valued context gives 6,561 cells against about 7,900 ticks. So we also coarsen that variable to 4 and 2 values.
 
 | channel | pairwise | conditional, 9 values | 4 values | 2 values |
 |---|---|---|---|---|
@@ -113,7 +115,7 @@ The benchmark flatters the conditional estimator, since its common cause is a sh
 | open-chat #general | 18 | **0** (mean z -0.34, max z 4.4) | **7** | **13** |
 | swarm, room a | 1 | **0** | | |
 
-**Main-village's two edges are robust to that choice; open-chat's zero is not.** At the finest resolution the open-chat test is degenerate, its surrogate sitting above the observed statistic for 65% of pairs with the largest z in the family only 4.4, so it is failing to reject rather than finding nothing to reject. Open-chat's structure therefore remains **undetermined**: depending on the conditioning resolution, between 0 and 13 of its 18 edges may survive. The resolution is a free parameter an analyst would otherwise set once and never revisit, and on one of our two channels it decides the answer.
+**Main-village's two edges are robust to that choice; open-chat's zero is not.** At the finest resolution the open-chat test is degenerate, its surrogate sitting above the observed statistic for 65% of pairs with the largest z in the family only 4.4, so it is failing to reject rather than finding nothing to reject. Open-chat's structure therefore remains **undetermined**: depending on the conditioning resolution, between 0 and 13 of its 18 edges may survive. That resolution is a free parameter an analyst would set once and never revisit.
 
 That is a property of the channel, not the estimator: on structure-free real data the conditional test fires in 2 of 40 replicates, an error rate of 0.05 with a mean z of -0.001, so it is nominal rather than conservative (Appendix G).
 
@@ -121,11 +123,11 @@ Those two edges are the strongest thing in this report and they are still not a 
 
 ### 5.5 Power, and whether anything replicates
 
-Both bound the claims above (Appendix G). Power is governed by how much an agent says as much as by how strongly it copies, and it is channel-specific: in main-village a planted follower copying on 80% of its messages is caught only 1 time in 4, while in open-chat one copying 10% of the time is caught 3 times in 4, so main-village's two edges are a floor and not a description. Replication is weak everywhere. Under the standard recipe the adjacent fourteen-day window shares 1 edge out of 8 and 4, and that surviving edge is also the only one the meaning-free hash null certifies. No certified edge in this report replicates out of sample.
+Both bound the claims above (Appendix G). Power is governed by how much an agent says as much as by how strongly it copies, and it is channel-specific: in main-village a planted follower copying on 80% of its messages is caught only 1 time in 4, while in open-chat one copying 10% of the time is caught 3 times in 4, so main-village's two edges are a floor and not a description. Replication is weak everywhere: under the standard recipe the adjacent fourteen-day window shares 1 edge out of 8 and 4, and that edge is also the only one the hash null certifies. No certified edge in this report replicates out of sample.
 
 ### 5.6 Humans in the channel
 
-main-village #general is now effectively human-free, with 3 human messages in the window, so the question has to be asked in open-chat, where 32% of messages come from 124 human visitors. Pairwise, with humans collapsed into one node, 19 edges are certified. Conditioning removes almost all the agent-to-agent structure and little of the rest: **four edges survive, of which three run from humans to agents, one is agent to agent, and none run from an agent to a human.** So the asymmetry is not an artifact of the confound. Read it carefully all the same: the measurement supports only that the dependence is dyad-specific and directional, not that anyone is steering a swarm. Appendix I has the breakdown.
+main-village #general is now effectively human-free, with 3 human messages in the window, so the question has to be asked in open-chat, where 32% of messages come from 124 human visitors. Pairwise, with humans collapsed into one node, 19 edges are certified. Conditioning removes almost all the agent-to-agent structure and little of the rest: **four edges survive, of which three run from humans to agents, one is agent to agent, and none run from an agent to a human.** So the asymmetry is not an artifact of the confound. Read it carefully all the same: the measurement supports only that the dependence is dyad-specific and directional, not that anyone is steering a swarm (Appendix I).
 
 Appendix D reports two further traps: a net-influence score measures volume rather than meaning, and a copy-rate detector does not reproduce transfer entropy, so what this report indicts is the surrogate and not the statistic.
 
@@ -138,13 +140,13 @@ Six inexpensive controls should be included whenever an influence graph over an 
 3. **Preserve the speaker sequence in your surrogate.** Any surrogate that moves an agent's messages in time will disturb it. Shorten et al. (2021) is the principled route.
 4. **Establish the detection floor before interpreting an absence.** "No edges" and "no influence" are different claims.
 5. **Condition on the channel, report both numbers, and sweep the resolution.** Pairwise and conditional bound the answer and the gap between them is the result; conditioning costs cells, so check whether your answer is an artifact of how finely you conditioned. On one of our channels it was.
-6. **Report how well your symboliser agrees with the truth, on data where you know it.** Every number these methods produce is downstream of turning text into symbols, and below roughly 0.44 adjusted Rand index detection collapses whatever the estimator (Appendix E). This is the one control on this list we have found in no influence-detection paper, and it is also the one we cannot run on our own real logs, which is why the floor remains the largest unquantified threat to everything above.
+6. **Report how well your symboliser agrees with the truth, on data where you know it.** Everything here is downstream of turning text into symbols, and below roughly 0.44 adjusted Rand index detection collapses whatever the estimator (Appendix E). We have found this control in no influence-detection paper, and it is also the one we cannot run on our own logs, which is why the floor remains the largest unquantified threat above.
 
-Two habits follow: publish a meaning-free null's edge count beside the real one, and require held-out replication before calling a graph the structure of a swarm.
+Two habits follow: publish a meaning-free null's count beside the real one, and require held-out replication before calling a graph structure.
 
 ## 7. Conclusion
 
-Applied to real agent chat, the standard recipe for "who drives whom" needs two repairs before it says anything. Clock windows cannot separate a message from its answer at the timescale agents reply on, and the edges they certify are reproduced by a null with no access to meaning. The turn-ordered representation that fixes this breaks the circular-shift surrogate: family-wise error 0.90 against a nominal 0.05, caused by the speaker sequence itself. A valid surrogate fixes calibration but not confounding, and conditioning introduces a resolution of its own. What survives is small: two dyad-specific edges that do not replicate, an undetermined answer where conditioning resolution decides it, and influence running from people into agents and never back. An influence graph should not guide decisions until its error rate, its confound, its detection floor and its symboliser's fidelity are all reported.
+Applied to real agent chat, the standard recipe for "who drives whom" needs two repairs before it says anything. Clock windows cannot separate a message from its answer at the speed agents reply, and what they certify is matched by a null with no access to meaning. The turn-ordered grid that fixes this breaks the circular-shift surrogate: family-wise error 0.90 against a nominal 0.05, caused by the speaker sequence itself. A valid surrogate fixes calibration but not confounding. What survives is small: two dyad-specific edges that do not replicate, an undetermined answer set by conditioning resolution, and influence running from people into agents and never back. **An influence graph should not guide decisions until its error rate, its confound, its detection floor and its symboliser's fidelity are reported.**
 
 ## Appendix A: Limitations
 
@@ -287,11 +289,23 @@ open-chat #general is the only analysed channel with substantial human traffic: 
 
 Two readings are available and the report commits to neither beyond what the test supports. The asymmetry survives conditioning, so it is not an artifact of the shared channel topic. But a human message followed by an agent message on the same topic is exactly what ordinary responsiveness looks like, and this measurement cannot separate "the visitor steered the agent" from "the agent answered the visitor". What it does establish is that the dependence is dyad-specific, directional, and absent in the reverse direction.
 
+## Appendix J: Concurrent work, and what it anticipates
+
+Papadopoulos and Psannis (2026) report the same surrogate failure in a different multi-agent setting, and it is close enough to this work that the boundary should be drawn explicitly rather than left to a reader.
+
+**What they find.** On training-time action series from two multi-agent reinforcement-learning games, with agent pairs whose directed influence is zero by construction, a plain permutation surrogate leaves the false-positive rate at 100.00% and 99.95% against a nominal 0.05, and **a circular time shift leaves it at 100% and 98.2%**. Their repair is a permutation restricted to blocks of training time, which returns 5.25% and 5.50%. They also report a four-learner control that defeats all of their remedies.
+
+**What that anticipates, and what it does not.** It anticipates the direction of our central result: a circular shift is not a safe default for information-theoretic influence edges between agents, and somebody has now measured that. We did not know of this work while running the audit, and we claim no priority over it. What it does not cover is the setting and the mechanism. Their series are binary actions over twelve thousand training rounds and their non-stationarity is a deterministic drift in each agent's marginal, produced by annealing exploration. Ours are symbolised natural-language messages on a turn-ordered grid, and the structure we isolate by ablation is the speaker sequence: turn-taking and non-stationary per-agent activity together, which our ablation explicitly does not separate. Neither result implies the other, and the repairs differ: theirs restricts permutation to blocks of training time, ours to an agent's own speaking positions, following Runge (2018) as adapted by Shorten et al. (2021). That both answers are restricted permutations is convergent evidence rather than coincidence.
+
+**Where it bears on our recommendation, and this is the uncomfortable part.** Their headline is that non-stationarity breaks *permutation* surrogates, which is the repair we recommend. Appendix E measures the same degradation from the other side: sweeping generated activity from stationary to strongly non-stationary leaves our permutation surrogate between 0.033 and 0.167, with one of its four intervals excluding the nominal 0.05. Their drift is far more severe than anything in our sweep, so the two are not in contradiction, but the honest reading is that the repair reported here is validated on conversational non-stationarity and should not be assumed to hold under monotone drift across a whole run. Section 6's second control, measuring your own error rate on your own data, is the protection against this, and it is the reason that control is listed before the repair rather than after it.
+
 ## References
 
 AI Digest (2026). AI Village dataset. https://huggingface.co/datasets/aidigestorg/ai-village and https://theaidigest.org/village
 
 Greenblatt, R., Shlegeris, B., Sachan, K., and Roger, F. (2024). AI Control: Improving Safety Despite Intentional Subversion. arXiv:2312.06942.
+
+Papadopoulos, N. A. and Psannis, K. E. (2026). Non-Stationarity Breaks Permutation Surrogates in Multi-Agent Reinforcement Learning: Diagnosis and Remedies. arXiv:2604.23716.
 
 Runge, J. (2018). Conditional Independence Testing Based on a Nearest-Neighbor Estimator of Conditional Mutual Information. Proceedings of the 21st International Conference on Artificial Intelligence and Statistics (AISTATS), PMLR 84, 938-947.
 

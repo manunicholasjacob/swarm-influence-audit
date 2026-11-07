@@ -171,5 +171,37 @@ while i < len(lines):
 
 cp = D.core_properties
 cp.title, cp.author, cp.last_modified_by, cp.comments = title, "Manu Nicholas Jacob", "Manu Nicholas Jacob", ""
+
+# The template carries a footnote on the title naming the sprint, and it named the WRONG one.
+# template.docx was reused from the AI Collusion Research Sprint, so every build of this report
+# said "Research conducted at the AI Collusion Research Sprint, October 2026" on page one, in a
+# document submitted to a different hackathon run by the same organisation. The title box, author
+# grid and abstract cell were all being filled from the markdown; the footnote was not, so nothing
+# ever corrected it. Rewrite it here rather than editing the template, so a future template swap
+# cannot silently reintroduce it.
+FOOTNOTE = "Research conducted at the Apart Research Swarm Alignment Hackathon, November 2026"
+_fn_part = next((p for p in D.part.package.parts
+                 if p.partname.endswith("footnotes.xml")), None)
+if _fn_part is not None:
+    # This part is raw XML rather than a parsed element, so edit the bytes and put them back.
+    from lxml import etree as _etree
+    _root = _etree.fromstring(_fn_part.blob)
+    _ts = _root.findall(".//" + qn("w:t"))
+    # The template's footnote is split across runs by its own formatting. Put the whole corrected
+    # sentence in the first text node and blank the rest, which keeps the run properties intact.
+    _body = [t for t in _ts if (t.text or "").strip()]
+    if _body:
+        _body[0].text = FOOTNOTE
+        _body[0].set(qn("xml:space"), "preserve")
+        for t in _body[1:]:
+            t.text = ""
+        _fn_part._blob = _etree.tostring(_root, xml_declaration=True,
+                                         encoding="UTF-8", standalone=True)
+        print("footnote set to:", FOOTNOTE)
+    else:
+        print("WARNING: footnote part found but no text nodes; check page 1 by eye")
+else:
+    print("WARNING: no footnotes.xml in the template; nothing to correct")
+
 D.save(out_path)
 print("wrote", out_path)

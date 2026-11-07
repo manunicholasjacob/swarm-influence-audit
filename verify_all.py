@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import os
 import pathlib
+import re
 import subprocess
 import sys
 
@@ -67,6 +68,8 @@ RETRACTION_MARKERS = (
     "incorrect", "superseded", "not ", "rather than", "instead of", "corrected",
 )
 DOC_GLOBS = ("*.md", "*.tex", "*.cff")
+# A sentence end is a full stop that is not a decimal point.
+_SENTENCE_END = re.compile(r"(?<![0-9])\.(?![0-9])")
 
 
 def _docs(root: pathlib.Path):
@@ -89,11 +92,20 @@ def check_retired(root: pathlib.Path) -> tuple[bool, str]:
             start = 0
             while (i := text.find(claim, start)) != -1:
                 start = i + len(claim)
-                # Look at the sentence around the hit, not the whole file.
-                left = text.rfind(".", 0, i) + 1
-                right = text.find(".", start)
-                sentence = text[left: right if right != -1 else len(text)].lower()
-                if any(m in sentence for m in RETRACTION_MARKERS):
+                # Look at the sentence around the hit plus the one after it, not the whole file.
+                # Two things this has to get right, both found by its own false positives:
+                #   - the FOLLOWING sentence matters, because documenting a withdrawal reads
+                #     'The README stated "X". Both are withdrawn.', and a window stopping at the
+                #     first full stop misses the marker and flags honest retraction text;
+                #   - a period between digits is a decimal point, not a sentence end. Every claim
+                #     guarded here is full of them ("22.7 to 0.0"), so naive splitting closes the
+                #     window inside the number it is checking.
+                ends = [m.start() for m in _SENTENCE_END.finditer(text)]
+                left = max([e + 1 for e in ends if e < i], default=0)
+                after = [e for e in ends if e >= start]
+                right = after[1] if len(after) > 1 else (after[0] if after else len(text))
+                window = text[left:right].lower()
+                if any(m in window for m in RETRACTION_MARKERS):
                     continue
                 offenders.append(f"{p.relative_to(root)}: states retired claim {claim!r}")
     if offenders:
@@ -162,8 +174,12 @@ def main() -> int:
         ("benchmark tests", [py, "-m", "pytest", "tests", "-q"], bench),
     ]
     if pack_root is not None:
+        pdf = pack_root / "deliverables" / "Apart_Swarm_Report_Manu_Nicholas_Jacob.pdf"
         checks.append(("submission pack matches report",
                        [py, "check_pack.py", str(pack_root / "deliverables")], HERE / "report"))
+        checks.append(("sprint submission rules",
+                       [py, "check_rubric.py", str(pdf), "--readme", str(HERE / "README.md")],
+                       HERE / "report"))
 
     names = [n for n, _, _ in checks] + ["arxiv source in sync", "retired claims in docs",
                                          "ascii and dashes"]
