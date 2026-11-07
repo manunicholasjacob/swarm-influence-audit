@@ -173,6 +173,26 @@ def read_table(lines, i):
     return rows, i
 
 
+def read_list(lines, i, pattern, group):
+    """Read a run of list items starting at line i, allowing blank separators."""
+    items = []
+    while i < len(lines):
+        m = pattern.match(lines[i].rstrip())
+        if m:
+            items.append(m.group(group))
+            i += 1
+            continue
+        if not lines[i].strip():
+            j = i + 1
+            while j < len(lines) and not lines[j].strip():
+                j += 1
+            if j < len(lines) and pattern.match(lines[j].rstrip()):
+                i = j
+                continue
+        break
+    return items, i
+
+
 def render_table(rows):
     ncols = len(rows[0])
     widths = [max(len(strip_markup(r[j])) for r in rows) for j in range(ncols)]
@@ -398,32 +418,16 @@ def convert(md_text, figure_source=None):
             body.extend(render_table(rows))
             continue
 
-        m = ORDERED_RE.match(line)
-        if m:
-            items = []
-            while i < len(lines) and ORDERED_RE.match(lines[i].rstrip()):
-                items.append(ORDERED_RE.match(lines[i].rstrip()).group(2))
-                i += 1
-                if i < len(lines) and not lines[i].strip():
-                    i += 1
-                    if not (i < len(lines) and ORDERED_RE.match(lines[i].rstrip())):
-                        break
+        if ORDERED_RE.match(line):
+            items, i = read_list(lines, i, ORDERED_RE, 2)
             body.append("")
             body.append(r"\begin{enumerate}")
             body.extend(r"\item %s" % inline(it) for it in items)
             body.append(r"\end{enumerate}")
             continue
 
-        m = BULLET_RE.match(line)
-        if m:
-            items = []
-            while i < len(lines) and BULLET_RE.match(lines[i].rstrip()):
-                items.append(BULLET_RE.match(lines[i].rstrip()).group(1))
-                i += 1
-                if i < len(lines) and not lines[i].strip():
-                    i += 1
-                    if not (i < len(lines) and BULLET_RE.match(lines[i].rstrip())):
-                        break
+        if BULLET_RE.match(line):
+            items, i = read_list(lines, i, BULLET_RE, 1)
             body.append("")
             body.append(r"\begin{itemize}")
             body.extend(r"\item %s" % inline(it) for it in items)
@@ -469,14 +473,21 @@ def check_output(tex):
     # own prose lives. File names and URLs are verbatim arguments and are
     # exempt, as are LaTeX comment lines.
     body = tex.split(r"\begin{document}", 1)[1]
+    in_table = False
     for line in body.split("\n"):
+        if re.search(r"\\begin\{tabular", line):
+            in_table = True
+        if re.search(r"\\end\{tabular", line):
+            in_table = False
         if line.lstrip().startswith("%"):
             continue
         rest = re.sub(r"\\url\{[^}]*\}", "", line)
         rest = re.sub(r"\\includegraphics(\[[^]]*\])?\{[^}]*\}", "", rest)
         for pair in (r"\%", r"\&", r"\$", r"\#", r"\_", r"\{", r"\}"):
             rest = rest.replace(pair, "")
-        for ch in "%&$#_":
+        # Inside a tabular, "&" is the column separator and is meant to be bare.
+        suspects = "%$#_" if in_table else "%&$#_"
+        for ch in suspects:
             if ch in rest:
                 raise ValueError("unescaped %r in: %r" % (ch, line))
 

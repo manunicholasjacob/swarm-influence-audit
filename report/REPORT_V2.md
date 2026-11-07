@@ -25,7 +25,7 @@ We run that audit on the AI Village (AI Digest, 2026), in which frontier models 
 
 **Transfer entropy and surrogates.** Transfer entropy (Schreiber, 2000) measures how much a source's past reduces uncertainty about a target's next symbol beyond the target's own past. Plug-in estimators are biased upward on short series, so significance rests on surrogate data, with family-wise error across all ordered pairs controlled by a max-T test (Westfall and Young, 1993). The usual surrogate is a circular time shift of the source.
 
-**Event-based data breaks the shift surrogate.** Our audit rediscovers this in a new domain. Shorten, Spinney and Lizier (2021), on neural spike trains, show that the conventional source-time-shift surrogate fails to represent the null hypothesis of conditional independence for event-based processes, and propose a local permutation scheme instead. Agent chat is event-based in that sense: messages are events in continuous time, not samples of a clocked signal. The correction itself is not our contribution. Ours is showing that the same failure carries over to multi-agent safety monitoring and can be severe enough to create apparent leaders where none exist.
+**Event-based data breaks the shift surrogate.** Our audit rediscovers this in a new domain. Shorten, Spinney and Lizier (2021), on neural spike trains, show that the conventional source-time-shift surrogate fails to represent the null hypothesis of conditional independence for event-based processes, and adapt to that setting the nearest-neighbour local permutation scheme of Runge (2018). Agent chat is event-based in that sense: messages are events in continuous time, not samples of a clocked signal. The correction itself is not our contribution. Ours is showing that the same failure carries over to multi-agent safety monitoring and can be severe enough to create apparent leaders where none exist.
 
 **Oversight under a budget.** AI-control research frames monitoring as resource constrained, with a cost for false positives (Greenblatt et al., 2024); an influence graph is one such measurement and our concern is its error rate.
 
@@ -60,7 +60,7 @@ We avoid the bind by ordering messages canonically and letting one message be on
 
 The preexisting estimator certifies an edge by comparing the observed transfer entropy with a **circular-shift** surrogate of the source, using a max-T family-wise test at level 0.05 across all ordered pairs. On the turn-ordered grid this surrogate fails. Real conversation is not a sequence of independent draws about who talks next: it has strong turn-taking and strongly non-stationary per-agent activity, and circularly shifting one agent's series slides that pattern to a different part of the timeline, where it aligns against the others differently than it ever does in the data.
 
-We therefore add a **symbol-permutation** surrogate, following the local-permutation idea of Shorten et al. (2021): the source keeps the exact ticks at which it spoke, and only its symbols are permuted among them. Speaking pattern, sparsity and turn-taking are preserved exactly, and only the correspondence between symbol and time is destroyed. Both surrogates are reported throughout.
+We therefore add a **symbol-permutation** surrogate, following the local-permutation idea of Runge (2018) as adapted to event data by Shorten et al. (2021): the source keeps the exact ticks at which it spoke, and only its symbols are permuted among them. Speaking pattern, sparsity and turn-taking are preserved exactly, and only the correspondence between symbol and time is destroyed. Both surrogates are reported throughout.
 
 ### 4.4 A second repair, for common cause
 
@@ -288,6 +288,8 @@ Two readings are available and the report commits to neither beyond what the tes
 AI Digest (2026). AI Village dataset. https://huggingface.co/datasets/aidigestorg/ai-village and https://theaidigest.org/village
 
 Greenblatt, R., Shlegeris, B., Sachan, K., and Roger, F. (2024). AI Control: Improving Safety Despite Intentional Subversion. arXiv:2312.06942.
+
+Runge, J. (2018). Conditional Independence Testing Based on a Nearest-Neighbor Estimator of Conditional Mutual Information. Proceedings of the 21st International Conference on Artificial Intelligence and Statistics (AISTATS), PMLR 84, 938-947.
 
 Schreiber, T. (2000). Measuring Information Transfer. Physical Review Letters, 85(2), 461-464.
 
