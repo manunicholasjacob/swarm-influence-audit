@@ -20,7 +20,7 @@ recomputed from `../facts_*.json` by `../report/verify_v2.py`.
 | 5 | The repair, compared | report 5.2 + variants | Partly written. Needs the variant comparison at 300 replicates |
 | 6 | Continuous time | new | **Done, 7 Nov, and the answer is neither of the two expected ones.** See `06_continuous_time.md` |
 | 7 | Confounding | report 5.4 | Written |
-| 8 | The symbolisation floor | report Appendix E + floor proxy | **Has a result and an open contradiction** |
+| 8 | The symbolisation floor | report Appendix E + floor proxy | **Rewritten 7 Nov.** See `08_symbolisation_floor.md`: the contradiction resolved against the proxy, and three claims were withdrawn |
 | 9 | The benchmark | report Appendix E | Written. Promote to a section; it is a contribution |
 | 10 | Real channels | report 5.3, 5.5, 5.6 | Written. **Demote**: the real-data result is weak and should look it |
 | 11 | Controls | report 6 | Written. Six controls, the practical payload |
@@ -40,11 +40,10 @@ recomputed from `../facts_*.json` by `../report/verify_v2.py`.
 1. ~~**Continuous-time comparison.**~~ **Done. See `06_continuous_time.md`.** The two estimators
    agree that nothing is detectable in event timing, and the audit's edges turn out to live in a
    channel the continuous-time estimator cannot read at all.
-2. **The open-chat contradiction.** The floor proxy calls open-chat below the floor; open-chat
-   certifies 18 and 22 edges against main-village's 2 and 1, with its hash null at 0. A below-floor
-   channel should certify near zero and should look like its own meaning-free null. It does neither.
-   Until this resolves the open-chat verdict is unusable, and resolving it is probably the most
-   interesting single question left here.
+2. ~~**The open-chat contradiction.**~~ **Resolved 7 Nov: the proxy was wrong, not the edge counts.**
+   The below-floor verdict is an artifact of k=8; at k=4 open-chat gives the highest stability
+   reading either channel produces anywhere. Three claims were withdrawn in the process, including
+   "below the floor there is no topic signal left", which is false. See `08_symbolisation_floor.md`.
 3. **Surrogate variants at 300 replicates.** Global within-speaker permutation, block-local
    permutation, and the local permutation of Runge as adapted by Shorten et al., compared at the
    precision the headline already reached. Compute, not research.
