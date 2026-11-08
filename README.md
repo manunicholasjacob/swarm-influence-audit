@@ -130,10 +130,21 @@ The dataset is gated, but **every number in the report is checked against the co
 python verify_all.py
 ```
 
-That runs five checks and prints one verdict: the numeric verifier below, the 8-page body cap, the
-benchmark's own test suite, a guard that no withdrawn claim is restated in any document, and an
-ASCII sweep. A check that cannot run is reported as a skip **and fails the run**, because a verifier
-that prints success for work it did not do is worse than no verifier.
+That runs seven checks and prints one verdict: the numeric verifier below, the 8-page body cap, a
+guard over the project image's own claims, the benchmark's own test suite, a check that the arXiv
+source still matches a fresh generation from the report, a guard that no withdrawn claim is
+restated in any document, and an ASCII sweep.
+
+```
+python verify_all.py --pack DIR          # adds two checks over a built submission pack
+```
+
+A check whose directory is missing is reported as a skip **and fails the run**, because a verifier
+that prints success for work it did not do is worse than no verifier. The pack is the one thing a
+bare run does not look at, so the bare verdict says in as many words that the pack went unchecked.
+This paragraph used to claim the pack itself was skipped-and-failed; it never was, and the claim
+is removed rather than implemented, because a runner that fails every time it is run from the
+repository is a runner nobody reads.
 
 ```
 python -X utf8 report/verify_v2.py      # 71 numeric claims + 89 assertions across rounds 3 to 12
@@ -158,7 +169,14 @@ python -X utf8 figures_r2.py             # the figures
 
 Other live scripts: `r2_robust.py`, `r2_villages.py`, `r2_humans.py`, `r2_humans_main.py`,
 `r2_openchat.py`, `r2_power.py`, `r2_power2.py`, `r4_power_openchat.py`, `r2_budget.py`,
-`r2_qual.py`, `r2_sparse.py`, `project_image.py`.
+`r2_qual.py`, `r2_sparse.py`.
+
+`project_image.py` belongs with the verifiers rather than here: it reads only the committed
+`facts_*.json` and runs from a clone. It writes `project_image.png` and, beside it,
+`project_image_claims.json`, which records every string the figure draws and the facts behind
+them. `report/check_image.py` compares both against a fresh generation and recomputes each
+number from the analysis output, because a PNG cannot be read back and this image was the one
+artifact nothing checked.
 
 **Superseded round-1 exploration, kept for the record and not used by the report:** `analyze.py`,
 `figures.py`, `characterise.py`, `measure.py`, `inspect_data.py`, `inspect_files.py`, `peek_raw.py`,

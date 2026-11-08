@@ -13,7 +13,9 @@ all of them and prints a single verdict.
   3. report/check_pack.py   the submission pack matches the report it claims to carry
   4. benchmark tests        46 tests in the companion repository, each a regression test for a
                             defect that was actually found
-  5. ascii and dashes       no em dashes, no en dashes, no non-ASCII anywhere in the deliverables
+  5. report/check_image.py  the project image, which was the only artifact nothing checked until
+                            8 Nov 2026 and had drifted. It is the first thing a judge sees
+  6. ascii and dashes       no em dashes, no en dashes, no non-ASCII anywhere in the deliverables
 
 Usage:  python verify_all.py [--pack DIR] [--bench DIR]
 """
@@ -29,8 +31,13 @@ import sys
 HERE = pathlib.Path(__file__).resolve().parent
 # The benchmark is a sibling checkout, so resolve it that way rather than by absolute path.
 DEFAULT_BENCH = HERE.parent / "swarm-bench"
-# The submission pack lives outside any repository and has no portable default. Left unset on
-# purpose: a missing pack is now reported as a skip that fails the run, not as a silent pass.
+# The submission pack lives outside any repository and has no portable default, so it stays
+# unset. What this file used to claim here, and in --pack's help, was that a missing pack is
+# reported as a skip that fails the run. That was never true: the pack checks are only added to
+# the list when --pack is given, so a bare run has nothing to skip and prints a clean verdict
+# with the pack unexamined. The claim is removed rather than implemented, because a runner that
+# fails every time it is run from the repository is a runner nobody reads. The verdict now says
+# out loud when the pack was not checked.
 DEFAULT_PACK = None
 
 
@@ -159,8 +166,8 @@ def check_ascii(root: pathlib.Path) -> tuple[bool, str]:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--pack", default=None,
-                    help="submission pack directory. Pack checks are skipped without it, "
-                         "and a skip is reported as a failure, never as a pass.")
+                    help="submission pack directory. Without it the two pack checks are not "
+                         "run at all and the verdict says so. Pass it before submitting.")
     ap.add_argument("--bench", default=str(DEFAULT_BENCH))
     args = ap.parse_args()
 
@@ -168,9 +175,17 @@ def main() -> int:
     bench = pathlib.Path(args.bench)
     py = sys.executable
 
+    # check_image.py runs with or without a pack: the image lives in this repository, and only
+    # the "pack carries the same image" round needs the pack. It is listed before the pack
+    # checks so that a bad image fails even when nobody passed --pack.
+    image_cmd = [py, "-X", "utf8", "check_image.py"]
+    if pack_root is not None:
+        image_cmd += ["--pack", str(pack_root / "deliverables")]
+
     checks = [
         ("numeric claims and consistency", [py, "verify_v2.py"], HERE / "report"),
         ("8-page body cap", [py, "check_pages.py"], HERE / "report"),
+        ("project image claims", image_cmd, HERE / "report"),
         ("benchmark tests", [py, "-m", "pytest", "tests", "-q"], bench),
     ]
     if pack_root is not None:
@@ -239,7 +254,11 @@ def main() -> int:
         print(f"NOT ALL CHECKS PASSED: {ran} of {total} ran, "
               f"{len(failed)} failed, {len(skipped)} skipped")
         return 1
-    print(f"ALL {total} CHECKS PASS")
+    if pack_root is None:
+        print(f"ALL {total} CHECKS PASS, but the submission pack was NOT checked. "
+              f"Before submitting:  python verify_all.py --pack DIR")
+    else:
+        print(f"ALL {total} CHECKS PASS")
     return 0
 
 

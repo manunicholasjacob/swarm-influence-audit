@@ -1,5 +1,11 @@
-"""Project image for the submission form: the one number that carries the paper."""
-import json, os
+"""Project image for the submission form: the one number that carries the paper.
+
+Writes project_image.png and, beside it, project_image_claims.json: every string the figure
+draws, plus the facts behind them. The sidecar exists because this file was the only artifact
+nothing verified, and it drifted. report/check_image.py reads it. Pass an output directory as
+argv[1] to write somewhere other than this repository; inputs always resolve from here.
+"""
+import json, os, sys
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
@@ -87,5 +93,45 @@ fig.text(0.5, 0.062,
 fig.text(0.5, 0.018, "Manu Nicholas Jacob, Independent Researcher   |   "
          "Apart Swarm Alignment Hackathon, November 2026",
          ha="center", fontsize=10.5, color="#9CA3AF")
-fig.savefig(os.path.join(D, "project_image.png"), dpi=100, facecolor="white")
-print("wrote project_image.png")
+OUT = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1 else D
+fig.savefig(os.path.join(OUT, "project_image.png"), dpi=100, facecolor="white")
+
+
+def _texts(f):
+    """Every string the figure draws, in no particular order.
+
+    A PNG cannot be read back, so the only way to check what the image claims is to record what
+    was drawn. Axis tick labels are included: "circular shift (standard practice)" is a claim
+    about what the field does, and it belongs under the same guard as the numbers.
+    """
+    out = [t.get_text() for t in f.texts]
+    for a in f.axes:
+        out += [a.get_title(), a.get_xlabel(), a.get_ylabel()]
+        out += [t.get_text() for t in a.texts]
+        out += [t.get_text() for t in a.get_xticklabels() + a.get_yticklabels()]
+    return [s for s in (x.strip() for x in out) if s]
+
+
+json.dump(
+    {
+        "drawn_text": sorted(_texts(fig)),
+        # The facts, named as what they are, so check_image.py compares against the analysis
+        # output rather than against a number retyped into a caption.
+        "facts": {
+            "shift_fwer": shift_fwer,
+            "perm_fwer": perm_fwer,
+            "n_edges_shift": n_shift,
+            "n_edges_permute": n_perm,
+            "peak_mean_max_z": peak_mean_max_z,
+            "n_seeds": n_seeds,
+            "n_villages": n_villages,
+            "total_agent_msgs": total_msgs,
+            "precision_pairwise": prec_pw,
+            "precision_conditional": prec_cd,
+        },
+    },
+    open(os.path.join(OUT, "project_image_claims.json"), "w", encoding="utf-8"),
+    indent=2,
+    sort_keys=True,
+)
+print(f"wrote project_image.png and project_image_claims.json to {OUT}")
