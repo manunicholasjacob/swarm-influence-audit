@@ -1,5 +1,7 @@
 # swarm-influence-audit
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24064130.svg)](https://doi.org/10.5281/zenodo.24064130)
+
 **An Agent That Copies Nobody Is Certified as a Leader.** An audit of information-theoretic influence
 detection on real multi-agent chat, built for the Apart Research Swarm Alignment Hackathon, 6 to 8
 November 2026 (Track 4, Multi-Agent Oversight and Control).

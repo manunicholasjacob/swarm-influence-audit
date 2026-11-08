@@ -26,8 +26,9 @@ keywords:
   - coordination detection
   - reproducibility
 license: MIT
+doi: "10.5281/zenodo.24064130"
 version: 1.0.0
-date-released: "2026-11-08"
+date-released: "2026-11-09"
 repository-code: "https://github.com/manunicholasjacob/swarm-influence-audit"
 url: "https://github.com/manunicholasjacob/swarm-influence-audit"
 references:
