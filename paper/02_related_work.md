@@ -187,15 +187,29 @@ checker that matches on title will catch none of them.
 repository's checks require pure ASCII in markdown, which exists so that nothing with a stray
 character reaches an arXiv abstract field. Restore the umlaut in the LaTeX, where \"{u} handles it.
 
-## Still to verify before submission
+## Citation checks, resolved 8 Nov 2026
 
-- **Greenblatt et al. venue.** Widely cited as ICML 2024, but the arXiv listing links an OpenReview
-  version without confirming acceptance. Check PMLR v235 and cite the preprint if it is not there.
-- **Schreiber (2000) end page.** The APS page shows start page 461 only. The 461-464 range is the
-  standard citation and almost certainly right, but confirm from the PDF.
-- **Venkatesh et al.'s reported metrics.** The 0.942 AUROC and 0.792 EDR@5 figures circulating for
-  CASPIAN come from a third-party summary, not from the paper. Do not quote them without checking
-  Tables 1 and 2. The claims used above are from the method description, which is safer ground.
-- **Yuan and Shou's mechanism.** The exact way ordinary time-shift surrogates fail is in their full
-  text, which was not readable. The validity claim and the stationarity condition are from the
-  abstract and are safe; the mechanism is not yet.
+The whole bibliography was also run through a three-database checker (CrossRef, Semantic Scholar,
+OpenAlex). Its one "not found" is the AI Village **dataset** entry, which is correct behaviour:
+datasets are not indexed as publications. Everything else resolved with a 100% title match.
+
+- **Greenblatt et al. venue. Resolved: it is in the proceedings.** PMLR 235:16295-16336,
+  Proceedings of the 41st International Conference on Machine Learning, 2024, read off the PMLR
+  volume page itself rather than a summary, with the four authors in the order used here. `refs.bib`
+  now carries the proceedings entry and keeps the arXiv eprint alongside it. **Note that the
+  submitted sprint report cites the preprint**, which was the safe form at the time and is not
+  wrong; only the paper's bibliography has been upgraded.
+- **Schreiber (2000) end page. Resolved: 461-464 is correct.** The APS landing page prints
+  "461 -" with no end page, which is why this was open. CrossRef's record for
+  10.1103/PhysRevLett.85.461, which is the registrant's own metadata, gives `page: 461-464`,
+  volume 85, issue 2, 10 July 2000. `refs.bib` already had it right.
+- **Venkatesh et al.'s reported metrics. Resolved by not using them.** A grep over the paper, the
+  report and the README confirms the 0.942 AUROC and 0.792 EDR@5 figures appear nowhere outside
+  this warning. They came from a third-party summary rather than the paper, and the claims made
+  above rest on the method description instead. Keep it that way unless someone reads Tables 1
+  and 2.
+- **Yuan and Shou's mechanism. Standing constraint, not an open task.** Section 2.1 claims only
+  exact validity for a truncated time-shift procedure given one stationary series, and that the
+  authors argue this is near-minimal among nonparametric tests. Both are from the abstract. The
+  full text was not readable, so **do not add any account of how ordinary time-shift nulls fail in
+  their setting** without reading it.

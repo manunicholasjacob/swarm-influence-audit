@@ -5,7 +5,10 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-D = r"C:\dev\swarm-sprint"
+# Resolved from this file, never hardcoded. report/verify_v2.py pinned an absolute path and so
+# kept reporting on one working copy no matter where it was run from; a generator with the same
+# bug silently writes the image from someone else's numbers.
+D = os.path.dirname(os.path.abspath(__file__))
 cal = json.load(open(os.path.join(D, "facts_calib.json"), encoding="utf-8"))
 # 300 replicates, the figure the report headlines. facts_calib2.json is the 30-replicate pilot
 # (0.10) and must not be used here: the image would disagree with the paper.
@@ -26,7 +29,12 @@ shift_fwer = cal["rows"]["shift"]["familywise_error_rate"]
 perm_fwer = calbig["fwer"]
 hb = fin["headline_by_null"]
 n_shift, n_perm = hb["shift"]["topic"]["n_edges"], hb["permute"]["topic"]["n_edges"]
-worst_z = max(r["mean_max_z"] for r in sp["rows"])
+# The largest of the per-volume MEANS of each run's largest z, not a single observed z. The name
+# matters: this was called worst_z and printed as "reaches z = 72", which reads as one agent
+# hitting 72. The report says "the mean largest z rising ... to 71.7" and the caption must not
+# claim more than that. The same conflation got into an outreach draft once already.
+peak_mean_max_z = max(r["mean_max_z"] for r in sp["rows"])
+n_seeds = sp["seeds"]
 
 plt.rcParams.update({"font.family": "DejaVu Sans"})
 fig = plt.figure(figsize=(12, 6.75), dpi=100)
@@ -68,7 +76,8 @@ for s in ("top", "right"):
     bx.spines[s].set_visible(False)
 
 fig.text(0.5, 0.105,
-         f"A planted agent coupled to nothing reaches z = {worst_z:.0f}.    "
+         f"A planted agent coupled to nothing reaches a mean largest z of "
+         f"{peak_mean_max_z:.0f} over {n_seeds} runs.    "
          f"{n_villages} villages, {total_msgs:,} agent messages.",
          ha="center", fontsize=12, color="#6B7280")
 fig.text(0.5, 0.062,

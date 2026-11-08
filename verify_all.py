@@ -202,8 +202,15 @@ def main() -> int:
     if not ok:
         failed.append(("arxiv source in sync", detail))
 
-    # These two run over the repository itself, always, plus the pack when one was given.
-    roots = [HERE] + ([pack_root] if pack_root is not None and pack_root.exists() else [])
+    # These two run over this repository, the benchmark repository, and the pack when one was
+    # given. The benchmark was added on 8 Nov 2026: it is linked from the public submission page,
+    # so a judge reads its README, and until then nothing guarded it. That is the same mistake as
+    # guarding the report but not the README, one repository further out.
+    roots = [HERE]
+    if bench.exists():
+        roots.append(bench)
+    if pack_root is not None and pack_root.exists():
+        roots.append(pack_root)
     for label, fn in (("retired claims in docs", check_retired), ("ascii and dashes", check_ascii)):
         oks, details = [], []
         for r in roots:
