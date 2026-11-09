@@ -36,11 +36,36 @@ measurable on real text.
 
 ## 8.3 Detecting the floor without labels, and the limit of that
 
-Two label-free statistics separate the floor with zero errors **on the mechanism they were fitted
-to**: seed stability at a cut of 0.623 and cross-symboliser agreement with LSA at 0.646. The
-instructive part is that the highest-correlating statistic is not the best classifier: silhouette
-correlates with true ARI at 0.979 and is useless for the decision, because its threshold sits in a
-gap 0.002 wide.
+**Three** label-free statistics separate the floor with zero errors **on the mechanism they were
+fitted to**: seed stability, specifically the **minimum** pairwise agreement across seeds, at a cut
+of 0.623; cross-symboliser agreement with LSA at 0.646; and the **Calinski-Harabasz index** at
+138.9. An earlier draft of this section said two and recommended the first pair without mentioning
+the third. Error count cannot justify that, because where they were fitted all three are perfect.
+Note also that it is the minimum across seeds and not the mean: the mean variant makes one error,
+at a different cut of 0.791.
+
+**What chooses between them is transportability, and it is measured rather than argued.** A floor
+proxy is a claim about the symbolisation, so a cut that moves when the corpus changes while the
+symbolisation stays perfect is a property of the corpus instead. Applying each cut unchanged to the
+30 nuisance cells of `floor_contradiction.json`, 27 of which hold true ARI at 1.000:
+
+| proxy | cut | errors where fitted | errors on nuisance set | of those at true ARI 1.000 |
+|---|---|---|---|---|
+| seed stability, min across seeds | 0.623 | 0 | 2 | **0** |
+| LSA agreement | 0.646 | 0 | 2 | **0** |
+| Calinski-Harabasz | 138.9 | 0 | 6 | **3** |
+
+The two bounded statistics err only on the short-message cells, where the symbolisation really has
+degraded. Calinski-Harabasz additionally condemns all three cells whose true ARI is exactly
+**1.000**, for no reason beyond the corpus holding 2,000 messages rather than 8,000: it reads 76 to
+77 there against its own cut of 138.9. It is unbounded and grows with sample size, so a published
+numeric cut for it means nothing on anyone else's corpus. **A cut that moves with the corpus is not
+a floor cut.** See `../../swarm-bench/proxy_transport.py` and `proxy_transport.json`.
+
+The instructive part stands: the highest-correlating statistic is not the best classifier.
+Silhouette correlates with true ARI at 0.979 and is useless for the decision, because its threshold
+sits in a gap 0.002 wide. Calinski-Harabasz sharpens that point rather than blunting it, since it
+correlates at 0.973 and classifies perfectly where it was fitted, and still cannot carry a cut.
 
 **Out of mechanism they degrade badly.** Applied unchanged to instances with a known k mismatch,
 seed stability's balanced accuracy falls from 1.00 to **0.75** and LSA agreement's to **0.571**. All

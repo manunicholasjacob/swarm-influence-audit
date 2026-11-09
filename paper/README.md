@@ -5,6 +5,11 @@ Target **TMLR**. No APC, no page limit, and it takes careful negative-plus-metho
 repository URLs. **arXiv preprint first**, which TMLR permits because a preprint is not an archival
 venue.
 
+**The prose itself is now drafted: `00_PROSE_v1.md`.** Eleven sections written 9 Nov, with every
+quoted figure verified against the committed JSONs and a change log recording all 25 corrections.
+Two things in it still need action: SLOT 2 is provisional until the 200-draw factorial lands, and
+every `[ANON]` marker must be resolved before a double-blind submission.
+
 This directory holds material written for the paper that does not exist in the sprint report.
 Everything else is reused from `../report/REPORT_V2.md`, which is verified and whose numbers are
 recomputed from `../facts_*.json` by `../report/verify_v2.py`.
@@ -20,7 +25,7 @@ recomputed from `../facts_*.json` by `../report/verify_v2.py`.
 | 5 | The repair, compared | report 5.2 + `surrogate_variants.json` | **Unblocked 9 Nov.** The variant comparison is done and says no repair beats another; the section must now argue the choice on grounds other than error rate |
 | 6 | Continuous time | new | **Done, 7 Nov, and the answer is neither of the two expected ones.** See `06_continuous_time.md` |
 | 7 | Confounding | report 5.4 | Written |
-| 8 | The symbolisation floor | report Appendix E + floor proxy | **Rewritten 7 Nov.** See `08_symbolisation_floor.md`: the contradiction resolved against the proxy, and three claims were withdrawn |
+| 8 | The symbolisation floor | report Appendix E + floor proxy | **Rewritten 7 Nov, corrected 9 Nov.** See `08_symbolisation_floor.md`: the contradiction resolved against the proxy, three claims withdrawn, and the proxy recommendation now rests on a measured transportability test rather than on error count |
 | 9 | The benchmark | report Appendix E | Written. Promote to a section; it is a contribution |
 | 10 | Real channels | report 5.3, 5.5, 5.6 | Written. **Demote**: the real-data result is weak and should look it |
 | 11 | Controls | report 6 | Written. Six controls, the practical payload |
@@ -34,6 +39,7 @@ recomputed from `../facts_*.json` by `../report/verify_v2.py`.
 | Label-free symbolisation-floor proxy | `../../swarm-bench/floor_proxy_sweep.json` | seed stability and LSA agreement each separate the floor with zero errors |
 | Real-channel floor verdict | `../../swarm-bench/floor_proxy_real.json` | **Contradicted by the audit's own edge counts. Not usable yet** |
 | Surrogate variants, paired at 300 replicates | `../../swarm-bench/surrogate_variants.json` and `_200.json` | At 200 draws the shift reads 0.033 and the global permutation 0.070, both covering nominal, while block-local and local still marginally exclude it. **The three repairs remain mutually indistinguishable.** The 100-draw version of this row read "all three run 2 to 3x nominal", which was a draw-count artifact |
+| Floor proxy cuts, tested out of mechanism | `../../swarm-bench/proxy_transport.json` | **Three** proxies are perfect where they were fitted, not two, so error count cannot choose. Only the two bounded ones keep their cut: Calinski-Harabasz condemns three cells at true ARI **1.000** on corpus size alone |
 | Closest prior work | report Appendix J | Papadopoulos and Psannis (2026) measured the same failure in MARL |
 
 ## The three things that would finish it
@@ -131,10 +137,10 @@ recomputed from `../facts_*.json` by `../report/verify_v2.py`.
 ## Reproducibility
 
 Public, MIT, with `facts_*.json` and a verifier that recomputes every number and fails on a
-mismatch. `../verify_all.py` runs nine checks: the numeric verifier, the page cap, a guard over the project
-image's own claims, the benchmark suite, the submission pack, the sprint's own submission rules,
-arXiv source freshness, a guard that no withdrawn claim is restated in any document, and an ASCII
-sweep. Zenodo DOI on release.
+mismatch. `../verify_all.py` runs ten checks: the numeric verifier, the page cap, a guard over the
+project image's own claims, the benchmark suite, **the 65 figures quoted in `00_PROSE_v1.md`**, the
+submission pack, the sprint's own submission rules, arXiv source freshness, a guard that no
+withdrawn claim is restated in any document, and an ASCII sweep. Zenodo DOI on release.
 
 **Cite the version DOI, not the concept DOI.**
 

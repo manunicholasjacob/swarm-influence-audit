@@ -1,6 +1,6 @@
 """Run every check this project has, in one command, and fail on the first that fails.
 
-There are now five independent checks across two repositories and a submission pack, each of which
+There are now seven independent checks across two repositories and a submission pack, each of which
 caught something real at least once. Running them one at a time is how one gets skipped. This runs
 all of them and prints a single verdict.
 
@@ -18,6 +18,10 @@ all of them and prints a single verdict.
   5. report/check_image.py  the project image, which was the only artifact nothing checked until
                             8 Nov 2026 and had drifted. It is the first thing a judge sees
   6. ascii and dashes       no em dashes, no en dashes, no non-ASCII anywhere in the deliverables
+  7. paper/verify_prose.py  65 figures quoted in the drafted paper prose, each recomputed from the
+                            committed JSONs. Added 9 Nov 2026: the prose was the last artifact here
+                            whose numbers nothing checked, and a read-through of it had already
+                            missed a wrong crossover, a merged citation and a mislabelled arm
 
 Usage:  python verify_all.py [--pack DIR] [--bench DIR]
 """
@@ -189,6 +193,9 @@ def main() -> int:
         ("8-page body cap", [py, "check_pages.py"], HERE / "report"),
         ("project image claims", image_cmd, HERE / "report"),
         ("benchmark tests", [py, "-m", "pytest", "tests", "-q"], bench),
+        # The drafted paper prose was for a while the only artifact here whose numbers nothing
+        # recomputed, which is how a wrong crossover and a merged citation survived a read-through.
+        ("paper prose figures", [py, "-X", "utf8", "verify_prose.py"], HERE / "paper"),
     ]
     if pack_root is not None:
         pdf = pack_root / "deliverables" / "Apart_Swarm_Report_Manu_Nicholas_Jacob.pdf"
