@@ -109,8 +109,17 @@ recomputed from `../facts_*.json` by `../report/verify_v2.py`.
    permutation reaches nominal, which is a reason to prefer it that is about calibration rather
    than provenance.
 
-   **Still open:** the drift sweep below also ran at 100 draws, so its repair rates are suspect in
-   the same way. A 200-draw repeat is running.
+   **The drift sweep was repeated at 200 draws too**
+   (`../../swarm-bench/stationarity_pinned_200.json`). The headline defence is unchanged and does
+   not depend on the draw count: Cochran-Armitage still gives the shift **z = 8.667, p < 1e-15**
+   and every repair nothing (**p = 0.51, 0.63, 0.37**). Under drift, three of the four surrogates
+   do fire significantly less with the extra draws (shift p = 0.0113, global p = 0.0033, block
+   p = 0.0003; local unmoved at p = 0.42), so **quote the 200-draw column**.
+
+   One asymmetry worth not hiding: under drift the **block-local** variant's interval covers
+   nominal in 3 of 4 cells where the global repair's covers 1 of 4. They remain pairwise
+   indistinguishable, so this is not grounds to switch the recommendation, but the paper should
+   not assert that the global repair is the best calibrated under drift.
 
 ## Reproducibility
 
