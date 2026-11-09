@@ -83,10 +83,34 @@ recomputed from `../facts_*.json` by `../report/verify_v2.py`.
      300-replicate figure. That is consistent with the inflation being a function of how many
      surrogate draws the max-T null is built from rather than of the data at all.
 
-   The check is cheap and is the next thing to run: repeat this sweep at 200 draws and see whether
-   the permutation rate falls toward 0.063. If it does, the paper gains a genuinely useful
-   practitioner result about how many draws the repair needs. If it does not, the 0.063 is a
-   property of that specific channel and the paper must stop quoting it as the repair's error rate.
+   **SETTLED 9 Nov 2026: it is the draws.** `../../swarm-bench/surrogate_variants_200.json`, the
+   same 300 instances at 200 draws instead of 100, so the comparison is paired.
+
+   | surrogate | 100 draws | 200 draws | McNemar p |
+   |---|---|---|---|
+   | circular shift | 0.0433 | 0.0333 [0.018, 0.060] | 0.45 |
+   | global permutation | **0.1167** | **0.0700 [0.046, 0.105]** | **0.0043** |
+   | block-local | 0.0900 | 0.0767 [0.052, 0.112] | 0.39 |
+   | local (Runge) | 0.0967 | 0.0800 [0.054, 0.116] | 0.33 |
+
+   **Only the global permutation is draw-sensitive**, and it is strongly so: 18 instances fired at
+   100 draws and not at 200, against 4 the other way. At 200 draws its interval **covers nominal
+   0.05** and **overlaps the report's published 0.0633 [0.0409, 0.0968]**. So the report's figure
+   is corroborated, not contradicted, and the apparent inflation at 100 draws was an artifact of
+   too few draws rather than a property of the repair.
+
+   **The practitioner result this buys:** the global within-speaker permutation needs on the order
+   of 200 surrogate draws. At 100 it over-fires by roughly a factor of two. The other two variants
+   do not improve with draws and still marginally exclude nominal at 200, which is the first thing
+   that has distinguished them at all.
+
+   The three repairs remain mutually indistinguishable at 200 draws (p = 0.85, 0.65, 1.00), so
+   SLOT 9's instruction not to rank them still stands. What has changed is that only the global
+   permutation reaches nominal, which is a reason to prefer it that is about calibration rather
+   than provenance.
+
+   **Still open:** the drift sweep below also ran at 100 draws, so its repair rates are suspect in
+   the same way. A 200-draw repeat is running.
 
 ## Reproducibility
 
