@@ -11,8 +11,10 @@ all of them and prints a single verdict.
                             once: the Conclusion heading sat on page 8 while its last lines spilled
                             onto page 9
   3. report/check_pack.py   the submission pack matches the report it claims to carry
-  4. benchmark tests        46 tests in the companion repository, each a regression test for a
-                            defect that was actually found
+  4. benchmark tests        150 tests in the companion repository, covering the generator, the
+                            detector harness, the text layer, the floor analysis and the
+                            turn-taking factorial. It said 46 until 9 Nov 2026; the count grew
+                            with the 7 Nov work and nothing updated it
   5. report/check_image.py  the project image, which was the only artifact nothing checked until
                             8 Nov 2026 and had drifted. It is the first thing a judge sees
   6. ascii and dashes       no em dashes, no en dashes, no non-ASCII anywhere in the deliverables

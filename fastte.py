@@ -84,6 +84,118 @@ def directed_tests_permute(series_int, A, silent_code, n_perm=200, seed=0):
             for pr, o, z, p in zip(pairs, obs, z_obs, p_fwer)}
 
 
+def _maxT(obs, null, n_draw, pairs):
+    """Shared max-T family-wise reduction. Identical arithmetic to the two tests above.
+
+    Factored out when the surrogate variants were added so that a comparison between surrogates
+    cannot accidentally become a comparison between two slightly different FWER reductions. The
+    two preexisting functions are deliberately left inline and untouched: their outputs are
+    verified numbers in the report.
+    """
+    mu, sd = null.mean(1), null.std(1, ddof=1)
+    sd = sd.copy(); sd[sd == 0] = np.inf
+    z_obs = (obs - mu) / sd
+    max_null = ((null - mu[:, None]) / sd[:, None]).max(0)
+    p_fwer = (1 + (max_null[None, :] >= z_obs[:, None]).sum(1)) / (1 + n_draw)
+    return {pr: {"te": float(o), "z": float(z), "p": float(p)}
+            for pr, o, z, p in zip(pairs, obs, z_obs, p_fwer)}
+
+
+def directed_tests_permute_block(series_int, A, silent_code, n_perm=200, seed=0, block_size=500):
+    """BLOCK-LOCAL permutation: like directed_tests_permute, but confined to blocks of ticks.
+
+    The global within-speaker permutation destroys an agent's symbol-to-time correspondence over
+    the whole timeline, so it also destroys any slow drift in WHAT an agent talks about. If the
+    channel's topic wanders and every agent follows it, a global permutation makes the surrogate
+    less like the observed data than it should be, which inflates z. Permuting only within a block
+    of `block_size` consecutive ticks preserves drift at scales longer than the block while still
+    destroying correspondence within it.
+
+    This is the direct analogue of the block-permutation null in the attribution-calibration
+    package, restricted here to the positions where the agent actually spoke so that sparsity is
+    preserved exactly as in the global version.
+    """
+    rng = np.random.default_rng(seed)
+    ids = list(series_int)
+    n = len(series_int[ids[0]])
+    pairs = [(i, j) for i in ids for j in ids if i != j]
+    obs = np.array([te_int(series_int[i], series_int[j], A) for i, j in pairs])
+
+    # Spoken positions per agent, split into blocks once. A trailing block holding fewer than two
+    # spoken positions is folded into the previous one: left alone it would be a stretch of the
+    # surrogate identical to the real series, which leaks real structure into the null.
+    blocks = {}
+    for i in ids:
+        spoke = np.flatnonzero(series_int[i] != silent_code)
+        starts = list(range(0, n, block_size))
+        groups = []
+        for b, st in enumerate(starts):
+            sp = starts[b + 1] if b + 1 < len(starts) else n
+            g = spoke[(spoke >= st) & (spoke < sp)]
+            if g.size > 1:
+                groups.append(g)
+            elif g.size == 1 and groups:
+                groups[-1] = np.concatenate([groups[-1], g])
+        blocks[i] = groups
+
+    null = np.empty((len(pairs), n_perm))
+    for p in range(n_perm):
+        shuffled = {}
+        for i in ids:
+            s = series_int[i].copy()
+            for g in blocks[i]:
+                s[g] = s[g][rng.permutation(g.size)]
+            shuffled[i] = s
+        for q, (i, j) in enumerate(pairs):
+            null[q, p] = te_int(shuffled[i], series_int[j], A)
+    return _maxT(obs, null, n_perm, pairs)
+
+
+def directed_tests_permute_local(series_int, A, silent_code, n_perm=200, seed=0):
+    """LOCAL permutation in conditioning state space: Runge (2018), adapted by Shorten et al. (2021).
+
+    Runge's scheme permutes the source only among points whose CONDITIONING state is similar, in
+    order to preserve the dependence between source and conditioning while destroying source to
+    target. In his continuous setting "similar" means a nearest-neighbour search; at history one
+    over a small discrete alphabet the exact analogue is available and needs no neighbourhood
+    parameter at all, because states can be matched exactly rather than approximately.
+
+    For the pair (i -> j), te_int reads the triple (t[u+1], t[u], s[u]). The conditioning variable
+    is the target's own previous symbol t[u]. So the surrogate permutes s[u] only among positions
+    sharing the same t[u], which holds the joint distribution of (source symbol, target past)
+    fixed. Positions where the source was silent are excluded, so sparsity is preserved exactly as
+    in the other two variants.
+
+    Unlike the global and block variants this null is TARGET-DEPENDENT, so a surrogate has to be
+    drawn per ordered pair rather than once per source. That is a property of the method, not an
+    inefficiency: a null that preserved the source's relationship to one target would not preserve
+    it to another.
+    """
+    rng = np.random.default_rng(seed)
+    ids = list(series_int)
+    n = len(series_int[ids[0]])
+    pairs = [(i, j) for i in ids for j in ids if i != j]
+    obs = np.array([te_int(series_int[i], series_int[j], A) for i, j in pairs])
+
+    null = np.empty((len(pairs), n_perm))
+    for q, (i, j) in enumerate(pairs):
+        src, tgt = series_int[i], series_int[j]
+        # Usable positions: u in [0, n-2] (u+1 must exist) where the source actually spoke.
+        u = np.flatnonzero(src[:-1] != silent_code)
+        cond = tgt[:-1][u]                      # the conditioning state at each usable position
+        order = np.argsort(cond, kind="stable")
+        u_sorted, cond_sorted = u[order], cond[order]
+        # Contiguous runs of equal conditioning state; runs of length 1 cannot be permuted.
+        cuts = np.flatnonzero(np.diff(cond_sorted)) + 1
+        groups = [g for g in np.split(u_sorted, cuts) if g.size > 1]
+        for p in range(n_perm):
+            s = src.copy()
+            for g in groups:
+                s[g] = s[g][rng.permutation(g.size)]
+            null[q, p] = te_int(s, tgt, A)
+    return _maxT(obs, null, n_perm, pairs)
+
+
 def cte_int(s, t, c, A, Ac):
     """Conditional TE(s->t | c), history 1: the extra information s's last symbol gives about t's
     next one, BEYOND t's own history and a channel-context variable c.
