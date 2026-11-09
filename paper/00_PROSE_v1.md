@@ -9,6 +9,9 @@ error (the crossover in SLOT 10), one merged citation (SLOT 4), one arm mislabel
 a set of omissions where the source carried a caveat attached to the exact figure being quoted. The
 change log at the end of this file lists every edit.
 
+**The 200-draw factorial has landed and SLOT 2 is no longer provisional.** All of its figures are
+restated at that draw count, and the change log records what moved. Nothing qualitative moved.
+
 **Two structural notes before the sections.**
 
 1. **SLOT 12 is not a paper section** and has been moved to the end under its own heading. It is a
@@ -38,30 +41,33 @@ mechanisms. The benchmark is released. `[ANON: the release link must be anonymis
 
 # SLOT 2: Two explanations that did not hold
 
-> **Provisional.** Every figure in this section comes from a sweep run at 100 surrogate draws. The
-> global permutation surrogate is known to over-fire at that setting (SLOT 3), and a 200-draw repeat
-> of this factorial is running. Do not submit this section until that lands.
-
 I initially attributed the circular-shift failure to mutual exclusivity: only one agent can speak at
 each tick, so shifting individual timelines could create overlaps that never occurred in the
 original conversation. The benchmark did not support this explanation. A generated channel with
-exactly one speaker per tick and steady activity produced an error rate of just 0.067 at 100
-surrogate draws, far below the 0.90 observed in the real data. Mutual exclusivity alone therefore
+exactly one speaker per tick and steady activity produced an error rate of just 0.025, 95% Wilson
+[0.011, 0.057], far below the 0.90 observed in the real data. Mutual exclusivity alone therefore
 cannot explain the failure.
 
 I then suspected turn-taking. In the real channel, speakers repeat 36% of the time and return after
 exactly one message 38% of the time. However, adding a Markov speaker chain to the generator
 produced the opposite result. Turn-taking suppressed the error rather than increasing it. At the
-nominal knob values and with no drift the error rate was 0.000, while removing turn-taking and
-introducing drift raised it to 0.400. The contribution from drift was +0.345, compared with -0.055
-for turn-taking. The same inversion appears in the arm calibrated so that the generated channel
-reproduces the real channel's measured repeat, return and block-share statistics rather than merely
-carrying those numbers as settings: there, turn-taking alone gives 0.005 and drift alone gives
-0.105. Neither mechanism, nor their combination in the tested design, reproduced the real-data error
-rate of 0.90. The largest cell anywhere in the design is 0.400. The real-data ablation removes
-turn-taking and non-stationarity together, while the generator allows us to separate them. The
-results point to non-stationary activity, but the remaining gap means the mechanism behind the full
-real-data failure is not yet established.
+nominal knob values and with no drift the surrogate certified nothing at all across 200 replicates,
+while removing turn-taking and introducing drift raised the rate to 0.365. The contribution from
+drift was +0.340, compared with -0.025 for turn-taking. The same inversion appears in the arm
+calibrated so that the generated channel reproduces the real channel's measured repeat, return and
+block-share statistics rather than merely carrying those numbers as settings: there, turn-taking
+alone also certifies nothing, and drift alone gives 0.065. Neither mechanism, nor their combination
+in the tested design, reproduced the real-data error rate of 0.90. The largest cell anywhere in the
+design is 0.365. The real-data ablation removes turn-taking and non-stationarity together, while the
+generator allows us to separate them. The results point to non-stationary activity, but the
+remaining gap means the mechanism behind the full real-data failure is not yet established.
+
+Every figure above comes from the run at 200 surrogate draws. The first version of this analysis
+used 100, which inflates both nulls on the same 2,400 instances: the circular shift fires 53 times
+where the 200-draw run does not, against 18 the other way (McNemar p = 3.9e-05), and the
+permutation surrogate 83 against 20 (p = 2.7e-10). Every qualitative conclusion in this section is
+the same at both settings, which is the reason it is worth stating them at all. The numbers are not,
+so the draw count belongs in the caption.
 
 # SLOT 3: How many surrogate draws are needed?
 
@@ -77,8 +83,15 @@ estimate of 0.0633 [0.0409, 0.0968]. The published real-data result is therefore
 than overstated. For practical use, the important point is that reducing the number of surrogate
 draws can materially change the result. In particular, the global permutation over-fires at 100
 draws by approximately a factor of two. I would therefore not treat the choice of draw count as a
-minor computational detail. The factorial estimate of 0.0942 should not be relied upon until its
-planned 200-draw rerun is available.
+minor computational detail.
+
+The same correction applies to the factorial estimate, and it is now measured rather than
+anticipated. That figure was 0.0942 at 100 draws. Repeating all 2,400 instances at 200 draws gives
+**0.0679, 95% Wilson [0.0585, 0.0787]**, and the paired difference is large: 83 instances fire at
+100 draws and not at 200, against 20 the other way, McNemar p = 2.7e-10. The conclusion it supports
+is unchanged, because the interval still excludes the nominal 0.05. So the permutation repair does
+carry a residual inflation on clean generated data, but it is about a third above nominal rather
+than nearly double, and 0.0679 is the figure to publish.
 
 One limit on this recommendation. I compared 100 draws against 200 and did not test any larger
 value, so what the experiment establishes is that 100 is too few, not that 200 is enough. Two
@@ -430,6 +443,10 @@ Every edit made to the drafted prose, with the source that forced it.
 | 23 | 11 | The eighth cell named | The slot said seven of eight fell inside without saying which did not |
 | 24 | 11 | BLAS thread count added to the recorded environment | The environment block now records what the workers ran under rather than the parent's unpinned default |
 | 25 | 12 | Moved out of the paper under its own heading | A changelog naming the author's published articles cannot appear in a double-blind submission |
+| 26 | 2 | Provisionality banner removed and every figure restated at 200 draws | The re-run landed. Baseline 0.055 to **0.025**, drift-only 0.400 to **0.365**, drift effect +0.345 to **+0.340**, turn-taking effect -0.055 to **-0.025**, calibrated drift-only 0.105 to **0.065**, largest cell anywhere 0.400 to **0.365**. Every qualitative conclusion is unchanged: turn-taking still suppresses, drift still inflates, neither reaches 0.90 |
+| 27 | 2 | Draw-count paragraph added | Both nulls over-fire at 100 draws on the same 2,400 instances: the shift at McNemar p = 3.9e-05 and the permutation surrogate at p = 2.7e-10. The conclusions survive the change and the numbers do not, so the draw count belongs in the caption |
+| 28 | 3 | The 0.0942 warning replaced with the measured answer | Repeating all 2,400 instances at 200 draws gives **0.0679 [0.0585, 0.0787]**, p = 2.7e-10 against the 100-draw run. The interval still excludes nominal 0.05, so the claim holds while the number moves by a third. 0.0679 is the figure to publish |
+| 29 | 2 | "0.067" replaced by the factorial's own baseline of 0.025 | The 0.067 came from a different sweep at a different draw count. Mixing it with factorial effect sizes made the section internally inconsistent |
 
 ## Unchanged, and verified against source
 

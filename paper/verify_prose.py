@@ -221,20 +221,53 @@ def main() -> int:
     sh0 = next(r["shift"]["fired"] for r in big["rows"] if r["activity_drift"] == 0.0)
     need("published shift at zero drift", f"{sh0/n30:.3f}")
 
-    # ---- the factorial -----------------------------------------------------------------------
-    tf = load("turntaking_factorial.json")
-    eff = tf["effects"]
-    need("factorial drift effect", f"+{eff['factorial']['by_surrogate']['shift']['drift_effect']:.3f}")
-    need("factorial turn-taking effect",
-         f"{eff['factorial']['by_surrogate']['shift']['turn_taking_effect']:.3f}")
-    need("factorial drift-only rate",
-         f"{eff['factorial']['by_surrogate']['shift']['drift_only']:.3f}")
-    need("factorial turn-taking-only rate",
-         f"{eff['factorial']['by_surrogate']['shift']['turn_taking_only']:.3f}")
-    need("calibrated turn-taking-only rate",
-         f"{eff['calibrated']['by_surrogate']['shift']['turn_taking_only']:.3f}")
-    need("calibrated drift-only rate",
-         f"{eff['calibrated']['by_surrogate']['shift']['drift_only']:.3f}")
+    # ---- the factorial, at 200 draws, paired against the 100-draw run -----------------------
+    # SLOT 2 quotes the 200-draw run throughout. The 100-draw file is loaded only to recompute
+    # the paired comparison the prose cites as its reason for preferring the other one.
+    tf = load("turntaking_factorial_200.json")
+    tf100 = load("turntaking_factorial.json")
+    assert tf["n_surrogates"] == 200 and tf100["n_surrogates"] == 100
+    sh = tf["effects"]["factorial"]["by_surrogate"]["shift"]
+    cal = tf["effects"]["calibrated"]["by_surrogate"]["shift"]
+    need("factorial baseline, no turn-taking and no drift", f"{sh['baseline_both_off']:.3f}")
+    need("factorial drift-only rate", f"{sh['drift_only']:.3f}")
+    need("factorial drift effect", f"+{sh['drift_effect']:.3f}")
+    need("factorial turn-taking effect", f"{sh['turn_taking_effect']:.3f}")
+    need("calibrated drift-only rate", f"{cal['drift_only']:.3f}")
+    # Both turn-taking-only corners are exactly zero, which the prose states in words rather than
+    # as "0.000", so assert the value and require the wording.
+    assert sh["turn_taking_only"] == 0.0 and cal["turn_taking_only"] == 0.0, (
+        f"a turn-taking-only corner is no longer zero: {sh['turn_taking_only']}, "
+        f"{cal['turn_taking_only']}")
+    need("the zero corner is stated in words", "certified nothing at all")
+    need("the calibrated zero corner is stated in words", "also certifies nothing")
+
+    baseline = next(c for c in tf["cells"] if c["arm"] == "factorial"
+                    and c["turn_taking"] == "off" and c["activity_drift"] == 0.0)
+    need("factorial baseline interval",
+         wilson3(baseline["shift"]["fired"], baseline["shift"]["of"]))
+    need("largest shift cell anywhere",
+         f"{max(c['shift']['fwer'] for c in tf['cells']):.3f}")
+
+    ka2 = {(r["cell"], r["rep"]): r for r in tf100["rows"]}
+    kb2 = {(r["cell"], r["rep"]): r for r in tf["rows"]}
+    sh2 = sorted(set(ka2) & set(kb2))
+    need("paired factorial instances", f"{len(sh2):,}")
+    k200 = sum(1 for key in sh2 if kb2[key]["permute_fired"])
+    need("pooled permutation at 200 draws", f"{k200/len(sh2):.4f}")
+    need("pooled permutation interval at 200 draws",
+         f"[{wilson(k200, len(sh2))[0]:.4f}, {wilson(k200, len(sh2))[1]:.4f}]")
+    assert wilson(k200, len(sh2))[0] > ALPHA, "the pooled figure no longer excludes nominal"
+    k100 = sum(1 for key in sh2 if ka2[key]["permute_fired"])
+    need("pooled permutation at 100 draws", f"{k100/len(sh2):.4f}")
+    for null, label in (("permute", "permutation"), ("shift", "shift")):
+        o1 = sum(1 for key in sh2
+                 if ka2[key][f"{null}_fired"] and not kb2[key][f"{null}_fired"])
+        o2 = sum(1 for key in sh2
+                 if kb2[key][f"{null}_fired"] and not ka2[key][f"{null}_fired"])
+        need(f"{label} fired at 100 only", str(o1))
+        need(f"{label} fired at 200 only", str(o2))
+        need(f"{label} paired p", f"{mcnemar(o1, o2):.1e}")
 
     # ---- run them ----------------------------------------------------------------------------
     # Search against whitespace-collapsed text: the prose is hard-wrapped at 100 columns, so a
@@ -252,8 +285,8 @@ def main() -> int:
          "NOT A PAPER SECTION" in text, "SLOT 12 heading missing its warning"),
         ("double-blind self-references are marked",
          text.count("[ANON") >= 2, "fewer [ANON] markers than expected"),
-        ("SLOT 2 carries its provisionality banner",
-         "Provisional" in text, "SLOT 2 banner missing"),
+        ("SLOT 2 states its draw count",
+         "200 surrogate draws" in re.sub(r"\s+", " ", text), "SLOT 2 draw count missing"),
         ("a change log is present", "# Change log" in text, "no change log"),
     ]
     failed_struct = [(n, m) for n, ok, m in struct if not ok]

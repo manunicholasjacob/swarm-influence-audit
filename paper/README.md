@@ -6,9 +6,9 @@ repository URLs. **arXiv preprint first**, which TMLR permits because a preprint
 venue.
 
 **The prose itself is now drafted: `00_PROSE_v1.md`.** Eleven sections written 9 Nov, with every
-quoted figure verified against the committed JSONs and a change log recording all 25 corrections.
-Two things in it still need action: SLOT 2 is provisional until the 200-draw factorial lands, and
-every `[ANON]` marker must be resolved before a double-blind submission.
+quoted figure verified against the committed JSONs by `verify_prose.py` and a change log recording
+all 29 corrections. **One thing in it still needs action:** every `[ANON]` marker must be resolved
+before a double-blind submission. The 200-draw factorial has landed, so nothing is provisional.
 
 This directory holds material written for the paper that does not exist in the sprint report.
 Everything else is reused from `../report/REPORT_V2.md`, which is verified and whose numbers are
@@ -35,7 +35,7 @@ recomputed from `../facts_*.json` by `../report/verify_v2.py`.
 | Result | Artifact | Headline |
 |---|---|---|
 | Turn-taking separated from non-stationarity | `../../swarm-bench/turntaking_factorial.json` | Turn-taking **suppresses** the failure; drift is the only inflating factor; neither reaches the real 0.90 |
-| Permutation surrogate, at precision | same | **0.0942 [0.083, 0.107]** over 2,400 instances, excludes nominal, flat across all cells. **At 100 draws.** Being re-run at 200, because this is the one surrogate now known to be draw-sensitive; do not quote this row until that lands |
+| Permutation surrogate, at precision | `../../swarm-bench/turntaking_factorial.json` and `_200.json` | **0.0679 [0.0585, 0.0787]** over 2,400 instances at **200 draws**, still excluding nominal, flat across all cells. The 100-draw version of this row read 0.0942; paired, the difference is McNemar **p = 2.7e-10**. The claim survives, the number moved by a third, so quote the draw count |
 | Label-free symbolisation-floor proxy | `../../swarm-bench/floor_proxy_sweep.json` | seed stability and LSA agreement each separate the floor with zero errors |
 | Real-channel floor verdict | `../../swarm-bench/floor_proxy_real.json` | **Contradicted by the audit's own edge counts. Not usable yet** |
 | Surrogate variants, paired at 300 replicates | `../../swarm-bench/surrogate_variants.json` and `_200.json` | At 200 draws the shift reads 0.033 and the global permutation 0.070, both covering nominal, while block-local and local still marginally exclude it. **The three repairs remain mutually indistinguishable.** The 100-draw version of this row read "all three run 2 to 3x nominal", which was a draw-count artifact |
@@ -164,3 +164,11 @@ scipy 1.18.0, scikit-learn 1.9.0, OpenBLAS 0.3.33, one BLAS thread per worker.
 **The position to take in the paper:** cite rates with intervals, never exact counts, and state the
 environment. Recording the environment does not make the old counts reproducible. It means the new
 ones can be checked by someone who matches it, and that is the strongest claim available here.
+
+**One trap in reading `turntaking_factorial_200.json`.** It carries a `published_sweep_agreement`
+block, inherited from the 100-draw script, which reports `exact match False` against
+`bench_stationarity_big.json`. That is **not** a further reproducibility failure: the published
+sweep used 100 surrogate draws and this run used 200, so the counts cannot agree and the block is
+vacuous here. The meaningful version of that check is the one in `turntaking_factorial.json`, which
+does run at 100 draws. Read the 200-draw file's agreement block as not applicable rather than as
+negative.
