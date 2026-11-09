@@ -30,10 +30,10 @@ recomputed from `../facts_*.json` by `../report/verify_v2.py`.
 | Result | Artifact | Headline |
 |---|---|---|
 | Turn-taking separated from non-stationarity | `../../swarm-bench/turntaking_factorial.json` | Turn-taking **suppresses** the failure; drift is the only inflating factor; neither reaches the real 0.90 |
-| Permutation surrogate, at precision | same | **0.0942 [0.083, 0.107]**, excludes nominal, flat across all cells |
+| Permutation surrogate, at precision | same | **0.0942 [0.083, 0.107]** over 2,400 instances, excludes nominal, flat across all cells. **At 100 draws.** Being re-run at 200, because this is the one surrogate now known to be draw-sensitive; do not quote this row until that lands |
 | Label-free symbolisation-floor proxy | `../../swarm-bench/floor_proxy_sweep.json` | seed stability and LSA agreement each separate the floor with zero errors |
 | Real-channel floor verdict | `../../swarm-bench/floor_proxy_real.json` | **Contradicted by the audit's own edge counts. Not usable yet** |
-| Surrogate variants, paired at 300 replicates | `../../swarm-bench/surrogate_variants.json` | Shift is nominal on stationary pure nulls; **all three repairs run 2 to 3x nominal and are indistinguishable from each other** |
+| Surrogate variants, paired at 300 replicates | `../../swarm-bench/surrogate_variants.json` and `_200.json` | At 200 draws the shift reads 0.033 and the global permutation 0.070, both covering nominal, while block-local and local still marginally exclude it. **The three repairs remain mutually indistinguishable.** The 100-draw version of this row read "all three run 2 to 3x nominal", which was a draw-count artifact |
 | Closest prior work | report Appendix J | Papadopoulos and Psannis (2026) measured the same failure in MARL |
 
 ## The three things that would finish it
@@ -109,6 +109,13 @@ recomputed from `../facts_*.json` by `../report/verify_v2.py`.
    permutation reaches nominal, which is a reason to prefer it that is about calibration rather
    than provenance.
 
+   **One more comparison moves, and the paper has to carry it.** At 100 draws the shift differed
+   from all three repairs. At 200 draws **it no longer differs from the global permutation
+   (p = 0.0614)**, while still differing from block-local (p = 0.0294) and from Runge's local
+   (p = 0.0201). So on clean stationary data the global repair costs nothing measurable against the
+   surrogate this paper attacks. That is a point in the repair's favour, and it is only visible at
+   the honest draw count.
+
    **The drift sweep was repeated at 200 draws too**
    (`../../swarm-bench/stationarity_pinned_200.json`). The headline defence is unchanged and does
    not depend on the draw count: Cochran-Armitage still gives the shift **z = 8.667, p < 1e-15**
@@ -131,8 +138,23 @@ sweep. Zenodo DOI on release.
 
 **Cite the version DOI, not the concept DOI.**
 
-**One defect to fix before submission:** `../../swarm-bench/bench_stationarity_big.json`'s exact
-counts do not reproduce today, off by one or two replicates per cell. The generator, the estimator
-and BLAS threading were ruled out, so it is a library or environment difference. Every 200-replicate
-rate falls inside the published 30-replicate interval, so no conclusion moves, but the paper must
-not cite those counts as reproducible. Re-run the sweep with a pinned environment.
+**The reproducibility defect, now measured rather than suspected.** The pinned re-run asked for here
+has been done: `../../swarm-bench/stationarity_pinned.json`, reproduction arm, which repeats the
+published configuration exactly (drifts 0.0/0.3/0.6/0.9, 30 replicates, 100 draws, generator seed
+7000+s, through the original `bench_eval.te_detector` path) and **reports** the agreement rather
+than asserting it. It confirms the defect rather than fixing it:
+
+- **1 of 8 cells reproduces the published count exactly.** The rest are off by one or two
+  replicates, in both directions.
+- **7 of the 8 published rates fall inside the re-run's own 95% interval.** The exception is drift
+  0.0 under the permutation null, where the published 1/30 sits just below the re-run's 3/30
+  interval [0.035, 0.256]. Nothing in the report depends on that cell.
+
+The generator, the estimator and BLAS threading were ruled out earlier, so it is a library
+difference, most likely scikit-learn's k-means inside the symboliser, whose output moves between
+versions. **Every sweep now records the environment it ran under**: Python 3.14.6, numpy 2.5.1,
+scipy 1.18.0, scikit-learn 1.9.0, OpenBLAS 0.3.33, one BLAS thread per worker.
+
+**The position to take in the paper:** cite rates with intervals, never exact counts, and state the
+environment. Recording the environment does not make the old counts reproducible. It means the new
+ones can be checked by someone who matches it, and that is the strongest claim available here.
