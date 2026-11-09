@@ -69,6 +69,25 @@ recomputed from `../facts_*.json` by `../report/verify_v2.py`.
    to three times nominal on clean data**, and that choosing between them cannot be justified by
    error rate.
 
+   **DO NOT write this up as contradicting the report's 0.063 without settling one thing first.**
+   Three differences separate the two numbers and only the third is interesting:
+
+   - **Population.** `facts_calib_big.json`'s 0.0633 is measured on the structure-destroyed REAL
+     channel, 15 agents and 7,958 ticks. This sweep is on generated pure nulls, 12 agents. Not the
+     same population.
+   - **Surrogate count.** The published figure used **200** draws per test; this sweep used
+     **100**. The intervals, [0.0409, 0.0968] published against [0.085, 0.158] here, overlap only
+     in a sliver, so the gap is real and needs an explanation that is not hand-waving.
+   - **The suspicious coincidence.** `facts_calib.json`, the 10-replicate pilot on the real
+     channel, puts the permutation surrogate at **0.1**, which matches this sweep and not the
+     300-replicate figure. That is consistent with the inflation being a function of how many
+     surrogate draws the max-T null is built from rather than of the data at all.
+
+   The check is cheap and is the next thing to run: repeat this sweep at 200 draws and see whether
+   the permutation rate falls toward 0.063. If it does, the paper gains a genuinely useful
+   practitioner result about how many draws the repair needs. If it does not, the 0.063 is a
+   property of that specific channel and the paper must stop quoting it as the repair's error rate.
+
 ## Reproducibility
 
 Public, MIT, with `facts_*.json` and a verifier that recomputes every number and fails on a
