@@ -1,5 +1,10 @@
 # The TMLR manuscript
 
+> **SUBMITTED 10 November 2026.** Forum https://openreview.net/forum?id=rPF8cH6T8k, submission
+> number 14335. See `SUBMITTED.md` for the exact state, including why it went in as a Long
+> submission and how to change that. **`main-SUBMITTED-2026-11-10.pdf` is the file that was
+> uploaded; do not delete it**, because rebuilding does not reproduce it byte for byte.
+
 Built 10 November 2026. `main.tex` is the only source. Three PDFs come out of it and they cannot
 drift apart, because the mode is chosen at build time rather than by editing the file.
 
@@ -73,14 +78,16 @@ repository's own licence.
 
 ## Still to do before submission
 
-1. **Decide the voice.** The manuscript is first-person singular throughout, which is the choice
-   recorded in the slot workbook. The sprint report says "we". Single-author "I" is accepted at
-   TMLR but unusual, and switching is one mechanical pass. This is the only stylistic decision left.
+1. ~~**Decide the voice.**~~ **Settled: first-person singular.** Checked against the source on
+   10 Nov: neither TMLR's author guide nor its editorial policies constrain pronouns, and general
+   style guidance accepts or prefers "I" for single-author work. Nothing to change.
 2. **The arXiv preprint needs an endorser.** `main-preprint.pdf` is ready; the endorsement request
    is outstanding, see `../../swarm-alignment-2026/outgoing/00_DISPATCH_LOG.md`.
-3. **An OpenReview submission needs the forum id** filled into `\openreview` for the camera-ready.
-   It is a placeholder now and is not used in the anonymous build.
-4. **Supplementary material must also be anonymised** if any is uploaded. The author guide is
-   explicit about that, and the repositories are not anonymous, so either upload an anonymised
-   archive or upload nothing and give the links at camera-ready, which is what the paper currently
-   promises.
+3. ~~**Fill the forum id into `\openreview`.**~~ Done: `rPF8cH6T8k`. It is used only by the accepted
+   and preprint builds, so filling it did not change the anonymous PDF.
+4. **Supplementary material must also be anonymised** if any is ever uploaded. The author guide is
+   explicit about that, and the repositories are not anonymous, so the submission uploaded none and
+   the paper promises the links at camera-ready.
+5. **Optional: convert to a Regular submission.** It went in as Long because the main content runs
+   onto page 13. `SUBMITTED.md` explains how to get it under 12 and why that was not done
+   unilaterally.
