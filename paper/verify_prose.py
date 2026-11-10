@@ -85,15 +85,54 @@ def fired_by_drift(path: str) -> dict[str, tuple[list[int], list[int]]]:
     return out
 
 
+def normalise(text: str, is_tex: bool) -> str:
+    """Collapse whitespace, and for LaTeX also undo the renderings that hide a plain number.
+
+    Both documents are hard-wrapped, so a quoted interval can straddle a line break and a literal
+    substring search would miss it. The manuscript additionally writes numbers in math mode, so
+    `$[0.046, 0.105]$` has to compare equal to `[0.046, 0.105]`, and `$p = 2.7 \\times 10^{-10}$`
+    to `2.7e-10` as Python formats it.
+    """
+    t = text
+    if is_tex:
+        # Scientific notation first, while the braces are still intact.
+        def sci(m: "re.Match[str]") -> str:
+            mant, expo = m.group(1), int(m.group(2))
+            return f"{mant}e{expo:+03d}"
+        t = re.sub(r"(\d+(?:\.\d+)?)\s*\\times\s*10\^\{(-?\d+)\}", sci, t)
+        t = t.replace("$", "")                       # strip math delimiters
+        t = re.sub(r"\\textbf\{([^{}]*)\}", r"\1", t)
+        t = re.sub(r"\\(?:emph|texttt|textit)\{([^{}]*)\}", r"\1", t)
+        t = t.replace(r"\%", "%").replace(r"\#", "#").replace(r"\_", "_")
+        t = t.replace("--", "-")                     # en dash in page ranges
+    return re.sub(r"\s+", " ", t)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--prose", default=str(HERE / "00_PROSE_v1.md"))
+    ap.add_argument("--docs", nargs="*", default=[str(HERE / "00_PROSE_v1.md"),
+                                                  str(HERE.parent / "tmlr" / "main.tex")],
+                    help="documents to check. Every numeric check runs against each of them.")
     args = ap.parse_args()
-    text = pathlib.Path(args.prose).read_text(encoding="utf-8")
+    docs = [pathlib.Path(p) for p in args.docs]
+    missing = [p for p in docs if not p.exists()]
+    if missing:
+        print("missing document(s): " + ", ".join(str(p) for p in missing))
+        return 1
+    text = docs[0].read_text(encoding="utf-8")
 
-    checks: list[tuple[str, str]] = []          # (label, string that must appear)
-    def need(label: str, s: str) -> None:
-        checks.append((label, s))
+    # (label, string that must appear, filename substring this check is limited to or None)
+    checks: list[tuple[str, str, str | None]] = []
+
+    def need(label: str, s: str, only: str | None = None) -> None:
+        """`only` limits a check to one document.
+
+        Used for figures that belong to the superseded 30-replicate sweep. Those are quoted in the
+        workbook's record of what the published articles had to correct, and deliberately do not
+        appear in the manuscript, which quotes the better-powered run throughout. Without the
+        scope the verifier would demand a superseded number in the paper.
+        """
+        checks.append((label, s, only))
 
     # ---- surrogate_variants, both draw counts ------------------------------------------------
     sv = {t: [r for r in load(f)["rows"] if not r.get("skipped")]
@@ -215,9 +254,10 @@ def main() -> int:
     n30 = big["reps"]
     perm = [r["permute"]["fired"] for r in big["rows"]]
     cov = sum(1 for k in perm if wilson(k, n30)[0] <= ALPHA <= wilson(k, n30)[1])
-    need("published permutation range low", f"{min(perm)/n30:.3f}")
-    need("published permutation range high", f"{max(perm)/n30:.3f}")
-    need("published cells covering nominal", "three of its four" if cov == 3 else f"{cov} of 4")
+    need("published permutation range low", f"{min(perm)/n30:.3f}", only="00_PROSE")
+    need("published permutation range high", f"{max(perm)/n30:.3f}", only="00_PROSE")
+    need("published cells covering nominal", "three of its four" if cov == 3 else f"{cov} of 4",
+         only="00_PROSE")
     sh0 = next(r["shift"]["fired"] for r in big["rows"] if r["activity_drift"] == 0.0)
     need("published shift at zero drift", f"{sh0/n30:.3f}")
 
@@ -269,12 +309,17 @@ def main() -> int:
         need(f"{label} fired at 200 only", str(o2))
         need(f"{label} paired p", f"{mcnemar(o1, o2):.1e}")
 
-    # ---- run them ----------------------------------------------------------------------------
-    # Search against whitespace-collapsed text: the prose is hard-wrapped at 100 columns, so a
-    # quoted interval can straddle a line break and a literal substring search would miss it.
-    flat = re.sub(r"\s+", " ", text)
-    bad_checks = [(lab, s) for lab, s in checks if s not in flat]
-    print(f"{len(checks)} numeric checks recomputed from source")
+    # ---- run them against every document -----------------------------------------------------
+    print(f"{len(checks)} numeric checks recomputed from source, against {len(docs)} document(s)")
+    bad_checks: list[tuple[str, str]] = []
+    for doc in docs:
+        raw = doc.read_text(encoding="utf-8")
+        flat = normalise(raw, doc.suffix == ".tex")
+        applicable = [(lab, s) for lab, s, only in checks if only is None or only in doc.name]
+        missed = [(f"{doc.name}: {lab}", s) for lab, s in applicable if s not in flat]
+        print(f"  {doc.name:<16} {len(applicable) - len(missed):>3}/{len(applicable)} found"
+              f"{'' if len(applicable) == len(checks) else f' ({len(checks) - len(applicable)} scoped out)'}")
+        bad_checks += missed
 
     # ---- structural --------------------------------------------------------------------------
     struct: list[tuple[str, bool, str]] = [

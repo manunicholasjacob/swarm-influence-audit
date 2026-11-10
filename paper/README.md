@@ -7,8 +7,15 @@ venue.
 
 **The prose itself is now drafted: `00_PROSE_v1.md`.** Eleven sections written 9 Nov, with every
 quoted figure verified against the committed JSONs by `verify_prose.py` and a change log recording
-all 29 corrections. **One thing in it still needs action:** every `[ANON]` marker must be resolved
-before a double-blind submission. The 200-draw factorial has landed, so nothing is provisional.
+all 29 corrections. The 200-draw factorial has landed, so nothing is provisional.
+
+**The manuscript is assembled and compiles: `../tmlr/`.** 14 pages, 11 citations, two figures, built
+from one `main.tex` in three modes (anonymous submission, de-anonymised arXiv preprint,
+camera-ready). The `[ANON]` markers are resolved: rather than citing the author's own public report
+as external prior work, which would de-anonymise it, the earlier audit is presented as this paper's
+own earlier phase, and every identifying string sits behind a `\ifdeanon` gate that `build.py`
+tests by grepping the built PDF. See `../tmlr/README.md` for what is left, which is a voice
+decision and the arXiv endorsement.
 
 This directory holds material written for the paper that does not exist in the sprint report.
 Everything else is reused from `../report/REPORT_V2.md`, which is verified and whose numbers are

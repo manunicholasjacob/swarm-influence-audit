@@ -196,6 +196,12 @@ def main() -> int:
         # The drafted paper prose was for a while the only artifact here whose numbers nothing
         # recomputed, which is how a wrong crossover and a merged citation survived a read-through.
         ("paper prose figures", [py, "-X", "utf8", "verify_prose.py"], HERE / "paper"),
+        # Builds the TMLR manuscript and greps the resulting PDF for the author's name, email,
+        # repository URLs and the benchmark's distinctive name. A non-anonymous submission is
+        # rejected without review, and the gate is a LaTeX conditional, so it is worth testing the
+        # output rather than trusting the source.
+        ("manuscript builds and is anonymous",
+         [py, "-X", "utf8", "build.py", "--mode", "submission"], HERE / "tmlr"),
     ]
     if pack_root is not None:
         pdf = pack_root / "deliverables" / "Apart_Swarm_Report_Manu_Nicholas_Jacob.pdf"
