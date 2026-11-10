@@ -33,6 +33,21 @@ the paper promises to give them. The correct flag is `\if@accepted`, which `tmlr
 
 The check is wired into `../verify_all.py`, so it runs with everything else.
 
+## The LLM-use disclosure is required, and its location is specified
+
+TMLR's FAQ requires it. The wording, read from `jmlr.org/tmlr/faq.html` on 10 Nov 2026, is that
+authors must "mention explicitly in their submission that they have used this tool", "as a footnote
+on the first page". The editorial-policies page separately states that LLMs "are not eligible for
+authorship" and that authors are "fully responsible" for the content regardless of tools used.
+
+So the disclosure is not a style choice and cannot be dropped. Two consequences shaped the file:
+
+1. **It is a first-page footnote**, not a line in Broader Impact, which is where it sat until 10 Nov.
+   `build.py` checks the rendered page rather than the source, because a footnote can be pushed to
+   the following page by the material around it.
+2. **No vendor is named.** Nothing in the policy asks for one, so the footnote says "a large
+   language model". All three built PDFs contain zero occurrences of any vendor name.
+
 ## What the numbers are checked against
 
 `../paper/verify_prose.py` recomputes 78 figures from the committed JSONs in `swarm-bench` and

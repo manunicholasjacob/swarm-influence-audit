@@ -49,6 +49,14 @@
 \makeatother
 \newcommand{\benchname}{\ifdeanon{SwarmInfluence-Bench}{the benchmark}}
 
+% An unmarked footnote, for the LLM-use disclosure. TMLR's FAQ requires the disclosure and names
+% the location: authors must "mention explicitly in their submission that they have used this
+% tool", "as a footnote on the first page". Verified against jmlr.org/tmlr/faq.html on 10 Nov 2026.
+% It is therefore not optional, and it does not belong in Broader Impact, where it sat until now.
+% Nothing in the policy asks for the vendor's name, so none is given.
+\newcommand{\disclosurefootnote}[1]{%
+  \begingroup\renewcommand\thefootnote{}\footnote{#1}\addtocounter{footnote}{-1}\endgroup}
+
 \title{An Influence Graph Over AI Agents Certifies an Agent That Copies Nobody}
 
 % Hidden by the tmlr package unless [accepted] or [preprint] is given.
@@ -76,6 +84,12 @@ ground truth. I also identify a symbolisation-dependent detection limit and deve
 diagnostics for it, and show that their calibration does not transport across degradation
 mechanisms. The benchmark is released.
 \end{abstract}
+
+\disclosurefootnote{\textbf{Use of a large language model.} A large language model was used as an
+assistive tool: to help write and run the analysis code, and to help draft this paper. The author is
+responsible for every claim, number and figure. All results come from the released code run on the
+public dataset, no result or reference is fabricated, and every number in this paper is recomputed
+from committed analysis output by a verifier that fails the build on a mismatch.}
 
 \section{Introduction}
 
@@ -798,10 +812,8 @@ Human participants appear only as an aggregate node or as anonymised visitor lab
 handle, and no content attributable to an individual person is reported. Message text and metadata
 were read, never model weights or private user data.
 
-An AI coding assistant was used to help write and run the analysis code and to help draft this paper.
-The author is responsible for every claim, number and figure. All results come from the released code
-run on the public dataset, no result or reference is fabricated, and the numbers in this document are
-checked against the analysis output by a script that fails on any mismatch.
+The use of a large language model in this work is disclosed in the first-page footnote, as TMLR
+requires.
 
 \bibliographystyle{tmlr}
 \bibliography{refs}

@@ -105,13 +105,25 @@ def check(mode: str, pdf: pathlib.Path) -> list[str]:
         missing = [s for s in IDENTIFIERS if s.lower() not in txt.lower()]
         # The benchmark name and the URLs only appear in the preprint; the author block appears in
         # both preprint and accepted.
-        if mode in ("preprint", "accepted") and missing:
+        if missing:
             problems.append(f"the de-anonymised build is MISSING {missing}, so the gate is stuck shut")
-        elif True:
-            print("  de-anonymised: author and both repository URLs present, as intended")
         else:
-            print(f"  camera-ready: {len(IDENTIFIERS) - len(missing)} of "
-                  f"{len(IDENTIFIERS)} identifiers present")
+            print("  de-anonymised: author and both repository URLs present, as intended")
+
+    # TMLR's FAQ requires the LLM-use disclosure and specifies where it goes: "as a footnote on the
+    # first page". A footnote can be pushed to the next page by the surrounding material, so the
+    # requirement is checked on the rendered page and not on the source. Verified against
+    # jmlr.org/tmlr/faq.html on 10 Nov 2026.
+    page1 = txt.split("\f")[0].lower()
+    if "large language model" not in page1:
+        where = next((i + 1 for i, p in enumerate(txt.split("\f"))
+                      if "large language model" in p.lower()), None)
+        problems.append(
+            "the required LLM-use disclosure is not on page 1 of the "
+            f"{mode} build" + (f"; it rendered on page {where}" if where
+                               else "; it is absent from the PDF entirely"))
+    else:
+        print("  disclosure: LLM-use footnote present on page 1, as TMLR requires")
     return problems
 
 
