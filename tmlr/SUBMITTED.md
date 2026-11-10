@@ -6,34 +6,51 @@
 | **Submission number** | 14335 |
 | **Submitted** | 10 Nov 2026, as `~Manu_Nicholas_Jacob1` |
 | **Title** | An Influence Graph Over AI Agents Certifies an Agent That Copies Nobody |
-| **Submission type** | Long submission (more than 12 pages of main content) |
+| **Submission type** | **Regular submission (no more than 12 pages of main content)**, revised 10 Nov. It went in as Long; see below |
 | **Licence** | CC BY 4.0 |
 | **Readers** | TMLR, Action Editors, Authors, AI Reviewer |
-| **The exact PDF** | `main-SUBMITTED-2026-11-10.pdf`, 517,602 bytes, sha256 `392d7b78d1a2f757517d8ae0640294be9b3125be` |
+| **The live PDF** | `main-SUBMITTED-2026-11-10-regular.pdf`, 517,837 bytes, sha256 `b1652406fe7dd29bce5f2bcf7055f097` |
+| **The first PDF** | `main-SUBMITTED-2026-11-10.pdf`, 517,602 bytes, sha256 `392d7b78d1a2f757517d8ae0640294be`, the Long version, superseded the same day |
 
 **Verified, not assumed.** The success banner was not taken as proof. The submission was confirmed
 from the author profile, which lists it as "Submitted to TMLR", and then from the forum page itself,
 which shows every field as entered. The signature resolved to `~Manu_Nicholas_Jacob1`, the active
 profile, which the forum URL's referrer confirms.
 
-**Keep `main-SUBMITTED-2026-11-10.pdf`.** Rebuilding `main.tex` does not reproduce the submitted
-file byte for byte, because a PDF embeds its creation time. The *content* is identical: both extract
-to exactly 49,455 characters of text and compare equal. That copy is the record of what was actually
-uploaded, and it is the one to diff against if a question ever arises.
+**Keep both `main-SUBMITTED-*.pdf` files.** Rebuilding `main.tex` does not reproduce either byte for
+byte, because a PDF embeds its creation time, so these are the record of what was actually uploaded
+and the files to diff against if a question ever arises. `-regular` is the live one; the other is the
+superseded Long version, kept because the revision history on OpenReview refers to it.
 
-## Why "Long submission"
+## It went in as Long, and was revised to Regular the same day
 
 TMLR's form asks whether "the main content (all pages before references and appendices) is 12 pages
-or less". The Conclusion ends on page 12 and the unnumbered Limitations and Broader Impact sections
-run onto page 13, where the references then begin. So the main content occupies 13 pages and
-"Regular" would have been a misstatement.
+or less", and warns that review "may take significantly longer" above 12. At submission the
+Conclusion ended on page 12 and the unnumbered Limitations and Broader Impact sections ran onto page
+13, so the honest answer was Long. It was then brought under the threshold and revised.
 
-TMLR warns that "the review process may take significantly longer for papers longer than 12 pages",
-so this costs review speed. **It is recoverable:** moving Limitations and Broader Impact to after the
-references, which is where many venues put them, or trimming roughly one page, would bring the main
-content to 12 and allow a change to Regular. A submission can be edited. That was not done
-unilaterally at submission time, because restructuring a paper to clear a page threshold minutes
-before submitting is the author's call, not a mechanical fix.
+**Nothing was cut from the paper.** The whole gap was closed without removing a sentence of content:
+
+1. **Limitations and Broader impact moved to after the references.** TMLR's own wording excludes
+   "references and appendices" from the count, and an ethics statement after the references is the
+   normal layout at ML venues. Both sections are present in full, and a clause at the end of the
+   Conclusion points the reader to them, so neither is hidden.
+2. **The three figures were set slightly narrower**, from `\textwidth` and `0.92\textwidth` to
+   `0.76` and `0.67`. Presentational only.
+3. **Three words** came out of one Conclusion sentence ("one of them" to "one").
+
+That ordering was deliberate: structural and presentational levers first, prose last. The 75 numeric
+checks in `../paper/verify_prose.py` all still pass against `main.tex`, which is what proves no
+quoted figure was lost in the process.
+
+**`build.py` now checks this.** It finds the page the references begin on and fails if any main
+content precedes them there, so the paper cannot drift back over the threshold unnoticed. The
+running header is excluded, since it is not content.
+
+Note the document is **14 pages**, not 15. `pdftotext` writes a form feed after the last page too,
+so splitting on it yields one empty trailing part and a naive count over-reports by one. The page
+*index* was never affected, so the Regular determination was correct throughout, but the reported
+total was wrong until fixed.
 
 ## Answers given on the form
 

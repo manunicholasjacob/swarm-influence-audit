@@ -1,9 +1,9 @@
 # The TMLR manuscript
 
-> **SUBMITTED 10 November 2026.** Forum https://openreview.net/forum?id=rPF8cH6T8k, submission
-> number 14335. See `SUBMITTED.md` for the exact state, including why it went in as a Long
-> submission and how to change that. **`main-SUBMITTED-2026-11-10.pdf` is the file that was
-> uploaded; do not delete it**, because rebuilding does not reproduce it byte for byte.
+> **SUBMITTED 10 November 2026**, and revised the same day to a **Regular submission** (main content
+> 12 pages, 14 pages total). Forum https://openreview.net/forum?id=rPF8cH6T8k, submission number
+> 14335. See `SUBMITTED.md` for the exact state. **Do not delete the `main-SUBMITTED-*.pdf` files**:
+> rebuilding does not reproduce them byte for byte, and they are the record of what was uploaded.
 
 Built 10 November 2026. `main.tex` is the only source. Three PDFs come out of it and they cannot
 drift apart, because the mode is chosen at build time rather than by editing the file.

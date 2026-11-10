@@ -91,7 +91,11 @@ def text_of(pdf: pathlib.Path) -> str:
 
 def check(mode: str, pdf: pathlib.Path) -> list[str]:
     txt = text_of(pdf)
-    pages = txt.count("\f") + 1
+    # pdftotext puts a form feed AFTER every page including the last, so splitting yields one
+    # empty trailing part and "count + 1" over-reports by one. This said 15 for a 14-page PDF,
+    # which is only cosmetic but was confusing enough to need chasing down once.
+    parts = txt.split("\f")
+    pages = len(parts) - 1 if not parts[-1].strip() else len(parts)
     print(f"  built, {pages} pages, {len(txt.split())} words of extracted text")
     problems = []
     if mode == "submission":
@@ -114,6 +118,27 @@ def check(mode: str, pdf: pathlib.Path) -> list[str]:
     # first page". A footnote can be pushed to the next page by the surrounding material, so the
     # requirement is checked on the rendered page and not on the source. Verified against
     # jmlr.org/tmlr/faq.html on 10 Nov 2026.
+    # TMLR's Regular threshold: "the main content (all pages before references and appendices) is
+    # 12 pages or less". This was submitted as Long on 10 Nov because the Conclusion ran onto page
+    # 13, then brought under the threshold the same day. The check keeps it there: it finds the
+    # page the references begin on and fails if any main content precedes them on that page. The
+    # running header is not content, so it is excluded.
+    pages = txt.split("\f")
+    HEADER = "under review as submission to tmlr"
+    ref_page = next((i + 1 for i, p in enumerate(pages) if "References" in p), None)
+    if ref_page is None:
+        problems.append("no References section found in the built PDF")
+    else:
+        before = pages[ref_page - 1].split("References")[0]
+        leftover = " ".join(before.replace("\f", " ").split())
+        if leftover.lower().replace(HEADER, "").strip():
+            problems.append(
+                f"main content runs onto page {ref_page}, so this is a Long submission, not "
+                f"Regular. Overflow: {leftover[:120]!r}")
+        else:
+            print(f"  length: main content ends on page {ref_page - 1}, "
+                  f"references begin page {ref_page} (Regular submission qualifies)")
+
     page1 = txt.split("\f")[0].lower()
     if "large language model" not in page1:
         where = next((i + 1 for i, p in enumerate(txt.split("\f"))

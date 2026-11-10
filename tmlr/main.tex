@@ -239,7 +239,7 @@ meaning.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.92\textwidth]{f1_clock.png}
+\includegraphics[width=0.67\textwidth]{f1_clock.png}
 \caption{Clock-window transfer entropy on the 15 analysed agents of main-village \#general. Left,
 the two failure modes as a function of window width. Right, edges certified under the topic
 symboliser against the meaning-free hash null.}
@@ -318,7 +318,7 @@ under the shift surrogate.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{f2_null.png}
+\includegraphics[width=0.76\textwidth]{f2_null.png}
 \caption{Left, how often an agent coupled to nothing is certified as a driver, under each surrogate.
 Middle, family-wise error rate measured on data with all structure destroyed, with a Wilson
 interval; the dotted line is the nominal 0.05. Right, what each surrogate certifies on the real
@@ -720,7 +720,7 @@ certifies. No certified edge in this work replicates out of sample.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.92\textwidth]{f4_power.png}
+\includegraphics[width=0.67\textwidth]{f4_power.png}
 \caption{Detection of a planted follower under the repaired surrogate. Left, varying the fraction of
 its messages that copy the leader, at the median agent's volume. Right, varying how much it speaks,
 at strong coupling.}
@@ -767,12 +767,15 @@ anything. Clock windows cannot separate a message from its answer at the speed a
 they certify is matched by a null with no access to meaning. The turn-ordered grid that fixes this
 breaks the circular-shift surrogate: family-wise error 0.90 against a nominal 0.05, caused by the
 speaker sequence itself. Restricted permutation surrogates repair most of that, but they are flat
-under drift rather than calibrated, they are mutually indistinguishable at this precision, and one of
-them needs twice the surrogate draws anyone would think to use. A valid surrogate fixes calibration
-but not confounding. What survives is small: two dyad-specific edges that do not replicate, an
-undetermined answer set by conditioning resolution, and influence running from people into agents and
-never back. \textbf{An influence graph should not guide decisions until its error rate, its confound,
-its detection floor and its symboliser's fidelity are reported.}
+under drift rather than calibrated, they are mutually indistinguishable at this precision, and one
+needs twice the surrogate draws anyone would think to use. A valid surrogate fixes calibration but
+not confounding. What survives is small: two dyad-specific edges that do not replicate, an
+undetermined answer set by conditioning resolution, and influence running from people into agents
+and never back. \textbf{An influence graph should not guide decisions until its error rate, its
+confound, its detection floor and its symboliser's fidelity are reported.} Limitations and the
+ethics statement follow the references.
+\bibliographystyle{tmlr}
+\bibliography{refs}
 
 \section*{Limitations}
 
@@ -816,8 +819,5 @@ were read, never model weights or private user data.
 
 The use of a large language model in this work is disclosed in the first-page footnote, as TMLR
 requires.
-
-\bibliographystyle{tmlr}
-\bibliography{refs}
 
 \end{document}
