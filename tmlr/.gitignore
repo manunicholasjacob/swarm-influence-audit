@@ -9,3 +9,8 @@
 *.txt
 build*.log
 *.bak-*
+
+# Status-bearing builds. main-accepted.pdf prints "Published in TMLR" and main.pdf prints
+# "Under review"; neither is true after the 21 Nov 2026 desk reject, so neither is committed.
+main-accepted.pdf
+main.pdf

@@ -1,5 +1,10 @@
 # The extended paper
 
+> **Status, 22 November 2026: not published, and not under review.** TMLR desk rejected submission
+> 14335 on 21 November 2026 without reviews. The paper is being revised for another venue. The
+> files below are kept as the record of what was submitted on 10 November; the "Under review as
+> submission to TMLR" header inside the `main-SUBMITTED-*.pdf` records is historical.
+
 Target **TMLR**. No APC, no page limit, and it takes careful negative-plus-method results.
 **Double-blind**: the submitted PDF carries no author names, no "our earlier preprint", and no
 repository URLs. **arXiv preprint first**, which TMLR permits because a preprint is not an archival

@@ -1,5 +1,10 @@
 # Submitted to TMLR, 10 November 2026
 
+> **Status, 22 November 2026: not published, and not under review.** TMLR desk rejected submission
+> 14335 on 21 November 2026 without reviews. The paper is being revised for another venue. The
+> files below are kept as the record of what was submitted on 10 November; the "Under review as
+> submission to TMLR" header inside the `main-SUBMITTED-*.pdf` records is historical.
+
 | | |
 |---|---|
 | **Forum** | https://openreview.net/forum?id=rPF8cH6T8k |

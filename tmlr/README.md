@@ -1,5 +1,10 @@
 # The TMLR manuscript
 
+> **Status, 22 November 2026: not published, and not under review.** TMLR desk rejected submission
+> 14335 on 21 November 2026 without reviews. The paper is being revised for another venue. The
+> files below are kept as the record of what was submitted on 10 November; the "Under review as
+> submission to TMLR" header inside the `main-SUBMITTED-*.pdf` records is historical.
+
 > **SUBMITTED 10 November 2026**, and revised the same day to a **Regular submission** (main content
 > 12 pages, 14 pages total). Forum https://openreview.net/forum?id=rPF8cH6T8k, submission number
 > 14335. See `SUBMITTED.md` for the exact state. **Do not delete the `main-SUBMITTED-*.pdf` files**:
@@ -17,9 +22,9 @@ python -X utf8 build.py --mode submission
 |---|---|---|---|
 | `submission` | `main.pdf` | **hidden** | **withheld** |
 | `preprint` | `main-preprint.pdf` | shown | shown |
-| `accepted` | `main-accepted.pdf` | shown | shown |
+| `accepted` | `main-accepted.pdf` (not committed: the paper was not accepted) | shown | shown |
 
-`main.pdf` is the file to upload to OpenReview. `main-preprint.pdf` is the arXiv version, which
+`main.pdf` was the file uploaded to OpenReview; it is no longer committed, because its header reads "Under review". The uploaded bytes are kept as `main-SUBMITTED-2026-11-10-regular.pdf`. `main-preprint.pdf` is the arXiv version, which
 still needs an endorser.
 
 ## Why the anonymity gate is tested on the PDF and not the source
