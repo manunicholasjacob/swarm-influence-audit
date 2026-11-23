@@ -5,7 +5,7 @@ Keeps one definition of: load a village, pick a room, cut a window, select agent
 build the turn-ordered series, run the directed test. Every round-2 experiment uses these, so the
 headline run and the robustness runs cannot silently diverge.
 """
-import sys, collections
+import os, sys, collections
 sys.path.insert(0, r"C:\dev\swarm-prep")
 import numpy as np
 from huggingface_hub import hf_hub_download
@@ -14,6 +14,11 @@ from swarm_load import load_rows, to_epoch, TopicSymboliser, HashSymboliser, SIL
 import fastte
 
 REPO = "aidigestorg/ai-village"
+# Pinned dataset revision. Every reported number was computed on this snapshot (downloaded
+# 6 Nov 2026). The dataset is updated in place, and an unpinned download silently fetches a
+# newer revision whose 14-day window holds different messages (7051 vs 7958 ticks on the
+# 22 Nov 2026 revision 67998ae). Override with AI_VILLAGE_REVISION only on purpose.
+REVISION = os.environ.get("AI_VILLAGE_REVISION", "fb5cf7806dbffb3ffabe677fc844b06fd6fb9559")
 ALPHA = 0.05
 _cache = {}
 
@@ -21,7 +26,7 @@ _cache = {}
 def table(village, name):
     key = (village, name)
     if key not in _cache:
-        fp = hf_hub_download(REPO, f"{village}/{name}.jsonl.gz", repo_type="dataset")
+        fp = hf_hub_download(REPO, f"{village}/{name}.jsonl.gz", repo_type="dataset", revision=REVISION)
         _cache[key] = list(load_rows(fp))   # single file in: no snapshot co-mingling
     return _cache[key]
 

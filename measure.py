@@ -1,5 +1,6 @@
 """Measure turn latency and per-window occupancy in the general room to choose the TE window.
 Also find the recent co-present active agent set."""
+import os
 import sys, collections, datetime as dt
 sys.path.insert(0, r"C:\dev\swarm-prep")
 import numpy as np
@@ -10,7 +11,8 @@ REPO, VILLAGE = "aidigestorg/ai-village", "main-village"
 GENERAL = "18a3b2fb-9d2e-4ce7-b9b1-52e09c5408a8"
 
 def table(name):
-    fp = hf_hub_download(REPO, f"{VILLAGE}/{name}.jsonl.gz", repo_type="dataset")
+    fp = hf_hub_download(REPO, f"{VILLAGE}/{name}.jsonl.gz", repo_type="dataset",
+                         revision=os.environ.get("AI_VILLAGE_REVISION", "fb5cf7806dbffb3ffabe677fc844b06fd6fb9559"))
     return list(load_rows(fp))
 
 agents = table("agents")

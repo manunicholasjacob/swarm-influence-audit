@@ -8,6 +8,7 @@ and fastte.py (a bit-for-bit vectorised reimplementation of the preexisting esti
 
 Emits facts.json + results.npz; no hand-typed numbers anywhere downstream.
 """
+import os
 import sys, json, time, collections, datetime as dt
 sys.path.insert(0, r"C:\dev\swarm-prep")
 import numpy as np
@@ -23,7 +24,8 @@ K_SYMBOLS, N_SHIFTS, SEED = 8, 200, 0
 F = dt.datetime.utcfromtimestamp
 
 def table(name):
-    fp = hf_hub_download(REPO, f"{VILLAGE}/{name}.jsonl.gz", repo_type="dataset")
+    fp = hf_hub_download(REPO, f"{VILLAGE}/{name}.jsonl.gz", repo_type="dataset",
+                         revision=os.environ.get("AI_VILLAGE_REVISION", "fb5cf7806dbffb3ffabe677fc844b06fd6fb9559"))
     return list(load_rows(fp))   # single file in, no snapshot co-mingling
 
 t0 = time.time()

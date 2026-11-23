@@ -1,6 +1,7 @@
 """Characterise main-village chat: rooms, agents, activity over time, inter-message gaps.
 Pull each table as a SINGLE file (hf_hub_download) then hand the one path to load_rows, so the
 preexisting loader never co-mingles tables from a shared snapshot dir."""
+import os
 import sys, json, collections, datetime as dt
 sys.path.insert(0, r"C:\dev\swarm-prep")
 import numpy as np
@@ -11,7 +12,8 @@ REPO = "aidigestorg/ai-village"
 VILLAGE = "main-village"
 
 def table(name):
-    fp = hf_hub_download(REPO, f"{VILLAGE}/{name}.jsonl.gz", repo_type="dataset")
+    fp = hf_hub_download(REPO, f"{VILLAGE}/{name}.jsonl.gz", repo_type="dataset",
+                         revision=os.environ.get("AI_VILLAGE_REVISION", "fb5cf7806dbffb3ffabe677fc844b06fd6fb9559"))
     return list(load_rows(fp))
 
 agents = table("agents")

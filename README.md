@@ -201,6 +201,12 @@ participants appear only as `HUMANS` or `visitor-1..3`.
 Pull each table as a single file via `hf_hub_download`; do **not** use the HF-repo path of
 `load_rows` for one table, because it reads the whole cached snapshot directory and co-mingles tables.
 
+**Every number here was computed on dataset revision `fb5cf7806dbffb3ffabe677fc844b06fd6fb9559`
+(downloaded 6 Nov 2026), and the code now pins it.** The dataset is updated in place. On 22 Nov 2026 an
+unpinned download fetched revision `67998ae`, whose 14-day window of the general room holds 7051 turns
+instead of 7958, and the analysis gives different numbers on it. Set `AI_VILLAGE_REVISION` only to
+study a newer snapshot on purpose.
+
 ## Citation
 
 > Jacob, M. N. (2026). *An Agent That Copies Nobody Is Certified as a Leader: auditing
